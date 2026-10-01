@@ -1,0 +1,158 @@
+/* CareTrack Role Dashboard Styles */
+
+.role-dashboard {
+  width: 100%;
+  min-height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.role-dashboard-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.role-dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.role-dashboard-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.role-dashboard-subtitle {
+  margin: 6px 0 0;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.role-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.role-dashboard-card {
+  padding: 20px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.role-dashboard-card h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.role-dashboard-card p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.role-dashboard-section {
+  width: 100%;
+  margin-bottom: 24px;
+  padding: 20px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-sizing: border-box;
+}
+
+.role-dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.role-dashboard-table th,
+.role-dashboard-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.role-dashboard-table th {
+  font-weight: 600;
+}
+
+.role-dashboard-button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.role-dashboard-button:hover {
+  transform: translateY(-1px);
+}
+
+.role-dashboard-form {
+  display: grid;
+  gap: 16px;
+}
+
+.role-dashboard-form input,
+.role-dashboard-form textarea,
+.role-dashboard-form select {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  box-sizing: border-box;
+  font: inherit;
+}
+
+.role-dashboard-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 1100px) {
+  .role-dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .role-dashboard {
+    padding: 16px;
+  }
+
+  .role-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .role-dashboard-title {
+    font-size: 23px;
+  }
+
+  .role-dashboard-section {
+    padding: 16px;
+    overflow-x: auto;
+  }
+
+  .role-dashboard-table {
+    min-width: 650px;
+  }
+}

@@ -1,0 +1,2 @@
+import {Navigate,Outlet} from 'react-router-dom';import {useAuth} from '../context/AuthContext';import type {UserRole} from '../services/auth';
+export default function ProtectedRoute({allowedRoles}:{allowedRoles?:UserRole[]}){const{user,profile,loading}=useAuth();if(loading)return <div className="route-loading"><div className="spinner"/>Checking account...</div>;if(!user||!profile)return <Navigate to="/login" replace/>;if(allowedRoles&&!allowedRoles.includes(profile.role))return <Navigate to={`/${profile.role}/dashboard`} replace/>;return <Outlet/>;}
