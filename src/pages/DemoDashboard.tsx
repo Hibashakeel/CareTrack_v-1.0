@@ -14,13 +14,11 @@ import {
   LogOut,
   MessageCircleQuestion,
   Mic,
-  Pill,
   Search,
   Settings,
   ShieldCheck,
   Stethoscope,
   UserCheck,
-  UserRound,
   Users,
 } from "lucide-react";
 
@@ -68,94 +66,6 @@ const demoPatients = [
   },
 ];
 
-const navItems: Record<
-  DemoRole,
-  { label: string; path: string; icon: React.ComponentType<{ size?: number }> }[]
-> = {
-  patient: [
-    { label: "Dashboard", path: "", icon: LayoutDashboard },
-    { label: "My Information", path: "information", icon: UserRound },
-    { label: "Daily Report", path: "daily-report", icon: ClipboardList },
-    { label: "My Vitals", path: "vitals", icon: HeartPulse },
-    { label: "Medications", path: "medications", icon: Pill },
-    { label: "Doctor Questions", path: "questions", icon: MessageCircleQuestion },
-    { label: "Voice Responses", path: "voice-responses", icon: Mic },
-    { label: "Appointments", path: "appointments", icon: CalendarDays },
-    { label: "My Timeline", path: "timeline", icon: Activity },
-    { label: "Notifications", path: "notifications", icon: Bell },
-  ],
-
-  nurse: [
-    { label: "Dashboard", path: "", icon: LayoutDashboard },
-    { label: "Patients", path: "patients", icon: Users },
-    { label: "Patient Reports", path: "reports", icon: ClipboardList },
-    { label: "Vitals", path: "vitals", icon: HeartPulse },
-    { label: "Notes", path: "notes", icon: FileText },
-    { label: "Notifications", path: "notifications", icon: Bell },
-  ],
-
-  doctor: [
-    { label: "Dashboard", path: "", icon: LayoutDashboard },
-    { label: "Patients", path: "patients", icon: Users },
-    { label: "Doctor Questions", path: "questions", icon: MessageCircleQuestion },
-    { label: "Voice Responses", path: "voice-responses", icon: Mic },
-    { label: "Appointments", path: "appointments", icon: CalendarDays },
-    { label: "Notes", path: "notes", icon: FileText },
-    { label: "Reports", path: "reports", icon: ClipboardList },
-    { label: "Vitals", path: "vitals", icon: HeartPulse },
-    { label: "Notifications", path: "notifications", icon: Bell },
-  ],
-
-  admin: [
-    { label: "Dashboard", path: "", icon: LayoutDashboard },
-    { label: "Patients", path: "patients", icon: Users },
-    { label: "Admissions", path: "admissions", icon: BedDouble },
-    { label: "Wards", path: "wards", icon: Activity },
-    { label: "Doctors", path: "doctors", icon: Stethoscope },
-    { label: "Nurses", path: "nurses", icon: UserCheck },
-    { label: "Appointments", path: "appointments", icon: CalendarDays },
-    { label: "Reports", path: "reports", icon: ClipboardList },
-    { label: "Audit Logs", path: "audit-logs", icon: ShieldCheck },
-    { label: "Notifications", path: "notifications", icon: Bell },
-    { label: "Settings", path: "settings", icon: Settings },
-  ],
-};
-
-const roleInfo: Record<
-  DemoRole,
-  {
-    title: string;
-    subtitle: string;
-    icon: typeof UserRound;
-    colorClass: string;
-  }
-> = {
-  patient: {
-    title: "Patient Portal",
-    subtitle: "Manage your daily health information and communicate with your care team.",
-    icon: UserRound,
-    colorClass: "patient",
-  },
-  nurse: {
-    title: "Nurse Portal",
-    subtitle: "Monitor patients, review reports and manage daily nursing activities.",
-    icon: HeartPulse,
-    colorClass: "nurse",
-  },
-  doctor: {
-    title: "Doctor Portal",
-    subtitle: "Review patient records, reports and communicate with patients.",
-    icon: Stethoscope,
-    colorClass: "doctor",
-  },
-  admin: {
-    title: "Administration Portal",
-    subtitle: "Manage users, admissions, hospital resources and system activity.",
-    icon: ShieldCheck,
-    colorClass: "admin",
-  },
-};
-
 function StatCard({
   icon: Icon,
   value,
@@ -202,14 +112,19 @@ function PatientDashboard() {
       <div className="demo-welcome">
         <div>
           <span className="demo-eyebrow">PATIENT OVERVIEW</span>
-          <h1>Good morning, Sarah 👋</h1>
+
+          <h1>Good morning, Sarah</h1>
+
           <p>
             Keep your daily health information updated and stay connected with
             your healthcare team.
           </p>
         </div>
 
-        <Link to="/demo/patient/daily-report" className="demo-primary-button">
+        <Link
+          to="/demo/patient/daily-report"
+          className="demo-primary-button"
+        >
           <ClipboardList size={18} />
           Add Daily Report
         </Link>
@@ -221,9 +136,24 @@ function PatientDashboard() {
           value="Submitted"
           label="Today's Report"
         />
-        <StatCard icon={Activity} value="6" label="Water Glasses" />
-        <StatCard icon={HeartPulse} value="2 / 10" label="Pain Level" />
-        <StatCard icon={CalendarDays} value="2" label="Appointments" />
+
+        <StatCard
+          icon={Activity}
+          value="6"
+          label="Water Glasses"
+        />
+
+        <StatCard
+          icon={HeartPulse}
+          value="2 / 10"
+          label="Pain Level"
+        />
+
+        <StatCard
+          icon={CalendarDays}
+          value="2"
+          label="Appointments"
+        />
       </div>
 
       <div className="demo-two-column">
@@ -265,19 +195,23 @@ function PatientDashboard() {
           <div className="demo-action-list">
             <Link to="/demo/patient/questions">
               <MessageCircleQuestion size={20} />
+
               <div>
                 <strong>Doctor Questions</strong>
                 <span>View and answer questions</span>
               </div>
+
               <ArrowRight size={18} />
             </Link>
 
             <Link to="/demo/patient/voice-responses">
               <Mic size={20} />
+
               <div>
                 <strong>Voice Response</strong>
                 <span>Send a voice response</span>
               </div>
+
               <ArrowRight size={18} />
             </Link>
           </div>
@@ -304,7 +238,7 @@ function PatientDashboard() {
           </Link>
 
           <Link to="/demo/patient/medications">
-            <Pill size={22} />
+            <PillIcon />
             <strong>Medications</strong>
             <span>Review medication information</span>
           </Link>
@@ -320,30 +254,58 @@ function PatientDashboard() {
   );
 }
 
+function PillIcon() {
+  return <Activity size={22} />;
+}
+
 function NurseDashboard() {
   return (
     <>
       <div className="demo-welcome">
         <div>
           <span className="demo-eyebrow">NURSE OVERVIEW</span>
-          <h1>Good morning, Nurse 👋</h1>
+
+          <h1>Good morning, Nurse</h1>
+
           <p>
             Monitor patient conditions, review daily reports and prioritize
             patients who need attention.
           </p>
         </div>
 
-        <Link to="/demo/nurse/patients" className="demo-primary-button">
+        <Link
+          to="/demo/nurse/patients"
+          className="demo-primary-button"
+        >
           <Users size={18} />
           View Patients
         </Link>
       </div>
 
       <div className="demo-stats-grid">
-        <StatCard icon={Users} value="24" label="Total Patients" />
-        <StatCard icon={CheckCircle2} value="18" label="Stable" />
-        <StatCard icon={Activity} value="4" label="Needs Attention" />
-        <StatCard icon={HeartPulse} value="2" label="Urgent" />
+        <StatCard
+          icon={Users}
+          value="24"
+          label="Total Patients"
+        />
+
+        <StatCard
+          icon={CheckCircle2}
+          value="18"
+          label="Stable"
+        />
+
+        <StatCard
+          icon={Activity}
+          value="4"
+          label="Needs Attention"
+        />
+
+        <StatCard
+          icon={HeartPulse}
+          value="2"
+          label="Urgent"
+        />
       </div>
 
       <div className="demo-two-column">
@@ -356,10 +318,13 @@ function NurseDashboard() {
           <div className="demo-patient-list">
             {demoPatients.map((patient) => (
               <div className="demo-patient-row" key={patient.id}>
-                <div className="demo-avatar">{patient.name.charAt(0)}</div>
+                <div className="demo-avatar">
+                  {patient.name.charAt(0)}
+                </div>
 
                 <div className="demo-patient-main">
                   <strong>{patient.name}</strong>
+
                   <span>
                     {patient.ward} · Room {patient.room} · Bed {patient.bed}
                   </span>
@@ -377,7 +342,9 @@ function NurseDashboard() {
                   {patient.severity}
                 </span>
 
-                <Link to="/demo/nurse/patients">View</Link>
+                <Link to="/demo/nurse/patients">
+                  View
+                </Link>
               </div>
             ))}
           </div>
@@ -459,24 +426,48 @@ function DoctorDashboard() {
       <div className="demo-welcome">
         <div>
           <span className="demo-eyebrow">DOCTOR OVERVIEW</span>
-          <h1>Good morning, Doctor 👋</h1>
+
+          <h1>Good morning, Doctor</h1>
+
           <p>
             Review patient records, monitor health reports and communicate with
             patients through CareTrack.
           </p>
         </div>
 
-        <Link to="/demo/doctor/patients" className="demo-primary-button">
+        <Link
+          to="/demo/doctor/patients"
+          className="demo-primary-button"
+        >
           <Users size={18} />
           View Patients
         </Link>
       </div>
 
       <div className="demo-stats-grid">
-        <StatCard icon={Users} value="24" label="Total Patients" />
-        <StatCard icon={ClipboardList} value="18" label="Daily Reports" />
-        <StatCard icon={HeartPulse} value="21" label="Patient Vitals" />
-        <StatCard icon={Bell} value="5" label="Notifications" />
+        <StatCard
+          icon={Users}
+          value="24"
+          label="Total Patients"
+        />
+
+        <StatCard
+          icon={ClipboardList}
+          value="18"
+          label="Daily Reports"
+        />
+
+        <StatCard
+          icon={HeartPulse}
+          value="21"
+          label="Patient Vitals"
+        />
+
+        <StatCard
+          icon={Bell}
+          value="5"
+          label="Notifications"
+        />
       </div>
 
       <section className="demo-panel">
@@ -505,11 +496,13 @@ function DoctorDashboard() {
                       <div className="demo-avatar">
                         {patient.name.charAt(0)}
                       </div>
+
                       <strong>{patient.name}</strong>
                     </div>
                   </td>
 
                   <td>{patient.ward}</td>
+
                   <td>{patient.report}</td>
 
                   <td>
@@ -527,7 +520,9 @@ function DoctorDashboard() {
                   </td>
 
                   <td>
-                    <Link to="/demo/doctor/patients">View Patient</Link>
+                    <Link to="/demo/doctor/patients">
+                      View Patient
+                    </Link>
                   </td>
                 </tr>
               ))}
@@ -577,25 +572,51 @@ function AdminDashboard() {
     <>
       <div className="demo-welcome">
         <div>
-          <span className="demo-eyebrow">ADMINISTRATION OVERVIEW</span>
-          <h1>Welcome, Administrator 👋</h1>
+          <span className="demo-eyebrow">
+            ADMINISTRATION OVERVIEW
+          </span>
+
+          <h1>Welcome, Administrator</h1>
+
           <p>
             Manage CareTrack users, hospital resources, admissions and system
             activity.
           </p>
         </div>
 
-        <Link to="/demo/admin/settings" className="demo-primary-button">
+        <Link
+          to="/demo/admin/settings"
+          className="demo-primary-button"
+        >
           <Settings size={18} />
           System Settings
         </Link>
       </div>
 
       <div className="demo-stats-grid">
-        <StatCard icon={Users} value="148" label="Total Users" />
-        <StatCard icon={UserCheck} value="12" label="Pending Requests" />
-        <StatCard icon={Stethoscope} value="18" label="Doctors" />
-        <StatCard icon={HeartPulse} value="34" label="Nurses" />
+        <StatCard
+          icon={Users}
+          value="148"
+          label="Total Users"
+        />
+
+        <StatCard
+          icon={UserCheck}
+          value="12"
+          label="Pending Requests"
+        />
+
+        <StatCard
+          icon={Stethoscope}
+          value="18"
+          label="Doctors"
+        />
+
+        <StatCard
+          icon={HeartPulse}
+          value="34"
+          label="Nurses"
+        />
       </div>
 
       <div className="demo-two-column">
@@ -614,7 +635,9 @@ function AdminDashboard() {
                 <span>Doctor · ahmed@example.com</span>
               </div>
 
-              <span className="demo-pending">Pending</span>
+              <span className="demo-pending">
+                Pending
+              </span>
             </div>
 
             <div className="demo-request">
@@ -625,12 +648,18 @@ function AdminDashboard() {
                 <span>Nurse · maria@example.com</span>
               </div>
 
-              <span className="demo-pending">Pending</span>
+              <span className="demo-pending">
+                Pending
+              </span>
             </div>
           </div>
 
-          <Link to="/demo/admin/doctors" className="demo-panel-link">
-            Manage Staff <ArrowRight size={17} />
+          <Link
+            to="/demo/admin/doctors"
+            className="demo-panel-link"
+          >
+            Manage Staff
+            <ArrowRight size={17} />
           </Link>
         </section>
 
@@ -725,7 +754,10 @@ function DemoEmptyPage({
 }) {
   const prettyPage = page
     .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(
+      (word) =>
+        word.charAt(0).toUpperCase() + word.slice(1)
+    )
     .join(" ");
 
   return (
@@ -734,17 +766,22 @@ function DemoEmptyPage({
         <Search size={30} />
       </div>
 
-      <span className="demo-eyebrow">DEMO SECTION</span>
+      <span className="demo-eyebrow">
+        DEMO SECTION
+      </span>
 
       <h1>{prettyPage}</h1>
 
       <p>
         This is a preview of the {role}{" "}
-        {prettyPage.toLowerCase()} section. Demo mode uses sample information
-        only and does not change your Firebase data.
+        {prettyPage.toLowerCase()} section. Demo mode uses sample
+        information only and does not change your Firebase data.
       </p>
 
-      <Link to={`/demo/${role}`} className="demo-primary-button">
+      <Link
+        to={`/demo/${role}`}
+        className="demo-primary-button"
+      >
         <LayoutDashboard size={18} />
         Back to Dashboard
       </Link>
@@ -766,24 +803,30 @@ export default function DemoDashboard() {
       ? role
       : "patient";
 
-  const info = roleInfo[currentRole];
-  const RoleIcon = info.icon;
-
   const currentPage = useMemo(() => {
     const path = wildcard || "";
 
-    if (!path) return "dashboard";
+    if (!path) {
+      return "dashboard";
+    }
 
     return path.split("/")[0];
   }, [wildcard]);
 
-  const dashboardPath = `/demo/${currentRole}`;
-
   const renderContent = () => {
     if (currentPage === "dashboard") {
-      if (currentRole === "patient") return <PatientDashboard />;
-      if (currentRole === "nurse") return <NurseDashboard />;
-      if (currentRole === "doctor") return <DoctorDashboard />;
+      if (currentRole === "patient") {
+        return <PatientDashboard />;
+      }
+
+      if (currentRole === "nurse") {
+        return <NurseDashboard />;
+      }
+
+      if (currentRole === "doctor") {
+        return <DoctorDashboard />;
+      }
+
       return <AdminDashboard />;
     }
 
@@ -796,12 +839,14 @@ export default function DemoDashboard() {
   };
 
   return (
-    <div className={`demo-interface demo-role-${currentRole}`}>
+    <div
+      className={`demo-interface demo-role-${currentRole}`}
+    >
       <style>{`
         .demo-interface {
           min-height: 100vh;
-          background: #f5f7fb;
-          color: #172033;
+          background: #f4f8f8;
+          color: #173b3a;
           font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
@@ -812,7 +857,7 @@ export default function DemoDashboard() {
         .demo-topbar {
           height: 70px;
           background: #ffffff;
-          border-bottom: 1px solid #e7ebf2;
+          border-bottom: 1px solid #dfeceb;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -834,17 +879,18 @@ export default function DemoDashboard() {
           border-radius: 12px;
           display: grid;
           place-items: center;
-          background: #2563eb;
+          background: #0f766e;
           color: white;
         }
 
         .demo-brand strong {
           font-size: 18px;
           display: block;
+          color: #173b3a;
         }
 
         .demo-brand span {
-          color: #7b8496;
+          color: #78908f;
           font-size: 12px;
         }
 
@@ -855,9 +901,9 @@ export default function DemoDashboard() {
         }
 
         .demo-mode-badge {
-          background: #eef4ff;
-          color: #2563eb;
-          border: 1px solid #dbe7ff;
+          background: #e8f7f5;
+          color: #0f766e;
+          border: 1px solid #ccece8;
           border-radius: 999px;
           padding: 8px 13px;
           font-size: 12px;
@@ -869,8 +915,8 @@ export default function DemoDashboard() {
           align-items: center;
           gap: 7px;
           text-decoration: none;
-          color: #475569;
-          border: 1px solid #dfe4ec;
+          color: #536968;
+          border: 1px solid #dbe7e6;
           background: white;
           padding: 9px 13px;
           border-radius: 9px;
@@ -879,100 +925,25 @@ export default function DemoDashboard() {
         }
 
         .demo-exit:hover {
-          background: #f8fafc;
+          background: #f5fbfa;
+          color: #0f766e;
         }
 
-        .demo-layout {
-          display: flex;
-          min-height: calc(100vh - 70px);
-        }
-
-        .demo-sidebar {
-          width: 250px;
-          background: #ffffff;
-          border-right: 1px solid #e7ebf2;
-          padding: 22px 14px;
-          flex-shrink: 0;
-        }
-
-        .demo-role-card {
-          padding: 15px;
-          background: #f7f9fc;
-          border: 1px solid #e8edf4;
-          border-radius: 13px;
-          margin-bottom: 22px;
-          display: flex;
-          gap: 11px;
-          align-items: center;
-        }
-
-        .demo-role-icon {
-          width: 42px;
-          height: 42px;
-          border-radius: 11px;
-          display: grid;
-          place-items: center;
-          background: #eaf1ff;
-          color: #2563eb;
-        }
-
-        .demo-role-card strong {
-          display: block;
-          font-size: 13px;
-        }
-
-        .demo-role-card span {
-          display: block;
-          color: #7c8799;
-          font-size: 11px;
-          margin-top: 3px;
-        }
-
-        .demo-nav-label {
-          color: #98a1b2;
-          font-size: 10px;
-          font-weight: 800;
-          letter-spacing: .08em;
-          margin: 0 11px 9px;
-        }
-
-        .demo-nav {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .demo-nav a {
-          display: flex;
-          align-items: center;
-          gap: 11px;
-          padding: 11px 12px;
-          border-radius: 9px;
-          text-decoration: none;
-          color: #647084;
-          font-size: 13px;
-          font-weight: 600;
-        }
-
-        .demo-nav a:hover {
-          background: #f4f7fb;
-          color: #2563eb;
-        }
-
-        .demo-nav a.active {
-          background: #eef4ff;
-          color: #2563eb;
-        }
+        /*
+          No sidebar is rendered here.
+          The existing real system sidebar remains untouched.
+        */
 
         .demo-main {
-          flex: 1;
+          width: 100%;
           min-width: 0;
           padding: 30px;
           max-width: 1500px;
+          margin: 0 auto;
         }
 
         .demo-welcome {
-          background: linear-gradient(135deg, #1d4ed8, #2563eb);
+          background: linear-gradient(135deg, #0f766e, #0d9488);
           color: white;
           border-radius: 18px;
           padding: 28px;
@@ -981,14 +952,14 @@ export default function DemoDashboard() {
           align-items: center;
           gap: 20px;
           margin-bottom: 22px;
-          box-shadow: 0 12px 30px rgba(37, 99, 235, .15);
+          box-shadow: 0 12px 30px rgba(15, 118, 110, .16);
         }
 
         .demo-eyebrow {
           font-size: 10px;
           font-weight: 800;
           letter-spacing: .1em;
-          opacity: .8;
+          opacity: .82;
         }
 
         .demo-welcome h1 {
@@ -1000,7 +971,7 @@ export default function DemoDashboard() {
         .demo-welcome p {
           margin: 0;
           max-width: 650px;
-          color: rgba(255,255,255,.82);
+          color: rgba(255,255,255,.86);
           font-size: 14px;
           line-height: 1.6;
         }
@@ -1011,13 +982,17 @@ export default function DemoDashboard() {
           justify-content: center;
           gap: 8px;
           background: white;
-          color: #1d4ed8;
+          color: #0f766e;
           text-decoration: none;
           padding: 11px 16px;
           border-radius: 10px;
           font-size: 13px;
           font-weight: 800;
           white-space: nowrap;
+        }
+
+        .demo-primary-button:hover {
+          background: #f0fdfa;
         }
 
         .demo-stats-grid {
@@ -1029,7 +1004,7 @@ export default function DemoDashboard() {
 
         .demo-stat-card {
           background: white;
-          border: 1px solid #e8edf4;
+          border: 1px solid #dfeceb;
           border-radius: 14px;
           padding: 18px;
           display: flex;
@@ -1043,22 +1018,22 @@ export default function DemoDashboard() {
           display: grid;
           place-items: center;
           border-radius: 11px;
-          background: #eef4ff;
-          color: #2563eb;
+          background: #e8f7f5;
+          color: #0f766e;
           flex-shrink: 0;
         }
 
         .demo-stat-card strong {
           display: block;
           font-size: 20px;
-          color: #172033;
+          color: #173b3a;
         }
 
         .demo-stat-card span {
           display: block;
           margin-top: 3px;
           font-size: 11px;
-          color: #7b8496;
+          color: #78908f;
         }
 
         .demo-two-column {
@@ -1070,7 +1045,7 @@ export default function DemoDashboard() {
 
         .demo-panel {
           background: white;
-          border: 1px solid #e8edf4;
+          border: 1px solid #dfeceb;
           border-radius: 15px;
           padding: 21px;
           margin-bottom: 22px;
@@ -1083,12 +1058,12 @@ export default function DemoDashboard() {
         .demo-section-title h2 {
           margin: 0;
           font-size: 17px;
-          color: #172033;
+          color: #173b3a;
         }
 
         .demo-section-title p {
           margin: 5px 0 0;
-          color: #7c8799;
+          color: #78908f;
           font-size: 12px;
         }
 
@@ -1099,7 +1074,7 @@ export default function DemoDashboard() {
         }
 
         .demo-info-grid > div {
-          background: #f8fafc;
+          background: #f4f9f8;
           border-radius: 10px;
           padding: 14px;
         }
@@ -1107,12 +1082,13 @@ export default function DemoDashboard() {
         .demo-info-grid span {
           display: block;
           font-size: 11px;
-          color: #8791a3;
+          color: #829695;
           margin-bottom: 6px;
         }
 
         .demo-info-grid strong {
           font-size: 13px;
+          color: #294846;
         }
 
         .demo-action-list {
@@ -1128,8 +1104,12 @@ export default function DemoDashboard() {
           padding: 13px;
           border-radius: 10px;
           text-decoration: none;
-          color: #2563eb;
-          background: #f7f9fc;
+          color: #0f766e;
+          background: #f4f9f8;
+        }
+
+        .demo-action-list a:hover {
+          background: #eaf7f5;
         }
 
         .demo-action-list a > div {
@@ -1143,12 +1123,12 @@ export default function DemoDashboard() {
 
         .demo-action-list strong {
           font-size: 12px;
-          color: #263247;
+          color: #294846;
         }
 
         .demo-action-list span {
           margin-top: 3px;
-          color: #8791a3;
+          color: #829695;
           font-size: 11px;
         }
 
@@ -1160,28 +1140,29 @@ export default function DemoDashboard() {
 
         .demo-quick-grid a {
           text-decoration: none;
-          color: #2563eb;
-          border: 1px solid #e9edf3;
+          color: #0f766e;
+          border: 1px solid #e0eceb;
           border-radius: 12px;
           padding: 16px;
           transition: .2s ease;
         }
 
         .demo-quick-grid a:hover {
-          border-color: #b9cdfc;
+          border-color: #9ed8d2;
+          background: #fbfefe;
           transform: translateY(-2px);
         }
 
         .demo-quick-grid strong {
           display: block;
-          color: #263247;
+          color: #294846;
           font-size: 13px;
           margin-top: 12px;
         }
 
         .demo-quick-grid span {
           display: block;
-          color: #8791a3;
+          color: #829695;
           font-size: 11px;
           margin-top: 4px;
           line-height: 1.5;
@@ -1198,7 +1179,7 @@ export default function DemoDashboard() {
           align-items: center;
           gap: 11px;
           padding: 11px;
-          background: #f8fafc;
+          background: #f5f9f8;
           border-radius: 10px;
         }
 
@@ -1208,8 +1189,8 @@ export default function DemoDashboard() {
           border-radius: 50%;
           display: grid;
           place-items: center;
-          background: #e8f0ff;
-          color: #2563eb;
+          background: #e3f4f2;
+          color: #0f766e;
           font-size: 12px;
           font-weight: 800;
           flex-shrink: 0;
@@ -1227,10 +1208,11 @@ export default function DemoDashboard() {
 
         .demo-patient-main strong {
           font-size: 12px;
+          color: #294846;
         }
 
         .demo-patient-main span {
-          color: #8791a3;
+          color: #829695;
           font-size: 10px;
           margin-top: 3px;
         }
@@ -1238,10 +1220,16 @@ export default function DemoDashboard() {
         .demo-patient-row > a,
         .demo-table a,
         .demo-panel-link {
-          color: #2563eb;
+          color: #0f766e;
           text-decoration: none;
           font-size: 11px;
           font-weight: 700;
+        }
+
+        .demo-patient-row > a:hover,
+        .demo-table a:hover,
+        .demo-panel-link:hover {
+          color: #0b5f59;
         }
 
         .demo-severity {
@@ -1277,20 +1265,21 @@ export default function DemoDashboard() {
           display: flex;
           align-items: center;
           gap: 10px;
-          background: #f8fafc;
+          background: #f5f9f8;
           padding: 12px;
           border-radius: 9px;
-          color: #2563eb;
+          color: #0f766e;
         }
 
         .demo-task-list span {
           flex: 1;
-          color: #4d586b;
+          color: #526a68;
           font-size: 11px;
         }
 
         .demo-task-list strong {
           font-size: 12px;
+          color: #294846;
         }
 
         .demo-table-wrap {
@@ -1306,17 +1295,17 @@ export default function DemoDashboard() {
         .demo-table th {
           text-align: left;
           padding: 11px;
-          color: #8791a3;
+          color: #829695;
           font-size: 10px;
           font-weight: 800;
-          border-bottom: 1px solid #edf0f4;
+          border-bottom: 1px solid #e7efee;
         }
 
         .demo-table td {
           padding: 13px 11px;
-          border-bottom: 1px solid #f0f2f5;
+          border-bottom: 1px solid #edf2f1;
           font-size: 11px;
-          color: #596477;
+          color: #607573;
         }
 
         .demo-table-person {
@@ -1326,7 +1315,7 @@ export default function DemoDashboard() {
         }
 
         .demo-table-person strong {
-          color: #263247;
+          color: #294846;
           font-size: 12px;
         }
 
@@ -1340,7 +1329,7 @@ export default function DemoDashboard() {
           display: flex;
           align-items: center;
           gap: 11px;
-          background: #f8fafc;
+          background: #f5f9f8;
           border-radius: 10px;
           padding: 12px;
         }
@@ -1356,10 +1345,11 @@ export default function DemoDashboard() {
 
         .demo-request strong {
           font-size: 12px;
+          color: #294846;
         }
 
         .demo-request div span {
-          color: #8791a3;
+          color: #829695;
           font-size: 10px;
           margin-top: 3px;
         }
@@ -1387,27 +1377,27 @@ export default function DemoDashboard() {
         }
 
         .demo-admin-grid > div {
-          border: 1px solid #edf0f4;
+          border: 1px solid #e2eceb;
           border-radius: 10px;
           padding: 14px;
-          color: #2563eb;
+          color: #0f766e;
         }
 
         .demo-admin-grid strong {
           display: block;
-          color: #263247;
+          color: #294846;
           font-size: 18px;
           margin-top: 7px;
         }
 
         .demo-admin-grid span {
-          color: #8791a3;
+          color: #829695;
           font-size: 10px;
         }
 
         .demo-empty-page {
           background: white;
-          border: 1px solid #e8edf4;
+          border: 1px solid #dfeceb;
           border-radius: 18px;
           padding: 70px 30px;
           text-align: center;
@@ -1421,22 +1411,23 @@ export default function DemoDashboard() {
           margin: 0 auto 20px;
           display: grid;
           place-items: center;
-          background: #eef4ff;
-          color: #2563eb;
+          background: #e8f7f5;
+          color: #0f766e;
           border-radius: 17px;
         }
 
         .demo-empty-page .demo-eyebrow {
-          color: #2563eb;
+          color: #0f766e;
         }
 
         .demo-empty-page h1 {
           margin: 9px 0;
           font-size: 27px;
+          color: #173b3a;
         }
 
         .demo-empty-page p {
-          color: #7c8799;
+          color: #78908f;
           max-width: 560px;
           margin: 0 auto 25px;
           line-height: 1.7;
@@ -1444,16 +1435,16 @@ export default function DemoDashboard() {
         }
 
         .demo-empty-page .demo-primary-button {
-          background: #2563eb;
+          background: #0f766e;
           color: white;
           display: inline-flex;
         }
 
-        @media (max-width: 1050px) {
-          .demo-sidebar {
-            width: 215px;
-          }
+        .demo-empty-page .demo-primary-button:hover {
+          background: #0b625c;
+        }
 
+        @media (max-width: 1050px) {
           .demo-stats-grid {
             grid-template-columns: repeat(2, 1fr);
           }
@@ -1470,30 +1461,6 @@ export default function DemoDashboard() {
 
           .demo-mode-badge {
             display: none;
-          }
-
-          .demo-layout {
-            display: block;
-          }
-
-          .demo-sidebar {
-            width: 100%;
-            border-right: 0;
-            border-bottom: 1px solid #e7ebf2;
-            padding: 12px;
-          }
-
-          .demo-role-card {
-            margin-bottom: 10px;
-          }
-
-          .demo-nav {
-            flex-direction: row;
-            overflow-x: auto;
-          }
-
-          .demo-nav a {
-            white-space: nowrap;
           }
 
           .demo-main {
@@ -1533,10 +1500,6 @@ export default function DemoDashboard() {
           .demo-topbar {
             height: 62px;
           }
-
-          .demo-layout {
-            min-height: calc(100vh - 62px);
-          }
         }
       `}</style>
 
@@ -1548,12 +1511,16 @@ export default function DemoDashboard() {
 
           <div>
             <strong>CareTrack</strong>
-            <span>Smart Patient Self-Monitoring System</span>
+            <span>
+              Smart Patient Self-Monitoring System
+            </span>
           </div>
         </div>
 
         <div className="demo-top-actions">
-          <span className="demo-mode-badge">DEMO MODE · NO FIREBASE CHANGES</span>
+          <span className="demo-mode-badge">
+            DEMO MODE · NO FIREBASE CHANGES
+          </span>
 
           <Link to="/demo" className="demo-exit">
             <LogOut size={16} />
@@ -1562,49 +1529,9 @@ export default function DemoDashboard() {
         </div>
       </header>
 
-      <div className="demo-layout">
-        <aside className="demo-sidebar">
-          <div className="demo-role-card">
-            <div className="demo-role-icon">
-              <RoleIcon size={20} />
-            </div>
-
-            <div>
-              <strong>{info.title}</strong>
-              <span>Interactive Demo</span>
-            </div>
-          </div>
-
-          <div className="demo-nav-label">NAVIGATION</div>
-
-          <nav className="demo-nav">
-            {navItems[currentRole].map((item) => {
-              const Icon = item.icon;
-              const target = item.path
-                ? `${dashboardPath}/${item.path}`
-                : dashboardPath;
-
-              const isActive =
-                item.path === ""
-                  ? currentPage === "dashboard"
-                  : currentPage === item.path;
-
-              return (
-                <Link
-                  key={item.label}
-                  to={target}
-                  className={isActive ? "active" : ""}
-                >
-                  <Icon size={17} />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </aside>
-
-        <main className="demo-main">{renderContent()}</main>
-      </div>
+      <main className="demo-main">
+        {renderContent()}
+      </main>
     </div>
   );
 }

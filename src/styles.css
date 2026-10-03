@@ -5144,3 +5144,332 @@
     flex-shrink: 0;
   }
 }
+/* =========================================
+CARETRACK ACCESSIBILITY MODE
+========================================= */
+
+html[data-caretrack-text-size="small"] {
+font-size: 90%;
+}
+
+html[data-caretrack-text-size="default"] {
+font-size: 100%;
+}
+
+html[data-caretrack-text-size="large"] {
+font-size: 112%;
+}
+
+html[data-caretrack-text-size="extra-large"] {
+font-size: 125%;
+}
+
+/* HIGH CONTRAST */
+
+html[data-caretrack-high-contrast="true"] {
+--caretrack-text: #071c2d;
+--caretrack-muted: #304b5e;
+--caretrack-border: #7b8d99;
+--caretrack-background: #ffffff;
+}
+
+html[data-caretrack-high-contrast="true"] body {
+color: #071c2d;
+background: #ffffff;
+}
+
+html[data-caretrack-high-contrast="true"] button,
+html[data-caretrack-high-contrast="true"] input,
+html[data-caretrack-high-contrast="true"] textarea,
+html[data-caretrack-high-contrast="true"] select {
+border-color: #647985 !important;
+}
+
+/* REDUCE MOTION */
+
+html[data-caretrack-reduce-motion="true"],
+html[data-caretrack-reduce-motion="true"] *,
+html[data-caretrack-reduce-motion="true"] *::before,
+html[data-caretrack-reduce-motion="true"] *::after {
+animation-duration: 0.01ms !important;
+animation-iteration-count: 1 !important;
+transition-duration: 0.01ms !important;
+scroll-behavior: auto !important;
+}
+
+/* COMFORTABLE SPACING */
+
+html[data-caretrack-spacing="true"] button {
+min-height: 40px;
+}
+
+html[data-caretrack-spacing="true"] input,
+html[data-caretrack-spacing="true"] textarea,
+html[data-caretrack-spacing="true"] select {
+min-height: 40px;
+}
+
+html[data-caretrack-spacing="true"] .nav-item {
+margin-bottom: 5px;
+}
+
+/* KEYBOARD FOCUS */
+
+html[data-caretrack-high-contrast="true"] button:focus-visible,
+html[data-caretrack-high-contrast="true"] input:focus-visible,
+html[data-caretrack-high-contrast="true"] textarea:focus-visible,
+html[data-caretrack-high-contrast="true"] select:focus-visible,
+html[data-caretrack-high-contrast="true"] a:focus-visible {
+outline: 3px solid #087b83 !important;
+outline-offset: 2px;
+}
+/* =========================================================
+   CARETRACK GLOBAL ACCESSIBILITY SYSTEM
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   FONT FAMILY
+   --------------------------------------------------------- */
+
+html[data-caretrack-font="default"] body,
+html[data-caretrack-font="default"] body * {
+  font-family: inherit;
+}
+
+html[data-caretrack-font="arial"] body,
+html[data-caretrack-font="arial"] body * {
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+html[data-caretrack-font="verdana"] body,
+html[data-caretrack-font="verdana"] body * {
+  font-family: Verdana, Geneva, sans-serif !important;
+}
+
+html[data-caretrack-font="georgia"] body,
+html[data-caretrack-font="georgia"] body * {
+  font-family: Georgia, "Times New Roman", serif !important;
+}
+
+/* ---------------------------------------------------------
+   TEXT SIZE
+   --------------------------------------------------------- */
+
+html[data-caretrack-text-size="small"] body {
+  font-size: 14px;
+}
+
+html[data-caretrack-text-size="default"] body {
+  font-size: 16px;
+}
+
+html[data-caretrack-text-size="large"] body {
+  font-size: 18px;
+}
+
+html[data-caretrack-text-size="extra-large"] body {
+  font-size: 20px;
+}
+
+/* Main readable text elements */
+html[data-caretrack-text-size="small"] body
+  :is(p, label, span, li, td, th, a, input, textarea, select, button) {
+  font-size: 0.92em;
+}
+
+html[data-caretrack-text-size="large"] body
+  :is(p, label, li, td, th, a, input, textarea, select) {
+  font-size: 1.12em;
+}
+
+html[data-caretrack-text-size="extra-large"] body
+  :is(p, label, li, td, th, a, input, textarea, select) {
+  font-size: 1.22em;
+}
+
+/* ---------------------------------------------------------
+   DARK THEME — GLOBAL
+   --------------------------------------------------------- */
+
+html[data-caretrack-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-caretrack-theme="dark"] body {
+  background: #0f1f2d !important;
+  color: #e8f0f4 !important;
+}
+
+/* Main structural areas */
+html[data-caretrack-theme="dark"] main,
+html[data-caretrack-theme="dark"] section,
+html[data-caretrack-theme="dark"] article {
+  color: #e8f0f4;
+}
+
+/* Common CareTrack surfaces */
+html[data-caretrack-theme="dark"] .card,
+html[data-caretrack-theme="dark"] .dashboard-card,
+html[data-caretrack-theme="dark"] .stat-card,
+html[data-caretrack-theme="dark"] .info-card,
+html[data-caretrack-theme="dark"] .content-card,
+html[data-caretrack-theme="dark"] .panel,
+html[data-caretrack-theme="dark"] .table-card,
+html[data-caretrack-theme="dark"] .form-card,
+html[data-caretrack-theme="dark"] .auth-card,
+html[data-caretrack-theme="dark"] .modal,
+html[data-caretrack-theme="dark"] .dropdown,
+html[data-caretrack-theme="dark"] .notification-card {
+  background: #172b3a !important;
+  color: #e8f0f4 !important;
+  border-color: #304958 !important;
+}
+
+/* Sidebar / dashboard layout */
+html[data-caretrack-theme="dark"] aside,
+html[data-caretrack-theme="dark"] nav,
+html[data-caretrack-theme="dark"] header {
+  border-color: #304958 !important;
+}
+
+/* Text */
+html[data-caretrack-theme="dark"] h1,
+html[data-caretrack-theme="dark"] h2,
+html[data-caretrack-theme="dark"] h3,
+html[data-caretrack-theme="dark"] h4,
+html[data-caretrack-theme="dark"] h5,
+html[data-caretrack-theme="dark"] h6,
+html[data-caretrack-theme="dark"] p,
+html[data-caretrack-theme="dark"] span,
+html[data-caretrack-theme="dark"] label,
+html[data-caretrack-theme="dark"] li,
+html[data-caretrack-theme="dark"] td,
+html[data-caretrack-theme="dark"] th {
+  color: #e8f0f4;
+}
+
+/* Muted text */
+html[data-caretrack-theme="dark"] .muted,
+html[data-caretrack-theme="dark"] .secondary,
+html[data-caretrack-theme="dark"] .description,
+html[data-caretrack-theme="dark"] small {
+  color: #aebfc9 !important;
+}
+
+/* Links */
+html[data-caretrack-theme="dark"] a {
+  color: #72cfd0;
+}
+
+/* Inputs */
+html[data-caretrack-theme="dark"] input,
+html[data-caretrack-theme="dark"] textarea,
+html[data-caretrack-theme="dark"] select {
+  background: #122431 !important;
+  color: #edf5f7 !important;
+  border-color: #405765 !important;
+}
+
+html[data-caretrack-theme="dark"] input::placeholder,
+html[data-caretrack-theme="dark"] textarea::placeholder {
+  color: #91a5b0 !important;
+}
+
+/* Tables */
+html[data-caretrack-theme="dark"] table {
+  color: #e8f0f4;
+}
+
+html[data-caretrack-theme="dark"] th {
+  background: #203747 !important;
+  color: #ffffff !important;
+}
+
+html[data-caretrack-theme="dark"] td {
+  border-color: #304958 !important;
+}
+
+/* Buttons */
+html[data-caretrack-theme="dark"] button {
+  border-color: #405765;
+}
+
+/* ---------------------------------------------------------
+   HIGH CONTRAST
+   --------------------------------------------------------- */
+
+html[data-caretrack-high-contrast="true"] body {
+  color: #111111 !important;
+}
+
+html[data-caretrack-high-contrast="true"] body * {
+  border-color: #1d1d1d !important;
+}
+
+html[data-caretrack-high-contrast="true"] a {
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+html[data-caretrack-high-contrast="true"] button,
+html[data-caretrack-high-contrast="true"] input,
+html[data-caretrack-high-contrast="true"] textarea,
+html[data-caretrack-high-contrast="true"] select {
+  outline-offset: 2px;
+}
+
+html[data-caretrack-high-contrast="true"] button:focus-visible,
+html[data-caretrack-high-contrast="true"] a:focus-visible,
+html[data-caretrack-high-contrast="true"] input:focus-visible,
+html[data-caretrack-high-contrast="true"] textarea:focus-visible,
+html[data-caretrack-high-contrast="true"] select:focus-visible {
+  outline: 3px solid #087b83 !important;
+}
+
+/* Dark + High Contrast */
+html[data-caretrack-theme="dark"][data-caretrack-high-contrast="true"] body {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+html[data-caretrack-theme="dark"][data-caretrack-high-contrast="true"] .card,
+html[data-caretrack-theme="dark"][data-caretrack-high-contrast="true"] .dashboard-card,
+html[data-caretrack-theme="dark"][data-caretrack-high-contrast="true"] .stat-card,
+html[data-caretrack-theme="dark"][data-caretrack-high-contrast="true"] .content-card,
+html[data-caretrack-theme="dark"][data-caretrack-high-contrast="true"] .panel {
+  background: #111111 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+/* ---------------------------------------------------------
+   COMFORTABLE SPACING
+   --------------------------------------------------------- */
+
+html[data-caretrack-spacing="true"] body
+  :is(p, li, label, td, th) {
+  line-height: 1.7;
+}
+
+html[data-caretrack-spacing="true"] body
+  :is(.card, .dashboard-card, .stat-card, .content-card, .panel) {
+  padding: 1.25rem !important;
+}
+
+html[data-caretrack-spacing="true"] body
+  :is(button, input, select, textarea) {
+  min-height: 44px;
+}
+
+/* ---------------------------------------------------------
+   REDUCE MOTION
+   --------------------------------------------------------- */
+
+html[data-caretrack-reduce-motion="true"] *,
+html[data-caretrack-reduce-motion="true"] *::before,
+html[data-caretrack-reduce-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}

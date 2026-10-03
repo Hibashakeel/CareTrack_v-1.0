@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from "react";
 import { get, ref, update } from "firebase/database";
 import {
@@ -9,7 +10,6 @@ import {
   Stethoscope,
   UserCheck,
   UserRound,
-  Users,
   XCircle,
 } from "lucide-react";
 
@@ -22,10 +22,7 @@ interface StaffUser {
   phone: string;
   role: "nurse" | "doctor";
   active: boolean;
-  approvalStatus:
-    | "approved"
-    | "pending"
-    | "rejected";
+  approvalStatus: "approved" | "pending" | "rejected";
   createdAt?: number;
 }
 
@@ -41,9 +38,7 @@ export default function AdminDashboard() {
       setLoading(true);
       setError("");
 
-      const snapshot = await get(
-        ref(db, "users")
-      );
+      const snapshot = await get(ref(db, "users"));
 
       if (!snapshot.exists()) {
         setUsers([]);
@@ -52,31 +47,23 @@ export default function AdminDashboard() {
 
       const data = snapshot.val();
 
-      const staffUsers: StaffUser[] =
-        Object.entries(data)
-          .map(
-            ([uid, value]: [string, any]) => ({
-              uid,
-              ...value,
-            })
-          )
-          .filter(
-            (user) =>
-              (user.role === "nurse" ||
-                user.role === "doctor") &&
-              user.approvalStatus === "pending"
-          );
+      const staffUsers: StaffUser[] = Object.entries(data)
+        .map(([uid, value]: [string, any]) => ({
+          uid,
+          ...value,
+        }))
+        .filter(
+          (user) =>
+            (user.role === "nurse" || user.role === "doctor") &&
+            user.approvalStatus === "pending"
+        );
 
       setUsers(staffUsers);
     } catch (err: any) {
-      console.error(
-        "Failed to load staff:",
-        err
-      );
+      console.error("Failed to load staff:", err);
 
       setError(
-        err?.message ||
-          "Unable to load pending registrations."
+        err?.message || "Unable to load pending registrations."
       );
     } finally {
       setLoading(false);
@@ -91,28 +78,19 @@ export default function AdminDashboard() {
     try {
       setProcessing(uid);
 
-      await update(
-        ref(db, `users/${uid}`),
-        {
-          active: true,
-          approvalStatus: "approved",
-        }
-      );
+      await update(ref(db, `users/${uid}`), {
+        active: true,
+        approvalStatus: "approved",
+      });
 
       setUsers((current) =>
-        current.filter(
-          (user) => user.uid !== uid
-        )
+        current.filter((user) => user.uid !== uid)
       );
     } catch (err: any) {
-      console.error(
-        "Approval failed:",
-        err
-      );
+      console.error("Approval failed:", err);
 
       setError(
-        err?.message ||
-          "Unable to approve account."
+        err?.message || "Unable to approve account."
       );
     } finally {
       setProcessing("");
@@ -123,28 +101,19 @@ export default function AdminDashboard() {
     try {
       setProcessing(uid);
 
-      await update(
-        ref(db, `users/${uid}`),
-        {
-          active: false,
-          approvalStatus: "rejected",
-        }
-      );
+      await update(ref(db, `users/${uid}`), {
+        active: false,
+        approvalStatus: "rejected",
+      });
 
       setUsers((current) =>
-        current.filter(
-          (user) => user.uid !== uid
-        )
+        current.filter((user) => user.uid !== uid)
       );
     } catch (err: any) {
-      console.error(
-        "Rejection failed:",
-        err
-      );
+      console.error("Rejection failed:", err);
 
       setError(
-        err?.message ||
-          "Unable to reject account."
+        err?.message || "Unable to reject account."
       );
     } finally {
       setProcessing("");
@@ -152,9 +121,7 @@ export default function AdminDashboard() {
   }
 
   const filteredUsers = useMemo(() => {
-    const term = search
-      .toLowerCase()
-      .trim();
+    const term = search.toLowerCase().trim();
 
     if (!term) {
       return users;
@@ -162,32 +129,26 @@ export default function AdminDashboard() {
 
     return users.filter(
       (user) =>
-        user.fullName
-          .toLowerCase()
-          .includes(term) ||
-        user.email
-          .toLowerCase()
-          .includes(term) ||
-        user.role
-          .toLowerCase()
-          .includes(term)
+        user.fullName.toLowerCase().includes(term) ||
+        user.email.toLowerCase().includes(term) ||
+        user.role.toLowerCase().includes(term)
     );
   }, [users, search]);
 
-  const nurseCount =
-    users.filter(
-      (user) => user.role === "nurse"
-    ).length;
+  const nurseCount = users.filter(
+    (user) => user.role === "nurse"
+  ).length;
 
-  const doctorCount =
-    users.filter(
-      (user) => user.role === "doctor"
-    ).length;
+  const doctorCount = users.filter(
+    (user) => user.role === "doctor"
+  ).length;
 
   return (
     <div className="admin-dashboard-page">
-
       <style>{`
+        /* =========================================================
+           ADMIN DASHBOARD
+           ========================================================= */
 
         .admin-dashboard-page {
           width: 100%;
@@ -197,7 +158,7 @@ export default function AdminDashboard() {
           color: #172033;
         }
 
-        /* PAGE INTRO */
+        /* ================= PAGE INTRO ================= */
 
         .admin-page-heading {
           display: flex;
@@ -217,8 +178,8 @@ export default function AdminDashboard() {
           width: 52px;
           height: 52px;
           border-radius: 15px;
-          background: #eaf2ff;
-          color: #2563eb;
+          background: #e8f5f5;
+          color: #087b83;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -230,11 +191,12 @@ export default function AdminDashboard() {
           font-size: 27px;
           font-weight: 800;
           letter-spacing: -0.5px;
+          color: #17324d;
         }
 
         .admin-heading-text p {
           margin: 5px 0 0;
-          color: #64748b;
+          color: #718493;
           font-size: 14px;
         }
 
@@ -245,47 +207,65 @@ export default function AdminDashboard() {
           gap: 8px;
           padding: 0 15px;
           border-radius: 11px;
-          border: 1px solid #dbe3ee;
+          border: 1px solid #dbe5ea;
           background: white;
-          color: #334155;
+          color: #334d61;
           font-weight: 700;
           cursor: pointer;
+          transition: 0.2s ease;
         }
 
         .admin-refresh:hover {
-          background: #f8fafc;
+          background: #f5fafb;
+          border-color: #bfd9dc;
         }
 
-        /* HERO */
+        /* =========================================================
+           CARETRACK THEME WELCOME CARD
+           ========================================================= */
 
         .admin-welcome {
           border-radius: 20px;
           padding: 26px 28px;
           margin-bottom: 22px;
           color: white;
+
           background:
             linear-gradient(
               135deg,
-              #1d4ed8 0%,
-              #2563eb 55%,
-              #0284c7 100%
+              #17324d 0%,
+              #214b63 58%,
+              #087b83 100%
             );
+
           position: relative;
           overflow: hidden;
+
           box-shadow:
             0 12px 30px
-            rgba(37, 99, 235, 0.18);
+            rgba(23, 50, 77, 0.16);
+        }
+
+        .admin-welcome::before {
+          content: "";
+          position: absolute;
+          width: 240px;
+          height: 240px;
+          border-radius: 50%;
+          right: -80px;
+          top: -100px;
+          background: rgba(255, 255, 255, 0.055);
         }
 
         .admin-welcome::after {
           content: "";
           position: absolute;
-          width: 190px;
-          height: 190px;
+          width: 150px;
+          height: 150px;
           border-radius: 50%;
-          right: -60px;
-          top: -75px;
-          background: rgba(255,255,255,0.08);
+          right: 120px;
+          bottom: -100px;
+          background: rgba(20, 154, 156, 0.12);
         }
 
         .admin-welcome-content {
@@ -299,7 +279,8 @@ export default function AdminDashboard() {
           gap: 7px;
           padding: 6px 10px;
           border-radius: 999px;
-          background: rgba(255,255,255,0.15);
+          background: rgba(255, 255, 255, 0.11);
+          border: 1px solid rgba(255, 255, 255, 0.12);
           font-size: 11px;
           font-weight: 800;
           text-transform: uppercase;
@@ -310,29 +291,29 @@ export default function AdminDashboard() {
           margin: 12px 0 5px;
           font-size: 23px;
           font-weight: 800;
+          color: #ffffff;
         }
 
         .admin-welcome p {
           margin: 0;
           max-width: 650px;
-          color: rgba(255,255,255,0.84);
+          color: rgba(255, 255, 255, 0.82);
           font-size: 13px;
           line-height: 1.6;
         }
 
-        /* STATS */
+        /* ================= STATS ================= */
 
         .admin-stats {
           display: grid;
-          grid-template-columns:
-            repeat(3, minmax(0, 1fr));
+          grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 16px;
           margin-bottom: 22px;
         }
 
         .admin-stat {
           background: white;
-          border: 1px solid #e7edf5;
+          border: 1px solid #e2ebef;
           border-radius: 17px;
           padding: 19px;
           display: flex;
@@ -340,7 +321,7 @@ export default function AdminDashboard() {
           gap: 14px;
           box-shadow:
             0 5px 20px
-            rgba(15,23,42,0.035);
+            rgba(23, 50, 77, 0.035);
         }
 
         .admin-stat-icon {
@@ -355,22 +336,22 @@ export default function AdminDashboard() {
 
         .admin-stat-icon.pending {
           background: #fff7ed;
-          color: #ea580c;
+          color: #d97706;
         }
 
         .admin-stat-icon.nurse {
-          background: #ecfeff;
-          color: #0891b2;
+          background: #eaf8f8;
+          color: #087b83;
         }
 
         .admin-stat-icon.doctor {
-          background: #f3e8ff;
-          color: #7c3aed;
+          background: #edf5fa;
+          color: #3f6f8f;
         }
 
         .admin-stat-label {
           margin: 0;
-          color: #64748b;
+          color: #718493;
           font-size: 12px;
           font-weight: 700;
         }
@@ -379,24 +360,24 @@ export default function AdminDashboard() {
           margin: 3px 0 0;
           font-size: 24px;
           font-weight: 800;
-          color: #172033;
+          color: #17324d;
         }
 
-        /* APPROVAL CARD */
+        /* ================= APPROVAL CARD ================= */
 
         .admin-approval-card {
           background: white;
-          border: 1px solid #e7edf5;
+          border: 1px solid #e2ebef;
           border-radius: 20px;
           overflow: hidden;
           box-shadow:
             0 7px 25px
-            rgba(15,23,42,0.04);
+            rgba(23, 50, 77, 0.04);
         }
 
         .admin-card-header {
           padding: 21px 23px;
-          border-bottom: 1px solid #edf1f6;
+          border-bottom: 1px solid #edf2f4;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -413,8 +394,8 @@ export default function AdminDashboard() {
           width: 41px;
           height: 41px;
           border-radius: 12px;
-          background: #eff6ff;
-          color: #2563eb;
+          background: #e8f5f5;
+          color: #087b83;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -424,11 +405,12 @@ export default function AdminDashboard() {
           margin: 0;
           font-size: 17px;
           font-weight: 800;
+          color: #17324d;
         }
 
         .admin-card-title p {
           margin: 4px 0 0;
-          color: #64748b;
+          color: #718493;
           font-size: 12px;
         }
 
@@ -443,12 +425,12 @@ export default function AdminDashboard() {
           white-space: nowrap;
         }
 
-        /* SEARCH */
+        /* ================= SEARCH ================= */
 
         .admin-search-area {
           padding: 15px 23px;
-          background: #fafbfd;
-          border-bottom: 1px solid #edf1f6;
+          background: #fafcfd;
+          border-bottom: 1px solid #edf2f4;
         }
 
         .admin-search {
@@ -461,28 +443,30 @@ export default function AdminDashboard() {
           left: 13px;
           top: 50%;
           transform: translateY(-50%);
-          color: #94a3b8;
+          color: #94a5ae;
         }
 
         .admin-search input {
           width: 100%;
           height: 41px;
-          border: 1px solid #dbe3ed;
+          border: 1px solid #dbe5ea;
           border-radius: 10px;
           outline: none;
           padding: 0 13px 0 39px;
           font-size: 13px;
           background: white;
+          color: #29445a;
+          box-sizing: border-box;
         }
 
         .admin-search input:focus {
-          border-color: #60a5fa;
+          border-color: #5aa9ad;
           box-shadow:
             0 0 0 3px
-            rgba(37,99,235,0.08);
+            rgba(8, 123, 131, 0.08);
         }
 
-        /* USERS */
+        /* ================= USERS ================= */
 
         .admin-users {
           padding: 18px 23px 23px;
@@ -491,21 +475,21 @@ export default function AdminDashboard() {
         }
 
         .admin-user-card {
-          border: 1px solid #e5eaf1;
+          border: 1px solid #e2ebef;
           border-radius: 15px;
           padding: 16px;
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 18px;
-          transition: 0.2s;
+          transition: 0.2s ease;
         }
 
         .admin-user-card:hover {
-          border-color: #bfdbfe;
+          border-color: #bcdadd;
           box-shadow:
             0 7px 20px
-            rgba(37,99,235,0.06);
+            rgba(8, 123, 131, 0.06);
         }
 
         .admin-user-info {
@@ -520,8 +504,8 @@ export default function AdminDashboard() {
           height: 46px;
           min-width: 46px;
           border-radius: 13px;
-          background: #eff6ff;
-          color: #2563eb;
+          background: #edf5f7;
+          color: #087b83;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -531,17 +515,18 @@ export default function AdminDashboard() {
           margin: 0;
           font-size: 14px;
           font-weight: 800;
+          color: #20394f;
         }
 
         .admin-user-email {
           margin: 4px 0 0;
-          color: #64748b;
+          color: #647b89;
           font-size: 12px;
         }
 
         .admin-user-phone {
           margin: 3px 0 0;
-          color: #94a3b8;
+          color: #94a5ae;
           font-size: 11px;
         }
 
@@ -558,13 +543,13 @@ export default function AdminDashboard() {
         }
 
         .admin-role.nurse {
-          background: #ecfeff;
-          color: #0e7490;
+          background: #eaf8f8;
+          color: #087b83;
         }
 
         .admin-role.doctor {
-          background: #f3e8ff;
-          color: #7c3aed;
+          background: #edf5fa;
+          color: #3f6f8f;
         }
 
         .admin-actions {
@@ -588,12 +573,12 @@ export default function AdminDashboard() {
         }
 
         .admin-approve {
-          background: #16a34a;
+          background: #168b72;
           color: white;
         }
 
         .admin-approve:hover {
-          background: #15803d;
+          background: #11745f;
         }
 
         .admin-reject {
@@ -611,7 +596,7 @@ export default function AdminDashboard() {
           cursor: not-allowed;
         }
 
-        /* EMPTY */
+        /* ================= EMPTY ================= */
 
         .admin-empty {
           text-align: center;
@@ -623,8 +608,8 @@ export default function AdminDashboard() {
           height: 62px;
           margin: 0 auto 14px;
           border-radius: 17px;
-          background: #ecfdf5;
-          color: #16a34a;
+          background: #eaf8f1;
+          color: #168b72;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -633,18 +618,19 @@ export default function AdminDashboard() {
         .admin-empty h3 {
           margin: 0 0 6px;
           font-size: 16px;
+          color: #20394f;
         }
 
         .admin-empty p {
           margin: 0;
-          color: #64748b;
+          color: #718493;
           font-size: 12px;
         }
 
         .admin-loading {
           text-align: center;
           padding: 60px;
-          color: #64748b;
+          color: #718493;
           font-size: 13px;
         }
 
@@ -658,7 +644,7 @@ export default function AdminDashboard() {
           font-size: 13px;
         }
 
-        /* RESPONSIVE */
+        /* ================= RESPONSIVE ================= */
 
         @media (max-width: 900px) {
           .admin-stats {
@@ -712,32 +698,23 @@ export default function AdminDashboard() {
             width: 100%;
           }
         }
-
       `}</style>
 
       {/* PAGE HEADING */}
 
       <div className="admin-page-heading">
-
         <div className="admin-heading-left">
-
           <div className="admin-heading-icon">
             <ShieldCheck size={25} />
           </div>
 
           <div className="admin-heading-text">
-
-            <h1>
-              Admin Dashboard
-            </h1>
+            <h1>Admin Dashboard</h1>
 
             <p>
-              Manage staff access and
-              CareTrack administration.
+              Manage staff access and CareTrack administration.
             </p>
-
           </div>
-
         </div>
 
         <button
@@ -748,15 +725,12 @@ export default function AdminDashboard() {
           <RefreshCw size={15} />
           Refresh
         </button>
-
       </div>
 
       {/* WELCOME */}
 
       <section className="admin-welcome">
-
         <div className="admin-welcome-content">
-
           <span className="admin-welcome-label">
             <ShieldCheck size={13} />
             Administration Portal
@@ -767,13 +741,10 @@ export default function AdminDashboard() {
           </h2>
 
           <p>
-            Review staff registration requests
-            and manage access for nurses and
-            doctors in the CareTrack system.
+            Review staff registration requests and manage
+            access for nurses and doctors in the CareTrack system.
           </p>
-
         </div>
-
       </section>
 
       {/* ERROR */}
@@ -787,9 +758,7 @@ export default function AdminDashboard() {
       {/* STAT CARDS */}
 
       <div className="admin-stats">
-
         <div className="admin-stat">
-
           <div className="admin-stat-icon pending">
             <Clock3 size={21} />
           </div>
@@ -803,11 +772,9 @@ export default function AdminDashboard() {
               {users.length}
             </p>
           </div>
-
         </div>
 
         <div className="admin-stat">
-
           <div className="admin-stat-icon nurse">
             <UserRound size={21} />
           </div>
@@ -821,11 +788,9 @@ export default function AdminDashboard() {
               {nurseCount}
             </p>
           </div>
-
         </div>
 
         <div className="admin-stat">
-
           <div className="admin-stat-icon doctor">
             <Stethoscope size={21} />
           </div>
@@ -839,50 +804,38 @@ export default function AdminDashboard() {
               {doctorCount}
             </p>
           </div>
-
         </div>
-
       </div>
 
       {/* APPROVAL CARD */}
 
       <section className="admin-approval-card">
-
         <div className="admin-card-header">
-
           <div className="admin-card-title">
-
             <div className="admin-card-title-icon">
               <UserCheck size={20} />
             </div>
 
             <div>
-
               <h3>
                 Staff Registration Requests
               </h3>
 
               <p>
-                Review nurse and doctor
-                accounts awaiting approval.
+                Review nurse and doctor accounts awaiting approval.
               </p>
-
             </div>
-
           </div>
 
           <span className="admin-pending-badge">
             {users.length} Pending
           </span>
-
         </div>
 
         {/* SEARCH */}
 
         <div className="admin-search-area">
-
           <div className="admin-search">
-
             <Search size={16} />
 
             <input
@@ -893,23 +846,17 @@ export default function AdminDashboard() {
                 setSearch(event.target.value)
               }
             />
-
           </div>
-
         </div>
 
         {/* DATA */}
 
         {loading ? (
-
           <div className="admin-loading">
             Loading staff registrations...
           </div>
-
         ) : filteredUsers.length === 0 ? (
-
           <div className="admin-empty">
-
             <div className="admin-empty-icon">
               <CheckCircle2 size={29} />
             </div>
@@ -919,37 +866,27 @@ export default function AdminDashboard() {
             </h3>
 
             <p>
-              There are currently no nurse or
-              doctor accounts waiting for approval.
+              There are currently no nurse or doctor accounts
+              waiting for approval.
             </p>
-
           </div>
-
         ) : (
-
           <div className="admin-users">
-
             {filteredUsers.map((user) => (
-
               <div
                 className="admin-user-card"
                 key={user.uid}
               >
-
                 <div className="admin-user-info">
-
                   <div className="admin-avatar">
-
                     {user.role === "doctor" ? (
                       <Stethoscope size={21} />
                     ) : (
                       <UserRound size={21} />
                     )}
-
                   </div>
 
                   <div>
-
                     <h4 className="admin-user-name">
                       {user.fullName}
                     </h4>
@@ -963,9 +900,7 @@ export default function AdminDashboard() {
                     </p>
 
                     <span
-                      className={`admin-role ${
-                        user.role
-                      }`}
+                      className={`admin-role ${user.role}`}
                     >
                       {user.role === "doctor" ? (
                         <Stethoscope size={11} />
@@ -975,59 +910,37 @@ export default function AdminDashboard() {
 
                       {user.role}
                     </span>
-
                   </div>
-
                 </div>
 
                 <div className="admin-actions">
-
                   <button
                     className="admin-action admin-approve"
-                    onClick={() =>
-                      approveUser(user.uid)
-                    }
-                    disabled={
-                      processing === user.uid
-                    }
+                    onClick={() => approveUser(user.uid)}
+                    disabled={processing === user.uid}
                   >
-
                     <CheckCircle2 size={15} />
 
                     {processing === user.uid
                       ? "Processing..."
                       : "Approve"}
-
                   </button>
 
                   <button
                     className="admin-action admin-reject"
-                    onClick={() =>
-                      rejectUser(user.uid)
-                    }
-                    disabled={
-                      processing === user.uid
-                    }
+                    onClick={() => rejectUser(user.uid)}
+                    disabled={processing === user.uid}
                   >
-
                     <XCircle size={15} />
 
                     Reject
-
                   </button>
-
                 </div>
-
               </div>
-
             ))}
-
           </div>
-
         )}
-
       </section>
-
     </div>
   );
 }
