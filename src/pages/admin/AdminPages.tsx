@@ -1,14 +1,15 @@
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-import React, { useEffect, useMemo, useState } from "react";
 import {
   Activity,
-  AlertCircle,
   BedDouble,
   Bell,
   CalendarDays,
   CheckCircle2,
-  ClipboardList,
-  Clock3,
   FileText,
   History,
   RefreshCw,
@@ -18,13 +19,15 @@ import {
   Stethoscope,
   Users,
 } from "lucide-react";
+
 import {
   get,
   push,
   ref,
-  set,
 } from "firebase/database";
+
 import { db } from "../../lib/firebase";
+import ContextualHelp from "../../components/ContextualHelp";
 
 /* =========================================================
    TYPES
@@ -100,17 +103,130 @@ function AdminPage({
           <Icon size={21} />
         </div>
 
-        <div>
-          <h1
+        <div
+          style={{
+            minWidth: 0,
+          }}
+        >
+          <div
             style={{
-              margin: 0,
-              color: "#17324d",
-              fontSize: "23px",
-              fontWeight: 800,
+              display: "flex",
+              alignItems: "center",
+              gap: "3px",
+              flexWrap: "wrap",
             }}
           >
-            {title}
-          </h1>
+            <h1
+              style={{
+                margin: 0,
+                color: "#17324d",
+                fontSize: "23px",
+                fontWeight: 800,
+              }}
+            >
+              {title}
+            </h1>
+
+            {/* =================================================
+                CONTEXTUAL HELP
+            ================================================= */}
+
+            {title === "Patients" && (
+              <ContextualHelp title="Patients">
+                Search and review registered
+                patient accounts. Use the search
+                box to find a patient by name,
+                email, or phone number. The
+                Refresh button reloads the latest
+                patient information from CareTrack.
+              </ContextualHelp>
+            )}
+
+            {title === "Doctors" && (
+              <ContextualHelp title="Doctors">
+                This section shows registered
+                doctors and their approval status.
+                Use the search box to find a
+                doctor by name, email, or phone.
+              </ContextualHelp>
+            )}
+
+            {title === "Nurses" && (
+              <ContextualHelp title="Nurses">
+                This section shows registered
+                nurses and their approval status.
+                Use the search box to find a nurse
+                by name, email, or phone.
+              </ContextualHelp>
+            )}
+
+            {title === "Admissions" && (
+              <ContextualHelp title="Admissions">
+                Use this section to review patient
+                admission records, including ward,
+                room, bed, and admission status.
+                Search can help you quickly locate
+                a specific admission.
+              </ContextualHelp>
+            )}
+
+            {title === "Reports" && (
+              <ContextualHelp title="Reports">
+                This section provides a quick
+                system-level overview of registered
+                patients, doctors, nurses, and
+                active accounts.
+              </ContextualHelp>
+            )}
+
+            {title === "Notifications" && (
+              <ContextualHelp title="Notifications">
+                Create a clear message for CareTrack
+                users and send it as a system-wide
+                notification. Avoid entering
+                unnecessary private patient
+                information in a general
+                notification.
+              </ContextualHelp>
+            )}
+
+            {title === "Settings" && (
+              <ContextualHelp title="Admin Settings">
+                These settings control administrative
+                preferences. System Notifications
+                controls whether administrators can
+                send system notifications.
+                Maintenance Mode indicates that
+                system maintenance is active.
+              </ContextualHelp>
+            )}
+
+            {title === "Wards" && (
+              <ContextualHelp title="Wards">
+                This section provides an overview of
+                the hospital's ward organization and
+                patient allocation.
+              </ContextualHelp>
+            )}
+
+            {title === "Appointments" && (
+              <ContextualHelp title="Appointments">
+                Review scheduled patient
+                appointments, including the patient,
+                assigned doctor, date, time, and
+                appointment status.
+              </ContextualHelp>
+            )}
+
+            {title === "Audit Logs" && (
+              <ContextualHelp title="Audit Logs">
+                Review important system activities
+                recorded in CareTrack, including
+                account registration, approvals,
+                admissions, and appointments.
+              </ContextualHelp>
+            )}
+          </div>
 
           {description && (
             <p
@@ -136,8 +252,11 @@ function AdminPage({
 ========================================================= */
 
 function useUsers() {
-  const [users, setUsers] = useState<SystemUser[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [users, setUsers] =
+    useState<SystemUser[]>([]);
+
+  const [loading, setLoading] =
+    useState(true);
 
   const loadUsers = async () => {
     try {
@@ -154,12 +273,16 @@ function useUsers() {
 
       const data = snapshot.val();
 
-      const list: SystemUser[] = Object.entries(
-        data
-      ).map(([uid, value]) => ({
-        uid,
-        ...(value as Omit<SystemUser, "uid">),
-      }));
+      const list: SystemUser[] =
+        Object.entries(data).map(
+          ([uid, value]) => ({
+            uid,
+            ...(value as Omit<
+              SystemUser,
+              "uid"
+            >),
+          })
+        );
 
       setUsers(list);
     } catch (error) {
@@ -167,6 +290,7 @@ function useUsers() {
         "Failed to load users:",
         error
       );
+
       setUsers([]);
     } finally {
       setLoading(false);
@@ -211,7 +335,8 @@ function SearchBox({
           position: "absolute",
           left: "12px",
           top: "50%",
-          transform: "translateY(-50%)",
+          transform:
+            "translateY(-50%)",
           color: "#9aa7b0",
         }}
       />
@@ -226,9 +351,11 @@ function SearchBox({
           width: "100%",
           boxSizing: "border-box",
           height: "38px",
-          border: "1px solid #dce5ea",
+          border:
+            "1px solid #dce5ea",
           borderRadius: "9px",
-          padding: "0 12px 0 36px",
+          padding:
+            "0 12px 0 36px",
           outline: "none",
           color: "#334e60",
           background: "#fff",
@@ -259,7 +386,8 @@ function ActionButton({
       disabled={disabled}
       style={{
         height: "38px",
-        border: "1px solid #dce5ea",
+        border:
+          "1px solid #dce5ea",
         background: "#ffffff",
         color: "#536b7b",
         borderRadius: "9px",
@@ -409,7 +537,9 @@ export function AdminPatients() {
             placeholder="Search patients..."
           />
 
-          <ActionButton onClick={refresh}>
+          <ActionButton
+            onClick={refresh}
+          >
             <RefreshCw size={14} />
             Refresh
           </ActionButton>
@@ -448,26 +578,31 @@ export function AdminPatients() {
           <table
             style={{
               width: "100%",
-              borderCollapse: "collapse",
+              borderCollapse:
+                "collapse",
               fontSize: "12px",
             }}
           >
             <thead>
               <tr
                 style={{
-                  background: "#f6f9fa",
+                  background:
+                    "#f6f9fa",
                   textAlign: "left",
                 }}
               >
                 <th style={tableHeader}>
                   Patient
                 </th>
+
                 <th style={tableHeader}>
                   Email
                 </th>
+
                 <th style={tableHeader}>
                   Phone
                 </th>
+
                 <th style={tableHeader}>
                   Account
                 </th>
@@ -475,36 +610,58 @@ export function AdminPatients() {
             </thead>
 
             <tbody>
-              {patients.map((patient) => (
-                <tr key={patient.uid}>
-                  <td style={tableCell}>
-                    <strong>
-                      {patient.fullName ||
-                        "Unnamed Patient"}
-                    </strong>
-                  </td>
-
-                  <td style={tableCell}>
-                    {patient.email ||
-                      "Not provided"}
-                  </td>
-
-                  <td style={tableCell}>
-                    {patient.phone ||
-                      "Not provided"}
-                  </td>
-
-                  <td style={tableCell}>
-                    <StatusBadge
-                      status={
-                        patient.active
-                          ? "Active"
-                          : "Inactive"
+              {patients.map(
+                (patient) => (
+                  <tr
+                    key={
+                      patient.uid
+                    }
+                  >
+                    <td
+                      style={
+                        tableCell
                       }
-                    />
-                  </td>
-                </tr>
-              ))}
+                    >
+                      <strong>
+                        {patient.fullName ||
+                          "Unnamed Patient"}
+                      </strong>
+                    </td>
+
+                    <td
+                      style={
+                        tableCell
+                      }
+                    >
+                      {patient.email ||
+                        "Not provided"}
+                    </td>
+
+                    <td
+                      style={
+                        tableCell
+                      }
+                    >
+                      {patient.phone ||
+                        "Not provided"}
+                    </td>
+
+                    <td
+                      style={
+                        tableCell
+                      }
+                    >
+                      <StatusBadge
+                        status={
+                          patient.active
+                            ? "Active"
+                            : "Inactive"
+                        }
+                      />
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
         </div>
@@ -530,13 +687,15 @@ function StaffCard({
       ? "Unnamed Doctor"
       : "Unnamed Nurse");
 
-  const isDoctor = role === "doctor";
+  const isDoctor =
+    role === "doctor";
 
   return (
     <div
       style={{
         background: "#ffffff",
-        border: "1px solid #e2e9ee",
+        border:
+          "1px solid #e2e9ee",
         borderRadius: "12px",
         padding: "16px",
         minWidth: 0,
@@ -570,7 +729,9 @@ function StaffCard({
             fontWeight: 800,
           }}
         >
-          {name.charAt(0).toUpperCase()}
+          {name
+            .charAt(0)
+            .toUpperCase()}
         </div>
 
         <div
@@ -586,8 +747,10 @@ function StaffCard({
               fontSize: "14px",
               fontWeight: 800,
               overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
+              textOverflow:
+                "ellipsis",
+              whiteSpace:
+                "nowrap",
             }}
           >
             {name}
@@ -627,7 +790,8 @@ function StaffCard({
               color: "#9aa7b0",
               fontSize: "9px",
               fontWeight: 800,
-              textTransform: "uppercase",
+              textTransform:
+                "uppercase",
               marginBottom: "3px",
             }}
           >
@@ -640,11 +804,13 @@ function StaffCard({
               color: "#536b7b",
               fontSize: "11px",
               fontWeight: 600,
-              overflowWrap: "anywhere",
+              overflowWrap:
+                "anywhere",
               lineHeight: 1.35,
             }}
           >
-            {user.email || "Not provided"}
+            {user.email ||
+              "Not provided"}
           </span>
         </div>
 
@@ -659,7 +825,8 @@ function StaffCard({
               color: "#9aa7b0",
               fontSize: "9px",
               fontWeight: 800,
-              textTransform: "uppercase",
+              textTransform:
+                "uppercase",
               marginBottom: "3px",
             }}
           >
@@ -674,7 +841,8 @@ function StaffCard({
               fontWeight: 600,
             }}
           >
-            {user.phone || "Not provided"}
+            {user.phone ||
+              "Not provided"}
           </span>
         </div>
 
@@ -696,7 +864,8 @@ function StaffCard({
                 color: "#9aa7b0",
                 fontSize: "9px",
                 fontWeight: 800,
-                textTransform: "uppercase",
+                textTransform:
+                  "uppercase",
                 marginBottom: "4px",
               }}
             >
@@ -718,7 +887,8 @@ function StaffCard({
                 color: "#9aa7b0",
                 fontSize: "9px",
                 fontWeight: 800,
-                textTransform: "uppercase",
+                textTransform:
+                  "uppercase",
                 marginBottom: "4px",
               }}
             >
@@ -868,13 +1038,15 @@ export function AdminDoctors() {
             alignItems: "start",
           }}
         >
-          {doctors.map((doctor) => (
-            <StaffCard
-              key={doctor.uid}
-              user={doctor}
-              role="doctor"
-            />
-          ))}
+          {doctors.map(
+            (doctor) => (
+              <StaffCard
+                key={doctor.uid}
+                user={doctor}
+                role="doctor"
+              />
+            )
+          )}
         </div>
       )}
     </AdminPage>
@@ -1010,13 +1182,15 @@ export function AdminNurses() {
             alignItems: "start",
           }}
         >
-          {nurses.map((nurse) => (
-            <StaffCard
-              key={nurse.uid}
-              user={nurse}
-              role="nurse"
-            />
-          ))}
+          {nurses.map(
+            (nurse) => (
+              <StaffCard
+                key={nurse.uid}
+                user={nurse}
+                role="nurse"
+              />
+            )
+          )}
         </div>
       )}
     </AdminPage>
@@ -1028,77 +1202,94 @@ export function AdminNurses() {
 ========================================================= */
 
 export function AdminAdmissions() {
-  const [admissions, setAdmissions] =
-    useState<Admission[]>([]);
+  const [
+    admissions,
+    setAdmissions,
+  ] = useState<Admission[]>([]);
+
   const [loading, setLoading] =
     useState(true);
+
   const [search, setSearch] =
     useState("");
 
-  const loadAdmissions = async () => {
-    try {
-      setLoading(true);
+  const loadAdmissions =
+    async () => {
+      try {
+        setLoading(true);
 
-      const snapshot = await get(
-        ref(db, "admissions")
-      );
+        const snapshot =
+          await get(
+            ref(db, "admissions")
+          );
 
-      if (!snapshot.exists()) {
-        setAdmissions([]);
-        return;
-      }
+        if (!snapshot.exists()) {
+          setAdmissions([]);
+          return;
+        }
 
-      const data = snapshot.val();
+        const data =
+          snapshot.val();
 
-      const list: Admission[] =
-        Object.entries(data).map(
-          ([id, value]) => ({
-            id,
-            ...(value as Omit<
-              Admission,
-              "id"
-            >),
-          })
+        const list: Admission[] =
+          Object.entries(
+            data
+          ).map(
+            ([id, value]) => ({
+              id,
+              ...(value as Omit<
+                Admission,
+                "id"
+              >),
+            })
+          );
+
+        setAdmissions(list);
+      } catch (error) {
+        console.error(
+          "Failed to load admissions:",
+          error
         );
 
-      setAdmissions(list);
-    } catch (error) {
-      console.error(
-        "Failed to load admissions:",
-        error
-      );
-      setAdmissions([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+        setAdmissions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
   useEffect(() => {
     loadAdmissions();
   }, []);
 
-  const filtered = useMemo(() => {
-    const query =
-      search.toLowerCase().trim();
+  const filtered =
+    useMemo(() => {
+      const query =
+        search
+          .toLowerCase()
+          .trim();
 
-    if (!query) return admissions;
+      if (!query)
+        return admissions;
 
-    return admissions.filter(
-      (item) =>
-        item.patientName
-          ?.toLowerCase()
-          .includes(query) ||
-        item.ward
-          ?.toLowerCase()
-          .includes(query) ||
-        item.room
-          ?.toLowerCase()
-          .includes(query) ||
-        item.bed
-          ?.toLowerCase()
-          .includes(query)
-    );
-  }, [admissions, search]);
+      return admissions.filter(
+        (item) =>
+          item.patientName
+            ?.toLowerCase()
+            .includes(query) ||
+          item.ward
+            ?.toLowerCase()
+            .includes(query) ||
+          item.room
+            ?.toLowerCase()
+            .includes(query) ||
+          item.bed
+            ?.toLowerCase()
+            .includes(query)
+      );
+    }, [
+      admissions,
+      search,
+    ]);
 
   return (
     <AdminPage
@@ -1126,7 +1317,9 @@ export function AdminAdmissions() {
           />
 
           <ActionButton
-            onClick={loadAdmissions}
+            onClick={
+              loadAdmissions
+            }
           >
             <RefreshCw size={14} />
             Refresh
@@ -1151,12 +1344,15 @@ export function AdminAdmissions() {
             overflowX: "auto",
           }}
         >
-          {filtered.length === 0 ? (
+          {filtered.length ===
+          0 ? (
             <div
               style={{
                 padding: "35px",
-                textAlign: "center",
-                color: "#8293a0",
+                textAlign:
+                  "center",
+                color:
+                  "#8293a0",
               }}
             >
               No admissions found.
@@ -1175,31 +1371,46 @@ export function AdminAdmissions() {
                   style={{
                     background:
                       "#f6f9fa",
-                    textAlign: "left",
+                    textAlign:
+                      "left",
                   }}
                 >
                   <th
-                    style={tableHeader}
+                    style={
+                      tableHeader
+                    }
                   >
                     Patient
                   </th>
+
                   <th
-                    style={tableHeader}
+                    style={
+                      tableHeader
+                    }
                   >
                     Ward
                   </th>
+
                   <th
-                    style={tableHeader}
+                    style={
+                      tableHeader
+                    }
                   >
                     Room
                   </th>
+
                   <th
-                    style={tableHeader}
+                    style={
+                      tableHeader
+                    }
                   >
                     Bed
                   </th>
+
                   <th
-                    style={tableHeader}
+                    style={
+                      tableHeader
+                    }
                   >
                     Status
                   </th>
@@ -1209,7 +1420,11 @@ export function AdminAdmissions() {
               <tbody>
                 {filtered.map(
                   (item) => (
-                    <tr key={item.id}>
+                    <tr
+                      key={
+                        item.id
+                      }
+                    >
                       <td
                         style={
                           tableCell
@@ -1359,7 +1574,8 @@ export function AdminWards() {
                       700,
                   }}
                 >
-                  WARD {index + 1}
+                  WARD{" "}
+                  {index + 1}
                 </span>
               </div>
 
@@ -1408,48 +1624,49 @@ export function AdminWards() {
 ========================================================= */
 
 export function AdminAppointments() {
-  const [appointments] =
-    useState([
-      {
-        id: "1",
-        patient:
-          "Sarah Ahmed",
-        doctor:
-          "Dr. Ahmed Khan",
-        date:
-          "05 October 2026",
-        time:
-          "10:30 AM",
-        status:
-          "Scheduled",
-      },
-      {
-        id: "2",
-        patient:
-          "Ali Raza",
-        doctor:
-          "Dr. Sara Malik",
-        date:
-          "06 October 2026",
-        time:
-          "11:00 AM",
-        status:
-          "Upcoming",
-      },
-      {
-        id: "3",
-        patient:
-          "Fatima Noor",
-        doctor:
-          "Dr. Ahmed Khan",
-        date:
-          "07 October 2026",
-        time:
-          "02:00 PM",
-        status:
-          "Scheduled",
-      },
-    ]);
+  const [
+    appointments,
+  ] = useState([
+    {
+      id: "1",
+      patient:
+        "Sarah Ahmed",
+      doctor:
+        "Dr. Ahmed Khan",
+      date:
+        "05 October 2026",
+      time:
+        "10:30 AM",
+      status:
+        "Scheduled",
+    },
+    {
+      id: "2",
+      patient:
+        "Ali Raza",
+      doctor:
+        "Dr. Sara Malik",
+      date:
+        "06 October 2026",
+      time:
+        "11:00 AM",
+      status:
+        "Upcoming",
+    },
+    {
+      id: "3",
+      patient:
+        "Fatima Noor",
+      doctor:
+        "Dr. Ahmed Khan",
+      date:
+        "07 October 2026",
+      time:
+        "02:00 PM",
+      status:
+        "Scheduled",
+    },
+  ]);
 
   return (
     <AdminPage
@@ -1466,7 +1683,9 @@ export function AdminAppointments() {
         {appointments.map(
           (appointment) => (
             <div
-              key={appointment.id}
+              key={
+                appointment.id
+              }
               className="panel"
               style={{
                 padding: "16px",
@@ -1480,7 +1699,9 @@ export function AdminAppointments() {
             >
               <div>
                 <span
-                  style={smallLabel}
+                  style={
+                    smallLabel
+                  }
                 >
                   PATIENT
                 </span>
@@ -1501,7 +1722,9 @@ export function AdminAppointments() {
 
               <div>
                 <span
-                  style={smallLabel}
+                  style={
+                    smallLabel
+                  }
                 >
                   DOCTOR
                 </span>
@@ -1522,7 +1745,9 @@ export function AdminAppointments() {
 
               <div>
                 <span
-                  style={smallLabel}
+                  style={
+                    smallLabel
+                  }
                 >
                   DATE
                 </span>
@@ -1543,7 +1768,9 @@ export function AdminAppointments() {
 
               <div>
                 <span
-                  style={smallLabel}
+                  style={
+                    smallLabel
+                  }
                 >
                   TIME
                 </span>
@@ -1881,6 +2108,7 @@ export function AdminAuditLogs() {
 export function AdminNotifications() {
   const [message, setMessage] =
     useState("");
+
   const [sent, setSent] =
     useState(false);
 
@@ -1893,13 +2121,15 @@ export function AdminNotifications() {
 
       try {
         await push(
-          ref(db, "adminNotifications"),
+          ref(
+            db,
+            "adminNotifications"
+          ),
           {
             message: text,
             createdAt:
               Date.now(),
-            status:
-              "sent",
+            status: "sent",
           }
         );
 
@@ -1957,6 +2187,16 @@ export function AdminNotifications() {
           >
             Create Notification
           </h3>
+
+          <ContextualHelp title="Sending Notifications">
+            Write a clear message for
+            CareTrack users and select
+            Send Notification when it is
+            ready. Avoid entering
+            unnecessary private patient
+            information in a system-wide
+            notification.
+          </ContextualHelp>
         </div>
 
         <textarea
@@ -2231,13 +2471,15 @@ const tableHeader: React.CSSProperties = {
   fontSize: "10px",
   fontWeight: 800,
   textTransform: "uppercase",
-  borderBottom: "1px solid #e7edf0",
+  borderBottom:
+    "1px solid #e7edf0",
 };
 
 const tableCell: React.CSSProperties = {
   padding: "13px 14px",
   color: "#536b7b",
-  borderBottom: "1px solid #edf1f4",
+  borderBottom:
+    "1px solid #edf1f4",
   verticalAlign: "middle",
 };
 

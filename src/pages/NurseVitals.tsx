@@ -13,6 +13,7 @@ import {
 import { get, ref, set } from "firebase/database";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../lib/firebase";
+import ContextualHelp from "../components/ContextualHelp";
 
 // =========================
 // TYPES
@@ -123,7 +124,10 @@ export function NurseVitals() {
       const name = patient.fullName?.toLowerCase() || "";
       const email = patient.email?.toLowerCase() || "";
 
-      return name.includes(term) || email.includes(term);
+      return (
+        name.includes(term) ||
+        email.includes(term)
+      );
     });
   }, [patients, search]);
 
@@ -138,10 +142,21 @@ export function NurseVitals() {
 
     const existing = monitoring[patientId] || {};
 
-    setBloodPressure(existing.bloodPressure?.toString() || "");
-    setHeartRate(existing.heartRate?.toString() || "");
-    setTemperature(existing.temperature?.toString() || "");
-    setOxygenLevel(existing.oxygenLevel?.toString() || "");
+    setBloodPressure(
+      existing.bloodPressure?.toString() || ""
+    );
+
+    setHeartRate(
+      existing.heartRate?.toString() || ""
+    );
+
+    setTemperature(
+      existing.temperature?.toString() || ""
+    );
+
+    setOxygenLevel(
+      existing.oxygenLevel?.toString() || ""
+    );
   }
 
   // =========================
@@ -179,7 +194,8 @@ export function NurseVitals() {
     try {
       setSaving(true);
 
-      const previous = monitoring[selectedPatientId] || {};
+      const previous =
+        monitoring[selectedPatientId] || {};
 
       const updatedRecord: PatientMonitoring = {
         ...previous,
@@ -198,7 +214,10 @@ export function NurseVitals() {
       };
 
       await set(
-        ref(db, `patientMonitoring/${selectedPatientId}`),
+        ref(
+          db,
+          `patientMonitoring/${selectedPatientId}`
+        ),
         updatedRecord
       );
 
@@ -210,7 +229,9 @@ export function NurseVitals() {
       alert("Patient vitals saved successfully.");
     } catch (error) {
       console.error("Error saving vitals:", error);
-      alert("Unable to save vitals. Please try again.");
+      alert(
+        "Unable to save vitals. Please try again."
+      );
     } finally {
       setSaving(false);
     }
@@ -247,15 +268,48 @@ export function NurseVitals() {
       <div style={styles.container}>
 
         {/* HEADER */}
+
         <div style={styles.header}>
           <div>
             <div style={styles.breadcrumb}>
               Nurse / Vitals
             </div>
 
-            <h1 style={styles.title}>
-              Patient Vitals
-            </h1>
+            {/* PATIENT VITALS TITLE + CONTEXTUAL HELP */}
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <h1 style={styles.title}>
+                Patient Vitals
+              </h1>
+
+              <ContextualHelp title="Patient Vitals">
+                <p style={{ margin: 0 }}>
+                  Record and monitor vital signs
+                  measured by the nurse, including
+                  blood pressure, heart rate,
+                  temperature and oxygen level.
+                </p>
+
+                <p
+                  style={{
+                    margin: "9px 0 0",
+                  }}
+                >
+                  Select a patient from the list,
+                  enter the measured readings and
+                  save the updated information.
+                  CareTrack stores these readings
+                  for authorized healthcare staff
+                  to review.
+                </p>
+              </ContextualHelp>
+            </div>
 
             <p style={styles.subtitle}>
               Record and monitor patient vital signs.
@@ -271,6 +325,7 @@ export function NurseVitals() {
         </div>
 
         {/* SUMMARY CARDS */}
+
         <div style={styles.statsGrid}>
 
           <StatCard
@@ -282,13 +337,15 @@ export function NurseVitals() {
           <StatCard
             icon={<HeartPulse size={22} />}
             title="Vitals Recorded"
-            value={Object.keys(monitoring).filter(
-              (id) =>
-                monitoring[id]?.bloodPressure ||
-                monitoring[id]?.heartRate ||
-                monitoring[id]?.temperature ||
-                monitoring[id]?.oxygenLevel
-            ).length.toString()}
+            value={Object.keys(monitoring)
+              .filter(
+                (id) =>
+                  monitoring[id]?.bloodPressure ||
+                  monitoring[id]?.heartRate ||
+                  monitoring[id]?.temperature ||
+                  monitoring[id]?.oxygenLevel
+              )
+              .length.toString()}
           />
 
           <StatCard
@@ -304,12 +361,15 @@ export function NurseVitals() {
         </div>
 
         {/* SEARCH */}
+
         <div style={styles.searchBox}>
           <Search size={19} />
 
           <input
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
             placeholder="Search patient by name or email..."
             style={styles.searchInput}
           />
@@ -318,8 +378,10 @@ export function NurseVitals() {
         <div style={styles.mainGrid}>
 
           {/* PATIENT LIST */}
+
           <section style={styles.card}>
             <div style={styles.cardHeader}>
+
               <div>
                 <h2 style={styles.cardTitle}>
                   Patients
@@ -331,6 +393,7 @@ export function NurseVitals() {
               </div>
 
               <Users size={22} />
+
             </div>
 
             {loading ? (
@@ -343,8 +406,10 @@ export function NurseVitals() {
               </div>
             ) : (
               <div style={styles.patientList}>
+
                 {filteredPatients.map((patient) => {
-                  const patientId = patient.uid || "";
+                  const patientId =
+                    patient.uid || "";
 
                   const patientVitals =
                     getPatientVitals(patientId);
@@ -363,7 +428,9 @@ export function NurseVitals() {
                   return (
                     <button
                       key={patientId}
-                      onClick={() => selectPatient(patient)}
+                      onClick={() =>
+                        selectPatient(patient)
+                      }
                       style={{
                         ...styles.patientItem,
                         ...(isSelected
@@ -381,7 +448,8 @@ export function NurseVitals() {
                         </strong>
 
                         <span>
-                          {patient.email || "No email"}
+                          {patient.email ||
+                            "No email"}
                         </span>
 
                         <small>
@@ -393,15 +461,21 @@ export function NurseVitals() {
                     </button>
                   );
                 })}
+
               </div>
             )}
           </section>
 
           {/* VITALS FORM */}
+
           <section style={styles.card}>
 
             {!selectedPatient ? (
-              <div style={styles.selectPatientMessage}>
+              <div
+                style={
+                  styles.selectPatientMessage
+                }
+              >
                 <div style={styles.largeIcon}>
                   <Stethoscope size={42} />
                 </div>
@@ -418,22 +492,38 @@ export function NurseVitals() {
             ) : (
               <>
                 {/* SELECTED PATIENT */}
-                <div style={styles.selectedPatientHeader}>
 
-                  <div style={styles.selectedAvatar}>
+                <div
+                  style={
+                    styles.selectedPatientHeader
+                  }
+                >
+                  <div
+                    style={styles.selectedAvatar}
+                  >
                     <User size={25} />
                   </div>
 
                   <div>
-                    <h2 style={styles.selectedName}>
-                      {getPatientName(selectedPatient)}
+                    <h2
+                      style={
+                        styles.selectedName
+                      }
+                    >
+                      {getPatientName(
+                        selectedPatient
+                      )}
                     </h2>
 
-                    <p style={styles.selectedEmail}>
-                      {selectedPatient.email || "No email"}
+                    <p
+                      style={
+                        styles.selectedEmail
+                      }
+                    >
+                      {selectedPatient.email ||
+                        "No email"}
                     </p>
                   </div>
-
                 </div>
 
                 <div style={styles.divider} />
@@ -442,15 +532,23 @@ export function NurseVitals() {
                   Record / Update Vitals
                 </h3>
 
-                <p style={styles.formDescription}>
-                  Enter the readings measured by the nurse.
+                <p
+                  style={
+                    styles.formDescription
+                  }
+                >
+                  Enter the readings measured by
+                  the nurse.
                 </p>
 
                 {/* VITAL INPUTS */}
+
                 <div style={styles.formGrid}>
 
                   <VitalInput
-                    icon={<HeartPulse size={20} />}
+                    icon={
+                      <HeartPulse size={20} />
+                    }
                     label="Blood Pressure"
                     placeholder="e.g. 120/80"
                     value={bloodPressure}
@@ -459,7 +557,9 @@ export function NurseVitals() {
                   />
 
                   <VitalInput
-                    icon={<Activity size={20} />}
+                    icon={
+                      <Activity size={20} />
+                    }
                     label="Heart Rate"
                     placeholder="e.g. 72"
                     value={heartRate}
@@ -468,7 +568,9 @@ export function NurseVitals() {
                   />
 
                   <VitalInput
-                    icon={<Thermometer size={20} />}
+                    icon={
+                      <Thermometer size={20} />
+                    }
                     label="Temperature"
                     placeholder="e.g. 37"
                     value={temperature}
@@ -477,7 +579,9 @@ export function NurseVitals() {
                   />
 
                   <VitalInput
-                    icon={<Activity size={20} />}
+                    icon={
+                      <Activity size={20} />
+                    }
                     label="Oxygen Level"
                     placeholder="e.g. 98"
                     value={oxygenLevel}
@@ -488,26 +592,34 @@ export function NurseVitals() {
                 </div>
 
                 {/* CURRENT DATA */}
+
                 <div style={styles.currentBox}>
-                  <h3 style={styles.currentTitle}>
+
+                  <h3
+                    style={styles.currentTitle}
+                  >
                     Current Saved Vitals
                   </h3>
 
-                  <div style={styles.currentGrid}>
+                  <div
+                    style={styles.currentGrid}
+                  >
 
                     <MiniInfo
                       label="Blood Pressure"
                       value={
-                        monitoring[selectedPatientId]
-                          ?.bloodPressure || "—"
+                        monitoring[
+                          selectedPatientId
+                        ]?.bloodPressure || "—"
                       }
                     />
 
                     <MiniInfo
                       label="Heart Rate"
                       value={
-                        monitoring[selectedPatientId]
-                          ?.heartRate
+                        monitoring[
+                          selectedPatientId
+                        ]?.heartRate
                           ? `${monitoring[selectedPatientId].heartRate} bpm`
                           : "—"
                       }
@@ -516,8 +628,9 @@ export function NurseVitals() {
                     <MiniInfo
                       label="Temperature"
                       value={
-                        monitoring[selectedPatientId]
-                          ?.temperature
+                        monitoring[
+                          selectedPatientId
+                        ]?.temperature
                           ? `${monitoring[selectedPatientId].temperature} °C`
                           : "—"
                       }
@@ -526,8 +639,9 @@ export function NurseVitals() {
                     <MiniInfo
                       label="Oxygen Level"
                       value={
-                        monitoring[selectedPatientId]
-                          ?.oxygenLevel
+                        monitoring[
+                          selectedPatientId
+                        ]?.oxygenLevel
                           ? `${monitoring[selectedPatientId].oxygenLevel}%`
                           : "—"
                       }
@@ -535,25 +649,42 @@ export function NurseVitals() {
 
                   </div>
 
-                  {monitoring[selectedPatientId]?.updatedAt && (
-                    <p style={styles.lastUpdated}>
+                  {monitoring[
+                    selectedPatientId
+                  ]?.updatedAt && (
+                    <p
+                      style={
+                        styles.lastUpdated
+                      }
+                    >
                       Last updated:{" "}
                       {formatDate(
-                        monitoring[selectedPatientId]
-                          ?.updatedAt
+                        monitoring[
+                          selectedPatientId
+                        ]?.updatedAt
                       )}
                     </p>
                   )}
 
-                  {monitoring[selectedPatientId]?.updatedBy && (
-                    <p style={styles.updatedBy}>
+                  {monitoring[
+                    selectedPatientId
+                  ]?.updatedBy && (
+                    <p
+                      style={styles.updatedBy}
+                    >
                       Updated by:{" "}
-                      {monitoring[selectedPatientId]?.updatedBy}
+                      {
+                        monitoring[
+                          selectedPatientId
+                        ]?.updatedBy
+                      }
                     </p>
                   )}
+
                 </div>
 
                 {/* BUTTONS */}
+
                 <div style={styles.actions}>
 
                   <button
@@ -584,6 +715,7 @@ export function NurseVitals() {
         </div>
 
         {/* INFORMATION NOTE */}
+
         <div style={styles.note}>
           <Stethoscope size={20} />
 
@@ -663,11 +795,13 @@ function VitalInput({
     <div style={styles.inputGroup}>
 
       <label style={styles.label}>
+
         <span style={styles.labelIcon}>
           {icon}
         </span>
 
         {label}
+
       </label>
 
       <div style={styles.inputWrapper}>

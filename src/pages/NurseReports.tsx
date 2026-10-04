@@ -10,6 +10,7 @@ import {
 import { Link } from "react-router-dom";
 
 import "../role-dashboards.css";
+import ContextualHelp from "../components/ContextualHelp";
 
 const reports = [
   {
@@ -18,7 +19,8 @@ const reports = [
     type: "Daily Health Report",
     status: "Submitted",
     time: "10 min ago",
-    summary: "Patient reported stable condition and adequate water intake.",
+    summary:
+      "Patient reported stable condition and adequate water intake.",
   },
   {
     patient: "Ali Raza",
@@ -26,7 +28,8 @@ const reports = [
     type: "Daily Health Report",
     status: "Pending",
     time: "25 min ago",
-    summary: "Patient has not submitted today's report yet.",
+    summary:
+      "Patient has not submitted today's report yet.",
   },
   {
     patient: "Ayesha Khan",
@@ -34,7 +37,8 @@ const reports = [
     type: "Daily Health Report",
     status: "Submitted",
     time: "42 min ago",
-    summary: "Patient reported mild discomfort and normal appetite.",
+    summary:
+      "Patient reported mild discomfort and normal appetite.",
   },
   {
     patient: "Usman Tariq",
@@ -42,7 +46,8 @@ const reports = [
     type: "Daily Health Report",
     status: "Review",
     time: "1 hour ago",
-    summary: "New symptoms were added to the patient's daily update.",
+    summary:
+      "New symptoms were added to the patient's daily update.",
   },
 ];
 
@@ -55,17 +60,51 @@ export default function NurseReports() {
       <div className="role-dashboard-header">
 
         <div>
+
           <p className="role-eyebrow">
             PATIENT MONITORING
           </p>
 
-          <h1>
-            Patient Reports
-          </h1>
+          {/* PAGE TITLE + HELP */}
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "7px",
+            }}
+          >
+
+            <h1
+              style={{
+                margin: 0,
+              }}
+            >
+              Patient Reports
+            </h1>
+
+            <ContextualHelp title="Nurse Reports">
+              <p style={{ margin: 0 }}>
+                Review daily health information submitted
+                by patients, including condition updates,
+                pain level, food intake, water consumption
+                and reported symptoms.
+              </p>
+
+              <p style={{ margin: "9px 0 0" }}>
+                Use the report information to support
+                patient monitoring and communication.
+                CareTrack does not automatically diagnose
+                conditions or recommend treatment.
+              </p>
+            </ContextualHelp>
+
+          </div>
 
           <p>
             Review daily information submitted by patients.
           </p>
+
         </div>
 
         <div
@@ -152,6 +191,7 @@ export default function NurseReports() {
         <div className="role-card-header">
 
           <div>
+
             <h2>
               Recent Patient Reports
             </h2>
@@ -159,6 +199,7 @@ export default function NurseReports() {
             <p>
               Patient-submitted information for nursing review
             </p>
+
           </div>
 
           <FileText
@@ -301,11 +342,12 @@ export default function NurseReports() {
                 lineHeight: 1.6,
               }}
             >
-              These reports contain information entered by patients,
-              such as pain level, food intake, water consumption,
-              symptoms and changes in daily condition. CareTrack
-              supports monitoring and communication; it does not
-              automatically diagnose or recommend treatment.
+              These reports contain information entered
+              by patients, such as pain level, food intake,
+              water consumption, symptoms and changes in
+              daily condition. CareTrack supports monitoring
+              and communication; it does not automatically
+              diagnose or recommend treatment.
             </p>
 
           </div>

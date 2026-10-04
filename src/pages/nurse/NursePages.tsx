@@ -23,6 +23,7 @@ import {
 
 import { get, ref, set } from "firebase/database";
 import { auth, db } from "../../lib/firebase";
+import ContextualHelp from "../../components/ContextualHelp";
 
 /* =========================================================
    TYPES
@@ -103,16 +104,79 @@ function NursePage({
   return (
     <div style={{ padding: "28px" }}>
       <div style={{ marginBottom: "24px" }}>
-        <h1
+        <div
           style={{
-            margin: 0,
-            fontSize: "30px",
-            fontWeight: 800,
-            color: "#17324d",
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
+            flexWrap: "wrap",
           }}
         >
-          {title}
-        </h1>
+          <h1
+            style={{
+              margin: 0,
+              fontSize: "30px",
+              fontWeight: 800,
+              color: "#17324d",
+            }}
+          >
+            {title}
+          </h1>
+
+          {title === "Nurse Dashboard" && (
+            <ContextualHelp title="Nurse Dashboard">
+              Review the overall patient monitoring summary, including
+              patient counts, manually assigned attention levels, active
+              admissions, and patients marked urgent.
+            </ContextualHelp>
+          )}
+
+          {title === "Patients" && (
+            <ContextualHelp title="Patients">
+              Search patient records by name, email, phone, ward, or bed.
+              You can review the patient record and manually update the
+              attention priority as Stable, Needs Attention, or Urgent.
+            </ContextualHelp>
+          )}
+
+          {title === "Patient Details" && (
+            <ContextualHelp title="Patient Details">
+              Review the patient's recorded profile, admission details,
+              daily reports, food and water information, recorded vitals,
+              medication information, and monitoring notes.
+            </ContextualHelp>
+          )}
+
+          {title === "Nurse Reports" && (
+            <ContextualHelp title="Nurse Reports">
+              Review daily reports submitted by patients. Use the report
+              information to stay informed about recorded condition, pain,
+              water, food, and symptoms.
+            </ContextualHelp>
+          )}
+
+          {title === "Patient Vitals" && (
+            <ContextualHelp title="Patient Vitals">
+              Review recorded patient vital information such as blood
+              pressure, heart rate, temperature, and oxygen level.
+            </ContextualHelp>
+          )}
+
+          {title === "Nurse Notes" && (
+            <ContextualHelp title="Nurse Notes">
+              Select a patient and record an observation or other important
+              nursing information. Save the note so it can be associated
+              with the selected patient's record.
+            </ContextualHelp>
+          )}
+
+          {title === "Notifications" && (
+            <ContextualHelp title="Notifications">
+              Use this area to stay informed about patient-related updates
+              and newly submitted patient reports.
+            </ContextualHelp>
+          )}
+        </div>
 
         <p
           style={{

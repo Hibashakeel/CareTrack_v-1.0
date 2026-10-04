@@ -23,7 +23,7 @@ export default function ContextualHelp({
   const [open, setOpen] = useState(false);
 
   const containerRef =
-    useRef<HTMLDivElement>(null);
+    useRef<HTMLSpanElement>(null);
 
   /* =====================================================
      CLOSE WHEN CLICKING OUTSIDE
@@ -93,13 +93,15 @@ export default function ContextualHelp({
   };
 
   return (
-    <div
+    <span
       ref={containerRef}
       style={{
         position: "relative",
         display: "inline-flex",
-        marginLeft: "5px",
+        alignItems: "center",
+        marginLeft: "7px",
         verticalAlign: "middle",
+        lineHeight: 1,
       }}
     >
       {/* =================================================
@@ -127,6 +129,7 @@ export default function ContextualHelp({
           cursor: "pointer",
           transition:
             "background 0.18s ease, transform 0.18s ease",
+          flexShrink: 0,
         }}
         onMouseEnter={(event) => {
           event.currentTarget.style.background =
@@ -275,6 +278,6 @@ export default function ContextualHelp({
           </div>
         </div>
       )}
-    </div>
+    </span>
   );
 }
