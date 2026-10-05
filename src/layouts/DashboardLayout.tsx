@@ -360,7 +360,7 @@ return ( <div className="app-shell">
           alignItems: "center",
           gap: "10px",
           padding: "10px 12px",
-          color: "#b9cbd7",
+          color: "#b9cde3",
           fontSize: "12px",
         }}
       >
@@ -485,7 +485,7 @@ return ( <div className="app-shell">
           padding: "12px 16px",
           borderRadius: "10px",
           background: "#eaf6f6",
-          border: "1px solid #cce8e8",
+          border: "1px solid #cbd7e8",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -498,7 +498,7 @@ return ( <div className="app-shell">
             style={{
               display: "block",
               fontSize: "13px",
-              color: "#087b83",
+              color: "#0056dd",
             }}
           >
             Demo Mode
@@ -518,7 +518,7 @@ return ( <div className="app-shell">
         <Link
           to="/login"
           style={{
-            background: "#087b83",
+            background: "#0056dd",
             color: "white",
             padding: "8px 14px",
             borderRadius: "8px",

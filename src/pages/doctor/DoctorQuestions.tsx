@@ -2369,7 +2369,7 @@ export default function DoctorQuestions() {
                               border:
                                 "none",
                               background:
-                                "#159a9c",
+                                "#006ee6",
                               color:
                                 "#ffffff",
                               display:
@@ -2639,7 +2639,7 @@ export default function DoctorQuestions() {
                           border:
                             "none",
                           background:
-                            "#159a9c",
+                            "#006ee6",
                           color:
                             "#ffffff",
                           cursor:

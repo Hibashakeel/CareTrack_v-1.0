@@ -46,7 +46,7 @@
 .dashboard-eyebrow,
 .card-kicker {
   margin: 0;
-  color: #159a9c !important;
+  color: #006ee6 !important;
   font-size: 11px !important;
   font-weight: 800 !important;
   letter-spacing: 0.1em;
@@ -74,7 +74,7 @@
   padding: 0 17px;
   border: 0;
   border-radius: 10px;
-  background: #159a9c;
+  background: #006ee6;
   color: #ffffff;
   font-size: 13px;
   font-weight: 700;
@@ -82,7 +82,7 @@
 }
 
 .patient-primary-button:hover {
-  background: #118486;
+  background: #0b4086;
   transform: translateY(-1px);
   box-shadow: 0 7px 18px rgba(21, 154, 156, 0.18);
 }
@@ -100,20 +100,20 @@
 
 .patient-secondary-button:hover {
   background: #f3fafb;
-  border-color: #159a9c;
-  color: #117e80;
+  border-color: #006ee6;
+  color: #0b3e80;
 }
 
 .patient-text-button {
   border: 0;
   background: transparent;
-  color: #168d90;
+  color: #104790;
   font-size: 12px;
   font-weight: 700;
 }
 
 .patient-text-button:hover {
-  color: #0e6f71;
+  color: #093671;
 }
 
 .full-button {
@@ -217,7 +217,7 @@
   height: 38px;
   border-radius: 10px;
   background: #e5f6f5;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 .health-summary-item span,
@@ -305,7 +305,7 @@
   height: 46px;
   border-radius: 12px;
   background: #e3f6f5;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 .question-card-content {
@@ -341,7 +341,7 @@
   height: 43px;
   border-radius: 11px;
   background: #e7f6f6;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 .status-badge {
@@ -431,7 +431,7 @@
   height: 9px;
   margin-top: 4px;
   border-radius: 50%;
-  background: #159a9c;
+  background: #006ee6;
   box-shadow: 0 0 0 4px #e8f7f6;
 }
 
@@ -469,7 +469,7 @@
   border: 1px solid #e0edf2;
   border-radius: 11px;
   background: #fbfdfe;
-  color: #159a9c;
+  color: #006ee6;
   text-decoration: none;
   transition:
     transform 0.18s ease,
@@ -479,8 +479,8 @@
 
 .quick-action:hover {
   transform: translateY(-2px);
-  border-color: #9ed8d8;
-  background: #f3fbfb;
+  border-color: #9bb5d8;
+  background: #f4f9ff;
 }
 
 .quick-action span {

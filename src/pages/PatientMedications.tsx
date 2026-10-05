@@ -88,7 +88,7 @@ export default function PatientMedications() {
       <div className="patient-inner-card">
 
         <div className="patient-card-title">
-          <Pill size={20} color="#159a9c" />
+          <Pill size={20} color="#006ee6" />
           Today's Medication Schedule
         </div>
 
@@ -162,7 +162,7 @@ export default function PatientMedications() {
           <div className="patient-card-title">
             <CalendarDays
               size={19}
-              color="#159a9c"
+              color="#006ee6"
             />
 
             Medication Record
@@ -191,7 +191,7 @@ export default function PatientMedications() {
           <div className="patient-card-title">
             <CheckCircle2
               size={19}
-              color="#159a9c"
+              color="#006ee6"
             />
 
             Today's Progress

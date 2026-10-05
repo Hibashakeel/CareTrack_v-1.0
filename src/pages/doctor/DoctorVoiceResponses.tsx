@@ -89,7 +89,7 @@ export default function DoctorVoiceResponses() {
                 PATIENT INFORMATION
             ========================== */}
             <div className="patient-card-title">
-              <User size={20} color="#159a9c" />
+              <User size={20} color="#006ee6" />
 
               <span>Patient Voice Response</span>
             </div>
@@ -117,8 +117,8 @@ export default function DoctorVoiceResponses() {
                     width: "44px",
                     height: "44px",
                     borderRadius: "50%",
-                    background: "#e8f7f7",
-                    color: "#159a9c",
+                    background: "#eef6ff",
+                    color: "#006ee6",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -219,8 +219,8 @@ export default function DoctorVoiceResponses() {
                       width: "40px",
                       height: "40px",
                       borderRadius: "10px",
-                      background: "#e8f7f7",
-                      color: "#159a9c",
+                      background: "#eef6ff",
+                      color: "#006ee6",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -269,7 +269,7 @@ export default function DoctorVoiceResponses() {
               <div className="patient-card-title">
                 <MessageSquareText
                   size={19}
-                  color="#159a9c"
+                  color="#006ee6"
                 />
 
                 <span>Editable Transcript</span>
@@ -314,7 +314,7 @@ export default function DoctorVoiceResponses() {
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
-                color: "#159a9c",
+                color: "#006ee6",
                 fontSize: "13px",
                 fontWeight: 600,
               }}

@@ -28,8 +28,8 @@ export default function Features() {
 
         .features-page {
           min-height: 100vh;
-          background: #f7fbfb;
-          color: #183b3e;
+          background: #f7fbff;
+          color: #173b5d;
 
           font-family:
             Inter,
@@ -81,7 +81,7 @@ export default function Features() {
 
           margin-bottom: 16px;
 
-          color: #159a9c;
+          color: #006ee6;
 
           font-size: 11px;
           font-weight: 800;
@@ -94,7 +94,7 @@ export default function Features() {
           width: 25px;
           height: 2px;
 
-          background: #159a9c;
+          background: #006ee6;
 
           border-radius: 20px;
         }
@@ -104,7 +104,7 @@ export default function Features() {
 
           margin: 0;
 
-          color: #123f43;
+          color: #123b5d;
 
           font-size: clamp(42px, 5vw, 64px);
           line-height: 1.03;
@@ -117,7 +117,7 @@ export default function Features() {
 
           margin: 23px 0 28px;
 
-          color: #607b7d;
+          color: #5f6c7d;
 
           font-size: 15px;
           line-height: 1.8;
@@ -132,7 +132,7 @@ export default function Features() {
 
           border-radius: 10px;
 
-          background: #159a9c;
+          background: #006ee6;
           color: white;
 
           text-decoration: none;
@@ -152,7 +152,7 @@ export default function Features() {
         .features-primary-button:hover {
           transform: translateY(-2px);
 
-          background: #117f81;
+          background: #0056dd;
 
           box-shadow:
             0 14px 30px rgba(21, 154, 156, 0.23);
@@ -169,7 +169,7 @@ export default function Features() {
 
           overflow: hidden;
 
-          border: 1px solid #e1eeee;
+          border: 1px solid #e5edff;
           border-radius: 20px;
 
           background: #fbfefe;
@@ -188,7 +188,7 @@ export default function Features() {
         .features-hero-card:hover {
           transform: translateY(-5px);
 
-          border-color: #b9dcdc;
+          border-color: #c8ddf5;
 
           box-shadow:
             0 18px 40px rgba(18, 63, 67, 0.08);
@@ -206,8 +206,8 @@ export default function Features() {
           background:
             linear-gradient(
               135deg,
-              #123f43,
-              #17666a
+              #123b5d,
+              #13396a
             );
 
           color: white;
@@ -248,7 +248,7 @@ export default function Features() {
 
           margin-bottom: 9px;
 
-          color: #9bd6d5;
+          color: #98b3d6;
 
           font-size: 9px;
           font-weight: 800;
@@ -310,9 +310,9 @@ export default function Features() {
 
           border-radius: 11px;
 
-          background: #e8f7f7;
+          background: #eef6ff;
 
-          color: #159a9c;
+          color: #006ee6;
 
           transition:
             transform 0.25s ease,
@@ -329,7 +329,7 @@ export default function Features() {
         .feature-mini-row strong {
           display: block;
 
-          color: #21494c;
+          color: #1f324c;
 
           font-size: 12px;
           font-weight: 750;
@@ -340,7 +340,7 @@ export default function Features() {
 
           margin-top: 2px;
 
-          color: #799294;
+          color: #788494;
 
           font-size: 10px;
           line-height: 1.4;
@@ -363,7 +363,7 @@ export default function Features() {
         }
 
         .features-section-header span {
-          color: #159a9c;
+          color: #006ee6;
 
           font-size: 11px;
           font-weight: 800;
@@ -373,7 +373,7 @@ export default function Features() {
         .features-section-header h2 {
           margin: 10px 0 14px;
 
-          color: #123f43;
+          color: #123b5d;
 
           font-size: clamp(30px, 4vw, 43px);
           line-height: 1.12;
@@ -383,7 +383,7 @@ export default function Features() {
         .features-section-header p {
           margin: 0;
 
-          color: #71888a;
+          color: #707b8a;
 
           font-size: 14px;
           line-height: 1.8;
@@ -403,7 +403,7 @@ export default function Features() {
 
           padding: 27px;
 
-          border: 1px solid #e1eeee;
+          border: 1px solid #e5edff;
           border-radius: 20px;
 
           background: #fbfefe;
@@ -419,7 +419,7 @@ export default function Features() {
         .feature-card:hover {
           transform: translateY(-5px);
 
-          border-color: #b9dcdc;
+          border-color: #c8ddf5;
 
           box-shadow:
             0 18px 40px rgba(18, 63, 67, 0.08);
@@ -437,9 +437,9 @@ export default function Features() {
 
           border-radius: 14px;
 
-          background: #e8f7f7;
+          background: #eef6ff;
 
-          color: #159a9c;
+          color: #006ee6;
 
           transition:
             transform 0.25s ease,
@@ -456,7 +456,7 @@ export default function Features() {
         .feature-card h3 {
           margin: 0 0 10px;
 
-          color: #1b4649;
+          color: #192e49;
 
           font-size: 18px;
         }
@@ -464,7 +464,7 @@ export default function Features() {
         .feature-card p {
           margin: 0;
 
-          color: #72888a;
+          color: #717c8a;
 
           font-size: 13px;
           line-height: 1.75;
@@ -492,7 +492,7 @@ export default function Features() {
         }
 
         .experience-heading span {
-          color: #159a9c;
+          color: #006ee6;
 
           font-size: 11px;
           font-weight: 800;
@@ -502,7 +502,7 @@ export default function Features() {
         .experience-heading h2 {
           margin: 12px 0 17px;
 
-          color: #123f43;
+          color: #123b5d;
 
           font-size: clamp(32px, 4vw, 45px);
           line-height: 1.1;
@@ -512,7 +512,7 @@ export default function Features() {
         .experience-heading p {
           margin: 0;
 
-          color: #708789;
+          color: #6f7a89;
 
           font-size: 14px;
           line-height: 1.8;
@@ -563,15 +563,15 @@ export default function Features() {
 
           border-radius: 10px;
 
-          background: #e8f7f7;
+          background: #eef6ff;
 
-          color: #159a9c;
+          color: #006ee6;
         }
 
         .experience-item h3 {
           margin: 0 0 5px;
 
-          color: #21494c;
+          color: #1f324c;
 
           font-size: 14px;
         }
@@ -579,7 +579,7 @@ export default function Features() {
         .experience-item p {
           margin: 0;
 
-          color: #778d8f;
+          color: #76818f;
 
           font-size: 12px;
           line-height: 1.65;
@@ -592,7 +592,7 @@ export default function Features() {
         .scope-section {
           padding: 70px 0;
 
-          background: #123f43;
+          background: #123b5d;
         }
 
         .scope-box {
@@ -613,7 +613,7 @@ export default function Features() {
 
           margin-bottom: 10px;
 
-          color: #80cecc;
+          color: #7ca0ce;
 
           font-size: 10px;
           font-weight: 800;
@@ -632,7 +632,7 @@ export default function Features() {
         .scope-content p {
           margin: 0;
 
-          color: #b2cdce;
+          color: #b1bdce;
 
           font-size: 13px;
           line-height: 1.8;
@@ -660,7 +660,7 @@ export default function Features() {
           background:
             rgba(255, 255, 255, 0.08);
 
-          color: #80cecc;
+          color: #7ca0ce;
         }
 
         /* =========================
@@ -670,7 +670,7 @@ export default function Features() {
         .caretrack-footer {
           width: 100%;
 
-          background: #123f43;
+          background: #123b5d;
 
           color: white;
 
@@ -718,7 +718,7 @@ export default function Features() {
 
           border-radius: 13px;
 
-          background: #159a9c;
+          background: #006ee6;
 
           color: white;
         }
@@ -735,7 +735,7 @@ export default function Features() {
 
           margin-top: 4px;
 
-          color: #a9c7c9;
+          color: #aac8e8;
 
           font-size: 10px;
           letter-spacing: 0.3px;
@@ -744,7 +744,7 @@ export default function Features() {
         .footer-brand > p {
           margin: 0;
 
-          color: #b3cbcd;
+          color: #b4cbe5;
 
           font-size: 13px;
           line-height: 1.8;
@@ -758,7 +758,7 @@ export default function Features() {
 
           margin-top: 20px;
 
-          color: #8ed3d2;
+          color: #a8d1ff;
 
           font-size: 11px;
         }
@@ -787,7 +787,7 @@ export default function Features() {
 
           margin-bottom: 13px;
 
-          color: #b4cbcd;
+          color: #b6cbe0;
 
           font-size: 12px;
 
@@ -805,7 +805,7 @@ export default function Features() {
         }
 
         .footer-column > a svg {
-          color: #61c4c3;
+          color: #73b5ff;
         }
 
         .footer-info {
@@ -816,7 +816,7 @@ export default function Features() {
 
           margin-bottom: 14px;
 
-          color: #b4cbcd;
+          color: #b6cbe0;
 
           font-size: 12px;
           line-height: 1.4;
@@ -825,7 +825,7 @@ export default function Features() {
         .footer-info svg {
           flex-shrink: 0;
 
-          color: #61c4c3;
+          color: #73b5ff;
 
           margin-top: 1px;
         }
@@ -859,7 +859,7 @@ export default function Features() {
         .footer-bottom p {
           margin: 0;
 
-          color: #91afb1;
+          color: #92afcc;
 
           font-size: 11px;
         }
@@ -870,7 +870,7 @@ export default function Features() {
 
           gap: 9px;
 
-          color: #91afb1;
+          color: #92afcc;
 
           font-size: 11px;
         }

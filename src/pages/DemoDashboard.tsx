@@ -846,7 +846,7 @@ export default function DemoDashboard() {
         .demo-interface {
           min-height: 100vh;
           background: #f4f8f8;
-          color: #173b3a;
+          color: #173b5d;
           font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
@@ -879,18 +879,18 @@ export default function DemoDashboard() {
           border-radius: 12px;
           display: grid;
           place-items: center;
-          background: #0f766e;
+          background: #0056dd;
           color: white;
         }
 
         .demo-brand strong {
           font-size: 18px;
           display: block;
-          color: #173b3a;
+          color: #173b5d;
         }
 
         .demo-brand span {
-          color: #78908f;
+          color: #778290;
           font-size: 12px;
         }
 
@@ -902,8 +902,8 @@ export default function DemoDashboard() {
 
         .demo-mode-badge {
           background: #e8f7f5;
-          color: #0f766e;
-          border: 1px solid #ccece8;
+          color: #0056dd;
+          border: 1px solid #cad9ec;
           border-radius: 999px;
           padding: 8px 13px;
           font-size: 12px;
@@ -915,7 +915,7 @@ export default function DemoDashboard() {
           align-items: center;
           gap: 7px;
           text-decoration: none;
-          color: #536968;
+          color: #525c69;
           border: 1px solid #dbe7e6;
           background: white;
           padding: 9px 13px;
@@ -926,7 +926,7 @@ export default function DemoDashboard() {
 
         .demo-exit:hover {
           background: #f5fbfa;
-          color: #0f766e;
+          color: #0056dd;
         }
 
         /*
@@ -943,7 +943,7 @@ export default function DemoDashboard() {
         }
 
         .demo-welcome {
-          background: linear-gradient(135deg, #0f766e, #0d9488);
+          background: linear-gradient(135deg, #0056dd, #064494);
           color: white;
           border-radius: 18px;
           padding: 28px;
@@ -982,7 +982,7 @@ export default function DemoDashboard() {
           justify-content: center;
           gap: 8px;
           background: white;
-          color: #0f766e;
+          color: #0056dd;
           text-decoration: none;
           padding: 11px 16px;
           border-radius: 10px;
@@ -1019,21 +1019,21 @@ export default function DemoDashboard() {
           place-items: center;
           border-radius: 11px;
           background: #e8f7f5;
-          color: #0f766e;
+          color: #0056dd;
           flex-shrink: 0;
         }
 
         .demo-stat-card strong {
           display: block;
           font-size: 20px;
-          color: #173b3a;
+          color: #173b5d;
         }
 
         .demo-stat-card span {
           display: block;
           margin-top: 3px;
           font-size: 11px;
-          color: #78908f;
+          color: #778290;
         }
 
         .demo-two-column {
@@ -1058,12 +1058,12 @@ export default function DemoDashboard() {
         .demo-section-title h2 {
           margin: 0;
           font-size: 17px;
-          color: #173b3a;
+          color: #173b5d;
         }
 
         .demo-section-title p {
           margin: 5px 0 0;
-          color: #78908f;
+          color: #778290;
           font-size: 12px;
         }
 
@@ -1082,13 +1082,13 @@ export default function DemoDashboard() {
         .demo-info-grid span {
           display: block;
           font-size: 11px;
-          color: #829695;
+          color: #818a96;
           margin-bottom: 6px;
         }
 
         .demo-info-grid strong {
           font-size: 13px;
-          color: #294846;
+          color: #273648;
         }
 
         .demo-action-list {
@@ -1104,7 +1104,7 @@ export default function DemoDashboard() {
           padding: 13px;
           border-radius: 10px;
           text-decoration: none;
-          color: #0f766e;
+          color: #0056dd;
           background: #f4f9f8;
         }
 
@@ -1123,12 +1123,12 @@ export default function DemoDashboard() {
 
         .demo-action-list strong {
           font-size: 12px;
-          color: #294846;
+          color: #273648;
         }
 
         .demo-action-list span {
           margin-top: 3px;
-          color: #829695;
+          color: #818a96;
           font-size: 11px;
         }
 
@@ -1140,7 +1140,7 @@ export default function DemoDashboard() {
 
         .demo-quick-grid a {
           text-decoration: none;
-          color: #0f766e;
+          color: #0056dd;
           border: 1px solid #e0eceb;
           border-radius: 12px;
           padding: 16px;
@@ -1148,21 +1148,21 @@ export default function DemoDashboard() {
         }
 
         .demo-quick-grid a:hover {
-          border-color: #9ed8d2;
+          border-color: #9bb5d8;
           background: #fbfefe;
           transform: translateY(-2px);
         }
 
         .demo-quick-grid strong {
           display: block;
-          color: #294846;
+          color: #273648;
           font-size: 13px;
           margin-top: 12px;
         }
 
         .demo-quick-grid span {
           display: block;
-          color: #829695;
+          color: #818a96;
           font-size: 11px;
           margin-top: 4px;
           line-height: 1.5;
@@ -1190,7 +1190,7 @@ export default function DemoDashboard() {
           display: grid;
           place-items: center;
           background: #e3f4f2;
-          color: #0f766e;
+          color: #0056dd;
           font-size: 12px;
           font-weight: 800;
           flex-shrink: 0;
@@ -1208,11 +1208,11 @@ export default function DemoDashboard() {
 
         .demo-patient-main strong {
           font-size: 12px;
-          color: #294846;
+          color: #273648;
         }
 
         .demo-patient-main span {
-          color: #829695;
+          color: #818a96;
           font-size: 10px;
           margin-top: 3px;
         }
@@ -1220,7 +1220,7 @@ export default function DemoDashboard() {
         .demo-patient-row > a,
         .demo-table a,
         .demo-panel-link {
-          color: #0f766e;
+          color: #0056dd;
           text-decoration: none;
           font-size: 11px;
           font-weight: 700;
@@ -1229,7 +1229,7 @@ export default function DemoDashboard() {
         .demo-patient-row > a:hover,
         .demo-table a:hover,
         .demo-panel-link:hover {
-          color: #0b5f59;
+          color: #072d5f;
         }
 
         .demo-severity {
@@ -1268,18 +1268,18 @@ export default function DemoDashboard() {
           background: #f5f9f8;
           padding: 12px;
           border-radius: 9px;
-          color: #0f766e;
+          color: #0056dd;
         }
 
         .demo-task-list span {
           flex: 1;
-          color: #526a68;
+          color: #515c6a;
           font-size: 11px;
         }
 
         .demo-task-list strong {
           font-size: 12px;
-          color: #294846;
+          color: #273648;
         }
 
         .demo-table-wrap {
@@ -1295,7 +1295,7 @@ export default function DemoDashboard() {
         .demo-table th {
           text-align: left;
           padding: 11px;
-          color: #829695;
+          color: #818a96;
           font-size: 10px;
           font-weight: 800;
           border-bottom: 1px solid #e7efee;
@@ -1305,7 +1305,7 @@ export default function DemoDashboard() {
           padding: 13px 11px;
           border-bottom: 1px solid #edf2f1;
           font-size: 11px;
-          color: #607573;
+          color: #5f6975;
         }
 
         .demo-table-person {
@@ -1315,7 +1315,7 @@ export default function DemoDashboard() {
         }
 
         .demo-table-person strong {
-          color: #294846;
+          color: #273648;
           font-size: 12px;
         }
 
@@ -1345,11 +1345,11 @@ export default function DemoDashboard() {
 
         .demo-request strong {
           font-size: 12px;
-          color: #294846;
+          color: #273648;
         }
 
         .demo-request div span {
-          color: #829695;
+          color: #818a96;
           font-size: 10px;
           margin-top: 3px;
         }
@@ -1380,18 +1380,18 @@ export default function DemoDashboard() {
           border: 1px solid #e2eceb;
           border-radius: 10px;
           padding: 14px;
-          color: #0f766e;
+          color: #0056dd;
         }
 
         .demo-admin-grid strong {
           display: block;
-          color: #294846;
+          color: #273648;
           font-size: 18px;
           margin-top: 7px;
         }
 
         .demo-admin-grid span {
-          color: #829695;
+          color: #818a96;
           font-size: 10px;
         }
 
@@ -1412,22 +1412,22 @@ export default function DemoDashboard() {
           display: grid;
           place-items: center;
           background: #e8f7f5;
-          color: #0f766e;
+          color: #0056dd;
           border-radius: 17px;
         }
 
         .demo-empty-page .demo-eyebrow {
-          color: #0f766e;
+          color: #0056dd;
         }
 
         .demo-empty-page h1 {
           margin: 9px 0;
           font-size: 27px;
-          color: #173b3a;
+          color: #173b5d;
         }
 
         .demo-empty-page p {
-          color: #78908f;
+          color: #778290;
           max-width: 560px;
           margin: 0 auto 25px;
           line-height: 1.7;
@@ -1435,13 +1435,13 @@ export default function DemoDashboard() {
         }
 
         .demo-empty-page .demo-primary-button {
-          background: #0f766e;
+          background: #0056dd;
           color: white;
           display: inline-flex;
         }
 
         .demo-empty-page .demo-primary-button:hover {
-          background: #0b625c;
+          background: #072e62;
         }
 
         @media (max-width: 1050px) {

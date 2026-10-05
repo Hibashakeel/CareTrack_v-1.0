@@ -178,8 +178,8 @@ export default function AdminDashboard() {
           width: 52px;
           height: 52px;
           border-radius: 15px;
-          background: #e8f5f5;
-          color: #087b83;
+          background: #eef6ff;
+          color: #0056dd;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -217,7 +217,7 @@ export default function AdminDashboard() {
 
         .admin-refresh:hover {
           background: #f5fafb;
-          border-color: #bfd9dc;
+          border-color: #becbdc;
         }
 
         /* =========================================================
@@ -235,7 +235,7 @@ export default function AdminDashboard() {
               135deg,
               #17324d 0%,
               #214b63 58%,
-              #087b83 100%
+              #0056dd 100%
             );
 
           position: relative;
@@ -340,8 +340,8 @@ export default function AdminDashboard() {
         }
 
         .admin-stat-icon.nurse {
-          background: #eaf8f8;
-          color: #087b83;
+          background: #eef6ff;
+          color: #0056dd;
         }
 
         .admin-stat-icon.doctor {
@@ -394,8 +394,8 @@ export default function AdminDashboard() {
           width: 41px;
           height: 41px;
           border-radius: 12px;
-          background: #e8f5f5;
-          color: #087b83;
+          background: #eef6ff;
+          color: #0056dd;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -460,7 +460,7 @@ export default function AdminDashboard() {
         }
 
         .admin-search input:focus {
-          border-color: #5aa9ad;
+          border-color: #567cad;
           box-shadow:
             0 0 0 3px
             rgba(8, 123, 131, 0.08);
@@ -486,7 +486,7 @@ export default function AdminDashboard() {
         }
 
         .admin-user-card:hover {
-          border-color: #bcdadd;
+          border-color: #bac9dd;
           box-shadow:
             0 7px 20px
             rgba(8, 123, 131, 0.06);
@@ -505,7 +505,7 @@ export default function AdminDashboard() {
           min-width: 46px;
           border-radius: 13px;
           background: #edf5f7;
-          color: #087b83;
+          color: #0056dd;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -543,8 +543,8 @@ export default function AdminDashboard() {
         }
 
         .admin-role.nurse {
-          background: #eaf8f8;
-          color: #087b83;
+          background: #eef6ff;
+          color: #0056dd;
         }
 
         .admin-role.doctor {

@@ -365,7 +365,7 @@ export default function NurseNotes() {
 
             <Edit3
               size={21}
-              color="#159a9c"
+              color="#006ee6"
             />
 
           </div>
@@ -601,7 +601,7 @@ export default function NurseNotes() {
 
           <FileText
             size={21}
-            color="#159a9c"
+            color="#006ee6"
           />
 
         </div>
@@ -753,8 +753,8 @@ export default function NurseNotes() {
                         display: "inline-block",
                         padding: "4px 8px",
                         borderRadius: "15px",
-                        background: "#eaf8f8",
-                        color: "#159a9c",
+                        background: "#eef6ff",
+                        color: "#006ee6",
                         fontSize: "9px",
                         fontWeight: 700,
                       }}

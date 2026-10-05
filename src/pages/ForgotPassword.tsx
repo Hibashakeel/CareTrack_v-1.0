@@ -29,9 +29,7 @@ export default function ForgotPassword() {
         "If an account exists for this email, a password reset email has been sent."
       );
     } catch (e: any) {
-      setErr(
-        e?.message || "Unable to send reset email."
-      );
+      setErr(e?.message || "Unable to send reset email.");
     } finally {
       setLoading(false);
     }
@@ -268,7 +266,7 @@ const styles: Record<string, React.CSSProperties> = {
   page: {
     minHeight: "100vh",
     background:
-      "linear-gradient(135deg, #f5f8f7 0%, #eef4f2 50%, #f8faf9 100%)",
+      "linear-gradient(135deg, #f4f8ff 0%, #eef5ff 50%, #f8fbff 100%)",
     position: "relative",
     overflow: "hidden",
     fontFamily:
@@ -280,8 +278,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: "420px",
     height: "420px",
     borderRadius: "50%",
-    background:
-      "rgba(45, 112, 96, 0.055)",
+    background: "rgba(20, 105, 225, 0.055)",
     top: "-180px",
     left: "-150px",
   },
@@ -291,8 +288,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: "500px",
     height: "500px",
     borderRadius: "50%",
-    background:
-      "rgba(67, 130, 112, 0.045)",
+    background: "rgba(45, 125, 235, 0.045)",
     bottom: "-260px",
     right: "-180px",
   },
@@ -324,7 +320,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     gap: "10px",
     textDecoration: "none",
-    color: "#24332f",
+    color: "#24344d",
     fontSize: "24px",
     fontWeight: 750,
     width: "fit-content",
@@ -335,13 +331,13 @@ const styles: Record<string, React.CSSProperties> = {
     height: "44px",
     borderRadius: "13px",
     background:
-      "linear-gradient(135deg, #356f60, #285b4e)",
+      "linear-gradient(135deg, #0878e8, #075bbd)",
     color: "#ffffff",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     boxShadow:
-      "0 8px 20px rgba(40, 91, 78, 0.18)",
+      "0 8px 20px rgba(8, 120, 232, 0.18)",
     flexShrink: 0,
   },
 
@@ -356,8 +352,8 @@ const styles: Record<string, React.CSSProperties> = {
     gap: "7px",
     padding: "8px 12px",
     borderRadius: "30px",
-    background: "#e7f1ee",
-    color: "#356f60",
+    background: "#e8f2ff",
+    color: "#0878e8",
     fontSize: "12px",
     fontWeight: 650,
     marginBottom: "22px",
@@ -368,12 +364,12 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "47px",
     lineHeight: 1.1,
     letterSpacing: "-1.5px",
-    color: "#24332f",
+    color: "#24344d",
     fontWeight: 750,
   },
 
   brandHighlight: {
-    color: "#356f60",
+    color: "#0878e8",
   },
 
   brandDescription: {
@@ -381,7 +377,7 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: "500px",
     fontSize: "16px",
     lineHeight: 1.7,
-    color: "#64736e",
+    color: "#64748b",
   },
 
   infoCard: {
@@ -392,15 +388,15 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "15px",
     borderRadius: "12px",
     background: "rgba(255,255,255,0.72)",
-    border: "1px solid #dce7e3",
+    border: "1px solid #dbe7f5",
   },
 
   infoIcon: {
     width: "38px",
     height: "38px",
     borderRadius: "10px",
-    background: "#e7f1ee",
-    color: "#356f60",
+    background: "#e8f2ff",
+    color: "#0878e8",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -409,21 +405,21 @@ const styles: Record<string, React.CSSProperties> = {
 
   infoTitle: {
     display: "block",
-    color: "#354740",
+    color: "#3d5068",
     fontSize: "13px",
     marginBottom: "4px",
   },
 
   infoText: {
     margin: 0,
-    color: "#71807a",
+    color: "#718198",
     fontSize: "12px",
     lineHeight: 1.55,
   },
 
   brandFooter: {
     margin: 0,
-    color: "#94a39e",
+    color: "#94a3b8",
     fontSize: "12px",
   },
 
@@ -434,18 +430,18 @@ const styles: Record<string, React.CSSProperties> = {
   card: {
     background:
       "rgba(255, 255, 255, 0.97)",
-    border: "1px solid #dfe8e4",
+    border: "1px solid #dfe8f2",
     borderRadius: "22px",
     padding: "35px",
     boxShadow:
-      "0 20px 55px rgba(36, 51, 47, 0.08)",
+      "0 20px 55px rgba(36, 67, 105, 0.08)",
   },
 
   mobileLogo: {
     display: "none",
     alignItems: "center",
     gap: "9px",
-    color: "#24332f",
+    color: "#24344d",
     fontSize: "21px",
     fontWeight: 750,
     marginBottom: "25px",
@@ -462,8 +458,8 @@ const styles: Record<string, React.CSSProperties> = {
     width: "45px",
     height: "45px",
     borderRadius: "12px",
-    background: "#e7f1ee",
-    color: "#356f60",
+    background: "#e8f2ff",
+    color: "#0878e8",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -474,13 +470,13 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     fontSize: "26px",
     lineHeight: 1.2,
-    color: "#24332f",
+    color: "#24344d",
     fontWeight: 720,
   },
 
   subtitle: {
     margin: "5px 0 0",
-    color: "#697873",
+    color: "#69798d",
     fontSize: "13px",
     lineHeight: 1.5,
   },
@@ -494,7 +490,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: "8px",
     fontSize: "13px",
     fontWeight: 650,
-    color: "#3d4d48",
+    color: "#3d4d60",
   },
 
   inputWrapper: {
@@ -506,7 +502,7 @@ const styles: Record<string, React.CSSProperties> = {
     left: "13px",
     top: "50%",
     transform: "translateY(-50%)",
-    color: "#80908a",
+    color: "#718198",
     pointerEvents: "none",
   },
 
@@ -514,11 +510,11 @@ const styles: Record<string, React.CSSProperties> = {
     width: "100%",
     height: "48px",
     boxSizing: "border-box",
-    border: "1px solid #d5e0dc",
+    border: "1px solid #d5e0ec",
     borderRadius: "10px",
     padding: "0 13px 0 42px",
     background: "#ffffff",
-    color: "#24332f",
+    color: "#24344d",
     outline: "none",
     fontSize: "14px",
   },
@@ -527,9 +523,9 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     alignItems: "flex-start",
     gap: "10px",
-    background: "#f1f8f4",
-    border: "1px solid #cfe4d9",
-    color: "#356f60",
+    background: "#eef6ff",
+    border: "1px solid #cfe0f5",
+    color: "#0878e8",
     borderRadius: "10px",
     padding: "12px 13px",
     marginBottom: "19px",
@@ -541,7 +537,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: "30px",
     height: "30px",
     borderRadius: "8px",
-    background: "#dfeee8",
+    background: "#e0edff",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -568,7 +564,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: "none",
     borderRadius: "10px",
     background:
-      "linear-gradient(135deg, #356f60, #285b4e)",
+      "linear-gradient(135deg, #0878e8, #075bbd)",
     color: "#ffffff",
     fontSize: "14px",
     fontWeight: 650,
@@ -577,7 +573,7 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: "center",
     gap: "9px",
     boxShadow:
-      "0 8px 18px rgba(40, 91, 78, 0.18)",
+      "0 8px 18px rgba(8, 120, 232, 0.18)",
   },
 
   divider: {
@@ -585,13 +581,13 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     gap: "10px",
     margin: "25px 0 20px",
-    color: "#9aa8a3",
+    color: "#9aa8b8",
   },
 
   dividerLine: {
     flex: 1,
     height: "1px",
-    background: "#e3ebe8",
+    background: "#e3eaf2",
   },
 
   backLink: {
@@ -599,7 +595,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     justifyContent: "center",
     gap: "7px",
-    color: "#356f60",
+    color: "#0878e8",
     textDecoration: "none",
     fontSize: "13px",
     fontWeight: 650,
@@ -609,8 +605,8 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: "22px",
     padding: "11px 12px",
     borderRadius: "9px",
-    background: "#f4f8f6",
-    color: "#71817b",
+    background: "#f3f7fc",
+    color: "#718198",
     display: "flex",
     alignItems: "flex-start",
     gap: "8px",

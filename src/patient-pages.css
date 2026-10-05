@@ -35,7 +35,7 @@
   border: 1px solid #bce8df;
   border-radius: 12px;
   background: #f0fbf8;
-  color: #167c70;
+  color: #113f7c;
   font-size: 14px;
   font-weight: 600;
 }
@@ -142,7 +142,7 @@
 .patient-form-group input:focus,
 .patient-form-group textarea:focus,
 .patient-form-group select:focus {
-  border-color: #159a9c;
+  border-color: #006ee6;
   box-shadow: 0 0 0 3px rgba(21, 154, 156, 0.1);
 }
 
@@ -155,7 +155,7 @@
   justify-self: start;
   border: 0;
   border-radius: 10px;
-  background: #159a9c;
+  background: #006ee6;
   color: white;
   padding: 11px 20px;
   font-size: 13px;
@@ -165,7 +165,7 @@
 }
 
 .patient-save-button:hover {
-  background: #118789;
+  background: #0056dd;
   transform: translateY(-1px);
 }
 
@@ -182,7 +182,7 @@
   margin: 0 auto 15px;
   border-radius: 16px;
   background: #dff5f4;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 .patient-id-number {
@@ -280,14 +280,14 @@
 }
 
 .condition-option label:hover {
-  border-color: #159a9c;
+  border-color: #006ee6;
   background: #f5fcfc;
 }
 
 .condition-option input:checked + label {
-  border-color: #159a9c;
+  border-color: #006ee6;
   background: #eaf8f7;
-  color: #117d7f;
+  color: #0056dd;
 }
 
 /* Pain */
@@ -300,7 +300,7 @@
 
 .pain-range {
   flex: 1;
-  accent-color: #159a9c;
+  accent-color: #006ee6;
   cursor: pointer;
 }
 
@@ -309,7 +309,7 @@
   padding: 7px 10px;
   border-radius: 9px;
   background: #eaf8f7;
-  color: #117d7f;
+  color: #0056dd;
   text-align: center;
   font-size: 13px;
   font-weight: 800;
@@ -336,13 +336,13 @@
 }
 
 .water-button:hover {
-  border-color: #159a9c;
+  border-color: #006ee6;
 }
 
 .water-button.active {
-  border-color: #159a9c;
+  border-color: #006ee6;
   background: #eaf8f7;
-  color: #117d7f;
+  color: #0056dd;
 }
 
 .water-value {
@@ -367,7 +367,7 @@
 }
 
 .report-textarea:focus {
-  border-color: #159a9c;
+  border-color: #006ee6;
   box-shadow: 0 0 0 3px rgba(21, 154, 156, 0.1);
 }
 
@@ -377,7 +377,7 @@
   width: 100%;
   border: 0;
   border-radius: 11px;
-  background: #159a9c;
+  background: #006ee6;
   color: #ffffff;
   padding: 13px 18px;
   font-size: 13px;
@@ -387,7 +387,7 @@
 }
 
 .report-save-button:hover {
-  background: #118789;
+  background: #0056dd;
   transform: translateY(-1px);
 }
 
@@ -417,7 +417,7 @@
   place-items: center;
   border-radius: 9px;
   background: #eaf8f7;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 .report-help-item h4 {
@@ -491,7 +491,7 @@
 }
 
 .medication-item:hover {
-  border-color: #b9dddd;
+  border-color: #b7c8dd;
   transform: translateY(-1px);
 }
 
@@ -509,7 +509,7 @@
   place-items: center;
   border-radius: 12px;
   background: #eaf8f7;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 .medication-main h3 {
@@ -554,10 +554,10 @@
 }
 
 .medication-take-button {
-  border: 1px solid #159a9c;
+  border: 1px solid #006ee6;
   border-radius: 9px;
   background: #ffffff;
-  color: #159a9c;
+  color: #006ee6;
   padding: 9px 13px;
   font-size: 11px;
   font-weight: 800;
@@ -566,7 +566,7 @@
 }
 
 .medication-take-button:hover {
-  background: #159a9c;
+  background: #006ee6;
   color: #ffffff;
 }
 
@@ -608,7 +608,7 @@
   padding: 13px 8px;
   border-radius: 12px;
   background: #eaf8f7;
-  color: #159a9c;
+  color: #006ee6;
   text-align: center;
   font-size: 18px;
   font-weight: 900;
@@ -692,7 +692,7 @@
 }
 
 .patient-inner-card:hover {
-  border-color: #c9e0e7;
+  border-color: #c8d5e7;
   box-shadow: 0 12px 30px rgba(25, 69, 92, 0.07);
 }
 
@@ -754,7 +754,7 @@
 
 .daily-report-layout .card-kicker {
   margin: 0 0 7px;
-  color: #159a9c;
+  color: #006ee6;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -783,7 +783,7 @@
   padding: 10px;
   border-radius: 12px;
   background: #eaf8f7;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 /* Condition */
@@ -822,15 +822,15 @@
 }
 
 .condition-option span:hover {
-  border-color: #159a9c;
+  border-color: #006ee6;
   background: #f5fcfc;
   transform: translateY(-1px);
 }
 
 .condition-option.selected span {
-  border-color: #159a9c;
+  border-color: #006ee6;
   background: #eaf8f7;
-  color: #117d7f;
+  color: #0056dd;
   box-shadow: 0 0 0 3px rgba(21, 154, 156, 0.08);
 }
 
@@ -844,7 +844,7 @@
   padding: 10px 15px;
   border-radius: 12px;
   background: #eaf8f7;
-  color: #117d7f;
+  color: #0056dd;
 }
 
 .pain-value strong {
@@ -860,7 +860,7 @@
 .pain-range {
   width: 100%;
   margin: 4px 0 7px;
-  accent-color: #159a9c;
+  accent-color: #006ee6;
   cursor: pointer;
 }
 
@@ -898,7 +898,7 @@
 
 .patient-textarea:focus,
 .report-textarea:focus {
-  border-color: #159a9c;
+  border-color: #006ee6;
   background: #ffffff;
   box-shadow: 0 0 0 4px rgba(21, 154, 156, 0.09);
 }
@@ -944,9 +944,9 @@
 
 .water-button:hover,
 .water-button.selected {
-  border-color: #159a9c;
+  border-color: #006ee6;
   background: #eaf8f7;
-  color: #117d7f;
+  color: #0056dd;
 }
 
 .form-helper {
@@ -961,7 +961,7 @@
 .report-help {
   height: fit-content;
   padding: 22px !important;
-  background: linear-gradient(145deg, #f3fbfb, #ffffff) !important;
+  background: linear-gradient(145deg, #f4f9ff, #ffffff) !important;
 }
 
 .report-help > svg {
@@ -971,7 +971,7 @@
   margin-bottom: 13px;
   border-radius: 12px;
   background: #dff5f4;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 .report-help h2 {
@@ -994,7 +994,7 @@
   min-height: 48px;
   border: 0;
   border-radius: 12px;
-  background: #159a9c;
+  background: #006ee6;
   color: #ffffff;
   padding: 13px 18px;
   font-size: 13px;
@@ -1004,7 +1004,7 @@
 }
 
 .daily-report-layout .report-save-button:hover:not(:disabled) {
-  background: #118789;
+  background: #0056dd;
   transform: translateY(-1px);
   box-shadow: 0 10px 20px rgba(21, 154, 156, 0.22);
 }
@@ -1032,7 +1032,7 @@
 }
 
 .patient-page .question-item:hover {
-  border-color: #c9e0e7;
+  border-color: #c8d5e7;
   background: #ffffff;
   box-shadow: 0 5px 17px rgba(25, 69, 92, 0.05);
 }
@@ -1052,7 +1052,7 @@
   place-items: center;
   border-radius: 11px;
   background: #eaf8f7;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 .question-meta {
@@ -1121,25 +1121,25 @@
 }
 
 .question-answer-button {
-  border: 1px solid #159a9c;
+  border: 1px solid #006ee6;
   background: #ffffff;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 .question-answer-button:hover {
-  background: #159a9c;
+  background: #006ee6;
   color: #ffffff;
 }
 
 .question-submit-button {
   border: 0;
-  background: #159a9c;
+  background: #006ee6;
   color: #ffffff;
   box-shadow: 0 5px 12px rgba(21, 154, 156, 0.16);
 }
 
 .question-submit-button:hover {
-  background: #118789;
+  background: #0056dd;
   transform: translateY(-1px);
 }
 
@@ -1184,7 +1184,7 @@
 }
 
 .voice-recorder.recording {
-  border-color: #a8dddd;
+  border-color: #a5bddd;
   background: linear-gradient(145deg, #eefafa, #ffffff);
 }
 
@@ -1196,7 +1196,7 @@
   margin-bottom: 18px;
   border-radius: 50%;
   background: #e1f6f5;
-  color: #159a9c;
+  color: #006ee6;
   box-shadow: 0 0 0 10px rgba(21, 154, 156, 0.06);
 }
 
@@ -1248,13 +1248,13 @@
 
 .voice-record-button {
   border: 0;
-  background: #159a9c;
+  background: #006ee6;
   color: #ffffff;
   box-shadow: 0 6px 14px rgba(21, 154, 156, 0.18);
 }
 
 .voice-record-button:hover {
-  background: #118789;
+  background: #0056dd;
   transform: translateY(-1px);
 }
 
@@ -1301,13 +1301,13 @@
 }
 
 .voice-play-button {
-  border: 1px solid #159a9c;
+  border: 1px solid #006ee6;
   background: #ffffff;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 .voice-play-button:hover {
-  background: #159a9c;
+  background: #006ee6;
   color: #ffffff;
 }
 
@@ -1453,8 +1453,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #eaf7f7;
-  color: #159a9c;
+  background: #eef6ff;
+  color: #006ee6;
   border: 1px solid #d2eded;
   flex-shrink: 0;
 }
@@ -1492,7 +1492,7 @@
   align-items: center;
   justify-content: center;
   background: #eef8f8;
-  color: #159a9c;
+  color: #006ee6;
   flex-shrink: 0;
 }
 
@@ -1574,7 +1574,7 @@
 /* Activity-specific icons */
 
 .timeline-icon-report {
-  color: #167d9a;
+  color: #0f4b9a;
   background: #e7f5fa;
 }
 
@@ -1650,9 +1650,9 @@
 }
 
 .timeline-type-report {
-  color: #167d9a;
+  color: #0f4b9a;
   background: #edf8fb;
-  border-color: #d4edf3;
+  border-color: #d2e1f3;
 }
 
 .timeline-type-medication {
@@ -1710,7 +1710,7 @@
 }
 
 .timeline-footer-note svg {
-  color: #159a9c;
+  color: #006ee6;
   flex-shrink: 0;
 }
 
@@ -1846,7 +1846,7 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 .notifications-page-heading h1 {
@@ -1880,8 +1880,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background: #eaf7f7;
-  color: #159a9c;
+  background: #eef6ff;
+  color: #006ee6;
 }
 
 .notifications-header-stat strong {
@@ -1936,7 +1936,7 @@
   justify-content: center;
   border-radius: 10px;
   background: #edf8f8;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 .notifications-panel-title h2 {
@@ -2012,7 +2012,7 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: #159a9c;
+  background: #006ee6;
 }
 
 /* Notification Icon */
@@ -2107,7 +2107,7 @@
   padding: 5px 8px;
   border-radius: 20px;
   background: #e8f7f6;
-  color: #128486;
+  color: #0c4186;
   font-size: 10px;
   font-weight: 700;
 }
@@ -2176,7 +2176,7 @@
 
 .notifications-panel-footer svg {
   flex-shrink: 0;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 /* =========================================================

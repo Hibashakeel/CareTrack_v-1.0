@@ -74,8 +74,8 @@ export default function Demo() {
               rgba(21,154,156,.10),
               transparent 25%
             ),
-            #f7fbfb;
-          color: #183b3e;
+            #f7fbff;
+          color: #173b5d;
         }
 
         .demo-container {
@@ -103,7 +103,7 @@ export default function Demo() {
           align-items: center;
           justify-content: center;
           border-radius: 15px;
-          background: linear-gradient(135deg, #159a9c, #117578);
+          background: linear-gradient(135deg, #006ee6, #004fbf);
           color: white;
           box-shadow: 0 9px 25px rgba(21,154,156,.20);
           animation: floating 4s ease-in-out infinite;
@@ -112,7 +112,7 @@ export default function Demo() {
         .demo-eyebrow {
           display: block;
           margin-bottom: 9px;
-          color: #159a9c;
+          color: #006ee6;
           font-size: 9px;
           font-weight: 800;
           letter-spacing: 1.7px;
@@ -120,7 +120,7 @@ export default function Demo() {
 
         .demo-header h1 {
           margin: 0;
-          color: #123f43;
+          color: #123b5d;
           font-size: clamp(31px, 4vw, 45px);
           line-height: 1.08;
           letter-spacing: -1.5px;
@@ -129,7 +129,7 @@ export default function Demo() {
         .demo-header p {
           margin: 14px auto 0;
           max-width: 620px;
-          color: #718789;
+          color: #707b89;
           font-size: 12px;
           line-height: 1.7;
         }
@@ -140,15 +140,15 @@ export default function Demo() {
           gap: 7px;
           margin-top: 15px;
           padding: 7px 11px;
-          border: 1px solid #d6e8e8;
+          border: 1px solid #d8e8ff;
           border-radius: 20px;
           background: white;
-          color: #648082;
+          color: #627082;
           font-size: 9px;
         }
 
         .demo-notice svg {
-          color: #159a9c;
+          color: #006ee6;
         }
 
         /* =========================
@@ -167,9 +167,9 @@ export default function Demo() {
           overflow: hidden;
           display: flex;
           align-items: flex-end;
-          border: 1px solid #dbeaea;
+          border: 1px solid #dbe8ff;
           border-radius: 19px;
-          background: #123f43;
+          background: #123b5d;
           text-decoration: none;
           color: white;
           box-shadow: 0 10px 30px rgba(18,63,67,.08);
@@ -264,7 +264,7 @@ export default function Demo() {
           border: 1px solid rgba(255,255,255,.18);
           border-radius: 12px;
           background: rgba(255,255,255,.10);
-          color: #bfe0e0;
+          color: #bdcce0;
           font-size: 7px;
           font-weight: 800;
           letter-spacing: 1px;
@@ -300,7 +300,7 @@ export default function Demo() {
           align-items: center;
           justify-content: center;
           border-radius: 50%;
-          background: #159a9c;
+          background: #006ee6;
           color: white;
           transition:
             transform .25s ease,
@@ -309,7 +309,7 @@ export default function Demo() {
 
         .demo-role-card:hover .demo-arrow {
           transform: translateX(4px);
-          background: #1aaeb0;
+          background: #1257b0;
         }
 
         /* =========================
@@ -322,12 +322,12 @@ export default function Demo() {
           justify-content: center;
           gap: 7px;
           margin-top: 23px;
-          color: #819496;
+          color: #808a96;
           font-size: 9px;
         }
 
         .demo-bottom svg {
-          color: #159a9c;
+          color: #006ee6;
         }
 
         /* =========================
@@ -338,7 +338,7 @@ export default function Demo() {
           margin-top: 25px;
           margin-left: -24px;
           margin-right: -24px;
-          background: #103b3e;
+          background: #0e233e;
           color: white;
         }
 
@@ -373,7 +373,7 @@ export default function Demo() {
           align-items: center;
           justify-content: center;
           border-radius: 12px;
-          background: linear-gradient(135deg, #159a9c, #117578);
+          background: linear-gradient(135deg, #006ee6, #004fbf);
           color: white;
         }
 
@@ -412,7 +412,7 @@ export default function Demo() {
         }
 
         .demo-footer-links a:hover {
-          color: #6ed5d6;
+          color: #6998d6;
           transform: translateX(3px);
         }
 
@@ -434,7 +434,7 @@ export default function Demo() {
         .demo-footer-contact-item svg {
           flex-shrink: 0;
           margin-top: 1px;
-          color: #48bfc1;
+          color: #4d9cff;
         }
 
         .demo-footer-social {
@@ -460,7 +460,7 @@ export default function Demo() {
         }
 
         .demo-footer-social a:hover {
-          background: #159a9c;
+          background: #006ee6;
           color: white;
           transform: translateY(-2px);
         }
@@ -492,7 +492,7 @@ export default function Demo() {
         }
 
         .demo-footer-bottom-right svg {
-          color: #48bfc1;
+          color: #4d9cff;
         }
 
         /* =========================

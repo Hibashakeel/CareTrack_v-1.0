@@ -230,7 +230,7 @@ export default function NurseNotifications() {
 
           <Bell
             size={21}
-            color="#159a9c"
+            color="#006ee6"
           />
 
         </div>
@@ -266,10 +266,10 @@ export default function NurseNotifications() {
                   justifyContent: "center",
                   borderRadius: "11px",
                   background: notification.unread
-                    ? "#eaf8f8"
+                    ? "#eef6ff"
                     : "#f4f8fa",
                   color: notification.unread
-                    ? "#159a9c"
+                    ? "#006ee6"
                     : "#8293a0",
                 }}
               >
@@ -310,7 +310,7 @@ export default function NurseNotifications() {
                         width: "7px",
                         height: "7px",
                         borderRadius: "50%",
-                        background: "#159a9c",
+                        background: "#006ee6",
                       }}
                     />
                   )}
@@ -366,7 +366,7 @@ export default function NurseNotifications() {
                     border: "1px solid #dceaf2",
                     borderRadius: "8px",
                     background: "#fff",
-                    color: "#159a9c",
+                    color: "#006ee6",
                     fontSize: "10px",
                     fontWeight: 700,
                     cursor: "pointer",
@@ -406,7 +406,7 @@ export default function NurseNotifications() {
 
           <CheckCircle2
             size={20}
-            color="#159a9c"
+            color="#006ee6"
           />
 
           <div>

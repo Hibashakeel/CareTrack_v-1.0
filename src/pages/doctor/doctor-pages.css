@@ -48,7 +48,7 @@
   justify-content: center;
   border-radius: 10px;
   background: #edf8f8;
-  color: #087b83;
+  color: #0056dd;
 }
 
 .doctor-appointment-stat strong {
@@ -152,8 +152,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background: #e8f5f5;
-  color: #087b83;
+  background: #eef6ff;
+  color: #0056dd;
 }
 
 .doctor-appointment-date span {
@@ -280,7 +280,7 @@
 
 .doctor-appointment-detail svg {
   flex-shrink: 0;
-  color: #5d8792;
+  color: #5a7292;
 }
 
 .doctor-appointment-detail span {
@@ -321,7 +321,7 @@
 
 .doctor-appointments-note svg {
   flex-shrink: 0;
-  color: #159a9c;
+  color: #006ee6;
 }
 
 /* ================= RESPONSIVE ================= */

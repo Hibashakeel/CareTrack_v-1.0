@@ -46,7 +46,7 @@ export default function PatientVoiceResponses() {
       <div className="voice-response-layout">
         <div className="patient-inner-card">
           <div className="patient-card-title">
-            <Mic size={20} color="#159a9c" />
+            <Mic size={20} color="#006ee6" />
             Record Your Response
           </div>
 
@@ -137,7 +137,7 @@ export default function PatientVoiceResponses() {
 
         <div className="patient-inner-card">
           <div className="patient-card-title">
-            <MessageSquareText size={19} color="#159a9c" />
+            <MessageSquareText size={19} color="#006ee6" />
             Editable Transcript
           </div>
 

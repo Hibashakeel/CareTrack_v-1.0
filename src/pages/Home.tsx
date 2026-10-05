@@ -355,27 +355,27 @@ export default function Home() {
           font-size: 12px;
           font-weight: 800;
           letter-spacing: 1.5px;
-          color: #159a9c;
+          color: #006ee6;
           margin-bottom: 15px;
         }
 
         .hero h1 {
           margin: 0;
-          color: #163a3d;
+          color: #173b5d;
           font-size: clamp(38px, 5vw, 62px);
           line-height: 1.08;
           letter-spacing: -2px;
         }
 
         .hero h1 em {
-          color: #159a9c;
+          color: #006ee6;
           font-style: normal;
         }
 
         .hero-copy > p {
           max-width: 590px;
           margin: 23px 0;
-          color: #63777a;
+          color: #626c7a;
           font-size: 16px;
           line-height: 1.8;
         }
@@ -408,19 +408,19 @@ export default function Home() {
         }
 
         .button.primary {
-          background: #159a9c;
+          background: #006ee6;
           color: white;
           box-shadow: 0 10px 25px rgba(21, 154, 156, 0.2);
         }
 
         .button.primary:hover {
-          background: #117f81;
+          background: #0056dd;
           box-shadow: 0 14px 30px rgba(21, 154, 156, 0.28);
         }
 
         .button.secondary {
           background: #f1f7f7;
-          color: #236164;
+          color: #203d64;
         }
 
         .button.secondary:hover {
@@ -434,17 +434,17 @@ export default function Home() {
           max-width: 570px;
           margin-top: 28px;
           padding: 13px 15px;
-          border: 1px solid #dceced;
+          border: 1px solid #dce9ff;
           border-radius: 12px;
           background: #f8fbfb;
-          color: #64787b;
+          color: #636d7b;
           font-size: 12px;
           line-height: 1.55;
         }
 
         .scope-note svg {
           flex-shrink: 0;
-          color: #159a9c;
+          color: #006ee6;
           margin-top: 1px;
         }
 
@@ -521,7 +521,7 @@ export default function Home() {
           justify-content: center;
           border-radius: 11px;
           background: #e7f7f7;
-          color: #159a9c;
+          color: #006ee6;
         }
 
         .floating-content {
@@ -534,7 +534,7 @@ export default function Home() {
 
         .floating-content strong {
           display: block;
-          color: #193f42;
+          color: #173b5d;
           font-size: 14px;
           line-height: 1.2;
           white-space: nowrap;
@@ -542,7 +542,7 @@ export default function Home() {
 
         .floating-content span {
           display: block;
-          color: #718588;
+          color: #707a88;
           font-size: 11px;
           line-height: 1.35;
           white-space: nowrap;
@@ -587,7 +587,7 @@ export default function Home() {
           align-items: center;
           gap: 14px;
           padding: 22px;
-          border: 1px solid #e4eeee;
+          border: 1px solid #e5edff;
           border-radius: 17px;
           background: #ffffff;
           box-shadow: 0 8px 25px rgba(28, 74, 77, 0.05);
@@ -609,20 +609,20 @@ export default function Home() {
           align-items: center;
           justify-content: center;
           border-radius: 13px;
-          background: #e9f8f8;
-          color: #159a9c;
+          background: #eef6ff;
+          color: #006ee6;
         }
 
         .feature-item b {
           display: block;
-          color: #203f42;
+          color: #1e2e42;
           margin-bottom: 4px;
           font-size: 14px;
         }
 
         .feature-item span {
           display: block;
-          color: #7b8d90;
+          color: #7a8490;
           font-size: 12px;
           line-height: 1.4;
         }
@@ -643,7 +643,7 @@ export default function Home() {
 
         .intro-heading h2 {
           margin: 0;
-          color: #193f42;
+          color: #173b5d;
           font-size: 38px;
           line-height: 1.15;
           letter-spacing: -1px;
@@ -651,7 +651,7 @@ export default function Home() {
 
         .intro-heading p {
           margin-top: 20px;
-          color: #718487;
+          color: #707a87;
           font-size: 14px;
           line-height: 1.8;
         }
@@ -675,26 +675,26 @@ export default function Home() {
         }
 
         .intro-number {
-          color: #159a9c;
+          color: #006ee6;
           font-size: 12px;
           font-weight: 800;
         }
 
         .intro-point h3 {
           margin: 0 0 5px;
-          color: #26484b;
+          color: #24354b;
           font-size: 15px;
         }
 
         .intro-point p {
           margin: 0;
-          color: #7b8c8f;
+          color: #7a838f;
           font-size: 12px;
           line-height: 1.6;
         }
 
         .intro-point > svg {
-          color: #9bb2b4;
+          color: #9aa5b4;
         }
 
         /* =========================
@@ -703,7 +703,7 @@ export default function Home() {
 
         .caretrack-footer {
           width: 100%;
-          background: #123f43;
+          background: #123b5d;
           color: white;
           margin-top: 20px;
         }
@@ -735,7 +735,7 @@ export default function Home() {
           align-items: center;
           justify-content: center;
           border-radius: 13px;
-          background: #159a9c;
+          background: #006ee6;
           color: white;
         }
 
@@ -748,14 +748,14 @@ export default function Home() {
         .footer-logo span {
           display: block;
           margin-top: 4px;
-          color: #a9c7c9;
+          color: #aac8e8;
           font-size: 10px;
           letter-spacing: 0.3px;
         }
 
         .footer-brand > p {
           margin: 0;
-          color: #b3cbcd;
+          color: #b4cbe5;
           font-size: 13px;
           line-height: 1.8;
         }
@@ -765,7 +765,7 @@ export default function Home() {
           align-items: center;
           gap: 8px;
           margin-top: 20px;
-          color: #8ed3d2;
+          color: #a8d1ff;
           font-size: 11px;
         }
 
@@ -787,7 +787,7 @@ export default function Home() {
           align-items: center;
           gap: 5px;
           margin-bottom: 13px;
-          color: #b4cbcd;
+          color: #b6cbe0;
           font-size: 12px;
           text-decoration: none;
           transition:
@@ -801,7 +801,7 @@ export default function Home() {
         }
 
         .footer-column > a svg {
-          color: #61c4c3;
+          color: #73b5ff;
         }
 
         .footer-info {
@@ -809,14 +809,14 @@ export default function Home() {
           align-items: flex-start;
           gap: 9px;
           margin-bottom: 14px;
-          color: #b4cbcd;
+          color: #b6cbe0;
           font-size: 12px;
           line-height: 1.4;
         }
 
         .footer-info svg {
           flex-shrink: 0;
-          color: #61c4c3;
+          color: #73b5ff;
           margin-top: 1px;
         }
 
@@ -833,7 +833,7 @@ export default function Home() {
 
         .footer-bottom p {
           margin: 0;
-          color: #91afb1;
+          color: #92afcc;
           font-size: 11px;
         }
 
@@ -841,7 +841,7 @@ export default function Home() {
           display: flex;
           align-items: center;
           gap: 9px;
-          color: #91afb1;
+          color: #92afcc;
           font-size: 11px;
         }
 

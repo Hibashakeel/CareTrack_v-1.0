@@ -93,8 +93,8 @@ function AdminPage({
             width: "44px",
             height: "44px",
             borderRadius: "12px",
-            background: "#e8f6f6",
-            color: "#087b83",
+            background: "#eef6ff",
+            color: "#0056dd",
             display: "grid",
             placeItems: "center",
             flexShrink: 0,
@@ -718,10 +718,10 @@ function StaffCard({
             minWidth: "40px",
             borderRadius: "50%",
             background: isDoctor
-              ? "#e8f6f6"
+              ? "#eef6ff"
               : "#edf4f8",
             color: isDoctor
-              ? "#087b83"
+              ? "#0056dd"
               : "#47718c",
             display: "grid",
             placeItems: "center",
@@ -1006,7 +1006,7 @@ export function AdminDoctors() {
         >
           <Stethoscope
             size={32}
-            color="#087b83"
+            color="#0056dd"
           />
 
           <h3
@@ -1150,7 +1150,7 @@ export function AdminNurses() {
         >
           <Users
             size={32}
-            color="#087b83"
+            color="#0056dd"
           />
 
           <h3
@@ -1550,9 +1550,9 @@ export function AdminWards() {
                     borderRadius:
                       "10px",
                     background:
-                      "#e8f6f6",
+                      "#eef6ff",
                     color:
-                      "#087b83",
+                      "#0056dd",
                     display:
                       "grid",
                     placeItems:
@@ -1907,9 +1907,9 @@ export function AdminReports() {
                     borderRadius:
                       "10px",
                     background:
-                      "#e8f6f6",
+                      "#eef6ff",
                     color:
-                      "#087b83",
+                      "#0056dd",
                     display:
                       "grid",
                     placeItems:
@@ -2173,7 +2173,7 @@ export function AdminNotifications() {
         >
           <Bell
             size={19}
-            color="#087b83"
+            color="#0056dd"
           />
 
           <h3
@@ -2326,7 +2326,7 @@ export function AdminSettings() {
           >
             <ShieldCheck
               size={20}
-              color="#087b83"
+              color="#0056dd"
             />
 
             <div>
@@ -2430,7 +2430,7 @@ function SettingCard({
           borderRadius:
             "20px",
           background: enabled
-            ? "#087b83"
+            ? "#0056dd"
             : "#c9d3d9",
           padding: "3px",
           cursor:

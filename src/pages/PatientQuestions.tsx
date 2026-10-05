@@ -854,7 +854,7 @@ export default function PatientQuestions() {
         <div className="patient-card-title">
           <MessageCircleQuestion
             size={20}
-            color="#159a9c"
+            color="#006ee6"
           />
 
           Questions From Your Care

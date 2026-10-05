@@ -150,7 +150,7 @@ export default function AccessibilitySettings() {
           borderRadius: "50%",
           border: "1px solid #c8dfe1",
           background: "#ffffff",
-          color: "#087b83",
+          color: "#0056dd",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -208,8 +208,8 @@ export default function AccessibilitySettings() {
                   width: "36px",
                   height: "36px",
                   borderRadius: "9px",
-                  background: "#e8f6f6",
-                  color: "#087b83",
+                  background: "#eef6ff",
+                  color: "#0056dd",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -275,7 +275,7 @@ export default function AccessibilitySettings() {
                   alignItems: "center",
                   gap: "7px",
                   marginBottom: "9px",
-                  color: "#087b83",
+                  color: "#0056dd",
                   fontSize: "12px",
                   fontWeight: 700,
                 }}
@@ -359,7 +359,7 @@ export default function AccessibilitySettings() {
                   alignItems: "center",
                   gap: "7px",
                   marginBottom: "9px",
-                  color: "#087b83",
+                  color: "#0056dd",
                   fontSize: "12px",
                   fontWeight: 700,
                 }}
@@ -533,14 +533,14 @@ function TextButton({
       style={{
         minHeight: "52px",
         border: selected
-          ? "2px solid #087b83"
+          ? "2px solid #0056dd"
           : "1px solid #dce5ea",
         borderRadius: "8px",
         background: selected
-          ? "#eaf7f7"
+          ? "#eef6ff"
           : "#ffffff",
         color: selected
-          ? "#087b83"
+          ? "#0056dd"
           : "#536b7b",
         cursor: "pointer",
         fontSize: "9px",
@@ -616,10 +616,10 @@ function ToggleRow({
           minWidth: "31px",
           borderRadius: "8px",
           background: enabled
-            ? "#e8f6f6"
+            ? "#eef6ff"
             : "#f3f6f8",
           color: enabled
-            ? "#087b83"
+            ? "#0056dd"
             : "#8293a0",
           display: "flex",
           alignItems: "center",
@@ -663,7 +663,7 @@ function ToggleRow({
           border: "none",
           borderRadius: "20px",
           background: enabled
-            ? "#087b83"
+            ? "#0056dd"
             : "#c9d3d9",
           padding: "3px",
           cursor: "pointer",

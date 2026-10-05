@@ -136,7 +136,7 @@ export default function NursePatients() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "5px",
-                  color: "#159a9c",
+                  color: "#006ee6",
                   textDecoration: "none",
                   fontSize: "11px",
                   fontWeight: 700,
@@ -164,7 +164,7 @@ export default function NursePatients() {
             </p>
           </div>
 
-          <Activity size={21} color="#159a9c" />
+          <Activity size={21} color="#006ee6" />
         </div>
 
       </section>

@@ -353,7 +353,7 @@ export default function About() {
           width: 100%;
           min-height: 100vh;
           background: #ffffff;
-          color: #193f42;
+          color: #173b5d;
           overflow: hidden;
         }
 
@@ -380,7 +380,7 @@ export default function About() {
           align-items: center;
           gap: 7px;
           margin-bottom: 15px;
-          color: #159a9c;
+          color: #006ee6;
           font-size: 12px;
           font-weight: 800;
           letter-spacing: 1.5px;
@@ -388,21 +388,21 @@ export default function About() {
 
         .about-hero h1 {
           margin: 0;
-          color: #163a3d;
+          color: #173b5d;
           font-size: clamp(40px, 5vw, 58px);
           line-height: 1.08;
           letter-spacing: -2px;
         }
 
         .about-hero h1 em {
-          color: #159a9c;
+          color: #006ee6;
           font-style: normal;
         }
 
         .about-hero-content > p {
           max-width: 650px;
           margin: 23px 0;
-          color: #63777a;
+          color: #626c7a;
           font-size: 16px;
           line-height: 1.8;
         }
@@ -419,7 +419,7 @@ export default function About() {
           min-height: 46px;
           padding: 0 20px;
           border-radius: 12px;
-          background: #159a9c;
+          background: #006ee6;
           color: #ffffff;
           text-decoration: none;
           font-size: 13px;
@@ -433,7 +433,7 @@ export default function About() {
 
         .about-primary-button:hover {
           transform: translateY(-2px);
-          background: #117f81;
+          background: #0056dd;
           box-shadow: 0 14px 30px rgba(21, 154, 156, 0.28);
         }
 
@@ -444,7 +444,7 @@ export default function About() {
         .about-hero-card {
           position: relative;
           padding: 35px;
-          border: 1px solid #dceced;
+          border: 1px solid #dce9ff;
           border-radius: 25px;
           background: linear-gradient(
             145deg,
@@ -476,21 +476,21 @@ export default function About() {
           justify-content: center;
           margin-bottom: 22px;
           border-radius: 15px;
-          background: #e5f7f7;
-          color: #159a9c;
+          background: #eef6ff;
+          color: #006ee6;
         }
 
         .about-hero-card h3 {
           position: relative;
           margin: 0;
-          color: #21474a;
+          color: #1f324a;
           font-size: 20px;
         }
 
         .about-hero-card p {
           position: relative;
           margin: 12px 0 22px;
-          color: #708386;
+          color: #6f7986;
           font-size: 13px;
           line-height: 1.75;
         }
@@ -523,7 +523,7 @@ export default function About() {
           width: min(1200px, calc(100% - 48px));
           margin: 0 auto;
           padding: 65px 0 85px;
-          border-top: 1px solid #edf2f2;
+          border-top: 1px solid #edf3f9;
         }
 
         .about-section-heading {
@@ -534,7 +534,7 @@ export default function About() {
         .about-section-label {
           display: inline-block;
           margin-bottom: 12px;
-          color: #159a9c;
+          color: #006ee6;
           font-size: 11px;
           font-weight: 800;
           letter-spacing: 1.4px;
@@ -543,7 +543,7 @@ export default function About() {
         .about-section-heading h2,
         .about-roles-heading h2 {
           margin: 0;
-          color: #193f42;
+          color: #173b5d;
           font-size: 36px;
           line-height: 1.15;
           letter-spacing: -1px;
@@ -553,7 +553,7 @@ export default function About() {
         .about-roles-heading p {
           max-width: 620px;
           margin: 17px 0 0;
-          color: #718487;
+          color: #707a87;
           font-size: 14px;
           line-height: 1.8;
         }
@@ -571,7 +571,7 @@ export default function About() {
         .about-info-card {
           min-height: 225px;
           padding: 23px;
-          border: 1px solid #e4eeee;
+          border: 1px solid #e5edff;
           border-radius: 17px;
           background: #ffffff;
           box-shadow: 0 8px 25px rgba(28, 74, 77, 0.05);
@@ -583,7 +583,7 @@ export default function About() {
 
         .about-info-card:hover {
           transform: translateY(-4px);
-          border-color: #cce6e6;
+          border-color: #cfe2ff;
           box-shadow: 0 14px 32px rgba(28, 74, 77, 0.1);
         }
 
@@ -594,7 +594,7 @@ export default function About() {
         }
 
         .about-number {
-          color: #9ab0b2;
+          color: #99a4b2;
           font-size: 11px;
           font-weight: 800;
           letter-spacing: 1px;
@@ -607,19 +607,19 @@ export default function About() {
           align-items: center;
           justify-content: center;
           border-radius: 13px;
-          background: #e9f8f8;
-          color: #159a9c;
+          background: #eef6ff;
+          color: #006ee6;
         }
 
         .about-info-card h3 {
           margin: 24px 0 9px;
-          color: #24494c;
+          color: #22344c;
           font-size: 15px;
         }
 
         .about-info-card p {
           margin: 0;
-          color: #788b8e;
+          color: #77818e;
           font-size: 12px;
           line-height: 1.7;
         }
@@ -631,7 +631,7 @@ export default function About() {
         .about-roles {
           width: 100%;
           padding: 75px 24px 85px;
-          background: #f7fbfb;
+          background: #f7fbff;
         }
 
         .about-roles-heading {
@@ -670,19 +670,19 @@ export default function About() {
           justify-content: center;
           margin-bottom: 18px;
           border-radius: 12px;
-          background: #e8f7f7;
-          color: #159a9c;
+          background: #eef6ff;
+          color: #006ee6;
         }
 
         .role-card h3 {
           margin: 0 0 8px;
-          color: #24494c;
+          color: #22344c;
           font-size: 15px;
         }
 
         .role-card p {
           margin: 0;
-          color: #77898c;
+          color: #76808c;
           font-size: 12px;
           line-height: 1.7;
         }
@@ -698,9 +698,9 @@ export default function About() {
           display: flex;
           align-items: flex-start;
           gap: 18px;
-          border: 1px solid #cfe6e6;
+          border: 1px solid #d3e5ff;
           border-radius: 20px;
-          background: #f3fbfb;
+          background: #f4f9ff;
         }
 
         .scope-icon {
@@ -711,14 +711,14 @@ export default function About() {
           align-items: center;
           justify-content: center;
           border-radius: 13px;
-          background: #dff4f4;
-          color: #159a9c;
+          background: #e5f0ff;
+          color: #006ee6;
         }
 
         .scope-content > span {
           display: block;
           margin-bottom: 6px;
-          color: #159a9c;
+          color: #006ee6;
           font-size: 10px;
           font-weight: 800;
           letter-spacing: 1.2px;
@@ -726,14 +726,14 @@ export default function About() {
 
         .about-scope h2 {
           margin: 0;
-          color: #24494c;
+          color: #22344c;
           font-size: 18px;
         }
 
         .about-scope p {
           max-width: 800px;
           margin: 8px 0 0;
-          color: #718487;
+          color: #707a87;
           font-size: 12px;
           line-height: 1.7;
         }
@@ -744,7 +744,7 @@ export default function About() {
 
         .caretrack-footer {
           width: 100%;
-          background: #123f43;
+          background: #123b5d;
           color: white;
           margin-top: 20px;
         }
@@ -776,7 +776,7 @@ export default function About() {
           align-items: center;
           justify-content: center;
           border-radius: 13px;
-          background: #159a9c;
+          background: #006ee6;
           color: white;
         }
 
@@ -789,14 +789,14 @@ export default function About() {
         .footer-logo span {
           display: block;
           margin-top: 4px;
-          color: #a9c7c9;
+          color: #aac8e8;
           font-size: 10px;
           letter-spacing: 0.3px;
         }
 
         .footer-brand > p {
           margin: 0;
-          color: #b3cbcd;
+          color: #b4cbe5;
           font-size: 13px;
           line-height: 1.8;
         }
@@ -806,7 +806,7 @@ export default function About() {
           align-items: center;
           gap: 8px;
           margin-top: 20px;
-          color: #8ed3d2;
+          color: #a8d1ff;
           font-size: 11px;
         }
 
@@ -828,7 +828,7 @@ export default function About() {
           align-items: center;
           gap: 5px;
           margin-bottom: 13px;
-          color: #b4cbcd;
+          color: #b6cbe0;
           font-size: 12px;
           text-decoration: none;
           transition:
@@ -842,7 +842,7 @@ export default function About() {
         }
 
         .footer-column > a svg {
-          color: #61c4c3;
+          color: #73b5ff;
         }
 
         .footer-info {
@@ -850,14 +850,14 @@ export default function About() {
           align-items: flex-start;
           gap: 9px;
           margin-bottom: 14px;
-          color: #b4cbcd;
+          color: #b6cbe0;
           font-size: 12px;
           line-height: 1.4;
         }
 
         .footer-info svg {
           flex-shrink: 0;
-          color: #61c4c3;
+          color: #73b5ff;
           margin-top: 1px;
         }
 
@@ -874,7 +874,7 @@ export default function About() {
 
         .footer-bottom p {
           margin: 0;
-          color: #91afb1;
+          color: #92afcc;
           font-size: 11px;
         }
 
@@ -882,7 +882,7 @@ export default function About() {
           display: flex;
           align-items: center;
           gap: 9px;
-          color: #91afb1;
+          color: #92afcc;
           font-size: 11px;
         }
 

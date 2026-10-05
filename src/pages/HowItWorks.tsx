@@ -384,7 +384,7 @@ export default function HowItWorks() {
           width: 100%;
           overflow: hidden;
           background: #ffffff;
-          color: #193f42;
+          color: #173b5d;
         }
 
         /* =========================
@@ -411,7 +411,7 @@ export default function HowItWorks() {
           align-items: center;
           gap: 7px;
           margin-bottom: 17px;
-          color: #159a9c;
+          color: #006ee6;
           font-size: 12px;
           font-weight: 800;
           letter-spacing: 1.5px;
@@ -419,21 +419,21 @@ export default function HowItWorks() {
 
         .how-hero h1 {
           margin: 0;
-          color: #173c40;
+          color: #152840;
           font-size: clamp(42px, 5vw, 60px);
           line-height: 1.07;
           letter-spacing: -2px;
         }
 
         .how-hero h1 em {
-          color: #159a9c;
+          color: #006ee6;
           font-style: normal;
         }
 
         .how-hero-copy > p {
           max-width: 620px;
           margin: 23px 0 0;
-          color: #687d80;
+          color: #677280;
           font-size: 16px;
           line-height: 1.8;
         }
@@ -450,7 +450,7 @@ export default function HowItWorks() {
           min-height: 46px;
           padding: 0 20px;
           border-radius: 12px;
-          background: #159a9c;
+          background: #006ee6;
           color: white;
           text-decoration: none;
           font-size: 13px;
@@ -464,7 +464,7 @@ export default function HowItWorks() {
 
         .how-primary-button:hover {
           transform: translateY(-3px);
-          background: #117f81;
+          background: #0056dd;
           box-shadow: 0 15px 30px rgba(21, 154, 156, 0.27);
         }
 
@@ -474,11 +474,11 @@ export default function HowItWorks() {
 
         .how-hero-card {
           padding: 32px;
-          border: 1px solid #dceced;
+          border: 1px solid #dce9ff;
           border-radius: 25px;
           background: linear-gradient(
             145deg,
-            #f3fbfb 0%,
+            #f4f9ff 0%,
             #ffffff 75%
           );
           box-shadow: 0 20px 45px rgba(28, 74, 77, 0.08);
@@ -493,14 +493,14 @@ export default function HowItWorks() {
           justify-content: center;
           margin-bottom: 22px;
           border-radius: 15px;
-          background: #e5f7f7;
-          color: #159a9c;
+          background: #eef6ff;
+          color: #006ee6;
         }
 
         .how-hero-card > span {
           display: block;
           margin-bottom: 9px;
-          color: #159a9c;
+          color: #006ee6;
           font-size: 10px;
           font-weight: 800;
           letter-spacing: 1.2px;
@@ -508,14 +508,14 @@ export default function HowItWorks() {
 
         .how-hero-card h3 {
           margin: 0;
-          color: #24494c;
+          color: #22344c;
           font-size: 21px;
           line-height: 1.45;
         }
 
         .how-hero-card p {
           margin: 13px 0 25px;
-          color: #718487;
+          color: #707a87;
           font-size: 13px;
           line-height: 1.75;
         }
@@ -538,7 +538,7 @@ export default function HowItWorks() {
           width: 15px;
           height: 15px;
           flex-basis: 15px;
-          background: #159a9c;
+          background: #006ee6;
           box-shadow: 0 0 0 5px #e1f5f5;
         }
 
@@ -556,7 +556,7 @@ export default function HowItWorks() {
           width: min(1200px, calc(100% - 48px));
           margin: 0 auto;
           padding: 75px 0 90px;
-          border-top: 1px solid #edf2f2;
+          border-top: 1px solid #edf3f9;
         }
 
         .how-section-heading {
@@ -567,7 +567,7 @@ export default function HowItWorks() {
         .how-section-label {
           display: inline-block;
           margin-bottom: 12px;
-          color: #159a9c;
+          color: #006ee6;
           font-size: 11px;
           font-weight: 800;
           letter-spacing: 1.4px;
@@ -575,7 +575,7 @@ export default function HowItWorks() {
 
         .how-section-heading h2 {
           margin: 0;
-          color: #1c4447;
+          color: #1a2d47;
           font-size: 36px;
           line-height: 1.2;
           letter-spacing: -1px;
@@ -584,7 +584,7 @@ export default function HowItWorks() {
         .how-section-heading p {
           max-width: 620px;
           margin: 17px 0 0;
-          color: #718487;
+          color: #707a87;
           font-size: 14px;
           line-height: 1.8;
         }
@@ -599,7 +599,7 @@ export default function HowItWorks() {
           position: relative;
           min-height: 275px;
           padding: 24px;
-          border: 1px solid #e2eeee;
+          border: 1px solid #e5edff;
           border-radius: 18px;
           background: #ffffff;
           box-shadow: 0 8px 25px rgba(28, 74, 77, 0.05);
@@ -611,12 +611,12 @@ export default function HowItWorks() {
 
         .how-step:hover {
           transform: translateY(-5px);
-          border-color: #cce6e6;
+          border-color: #cfe2ff;
           box-shadow: 0 17px 35px rgba(28, 74, 77, 0.1);
         }
 
         .how-step-number {
-          color: #9ab0b2;
+          color: #99a4b2;
           font-size: 11px;
           font-weight: 800;
           letter-spacing: 1px;
@@ -630,20 +630,20 @@ export default function HowItWorks() {
           justify-content: center;
           margin-top: 22px;
           border-radius: 12px;
-          background: #e9f8f8;
-          color: #159a9c;
+          background: #eef6ff;
+          color: #006ee6;
         }
 
         .how-step h3 {
           margin: 20px 0 9px;
-          color: #24494c;
+          color: #22344c;
           font-size: 15px;
           line-height: 1.4;
         }
 
         .how-step p {
           margin: 0;
-          color: #788b8e;
+          color: #77818e;
           font-size: 12px;
           line-height: 1.7;
         }
@@ -653,7 +653,7 @@ export default function HowItWorks() {
           height: 3px;
           margin-top: 20px;
           border-radius: 10px;
-          background: #159a9c;
+          background: #006ee6;
           opacity: 0.7;
         }
 
@@ -673,7 +673,7 @@ export default function HowItWorks() {
 
         .how-roles-heading h2 {
           margin: 0;
-          color: #1c4447;
+          color: #1a2d47;
           font-size: 36px;
           line-height: 1.15;
           letter-spacing: -1px;
@@ -681,7 +681,7 @@ export default function HowItWorks() {
 
         .how-roles-heading p {
           margin-top: 18px;
-          color: #718487;
+          color: #707a87;
           font-size: 14px;
           line-height: 1.8;
         }
@@ -697,7 +697,7 @@ export default function HowItWorks() {
           grid-template-columns: 43px 1fr;
           gap: 13px;
           padding: 19px;
-          border: 1px solid #e4eeee;
+          border: 1px solid #e5edff;
           border-radius: 16px;
           background: #ffffff;
           box-shadow: 0 7px 22px rgba(28, 74, 77, 0.04);
@@ -718,19 +718,19 @@ export default function HowItWorks() {
           align-items: center;
           justify-content: center;
           border-radius: 11px;
-          background: #e9f8f8;
-          color: #159a9c;
+          background: #eef6ff;
+          color: #006ee6;
         }
 
         .how-role-card h3 {
           margin: 1px 0 5px;
-          color: #26484b;
+          color: #24354b;
           font-size: 14px;
         }
 
         .how-role-card p {
           margin: 0;
-          color: #7b8c8f;
+          color: #7a838f;
           font-size: 11px;
           line-height: 1.65;
         }
@@ -746,9 +746,9 @@ export default function HowItWorks() {
           display: flex;
           align-items: flex-start;
           gap: 18px;
-          border: 1px solid #cfe6e6;
+          border: 1px solid #d3e5ff;
           border-radius: 20px;
-          background: #f3fbfb;
+          background: #f4f9ff;
         }
 
         .how-principle-icon {
@@ -759,14 +759,14 @@ export default function HowItWorks() {
           align-items: center;
           justify-content: center;
           border-radius: 13px;
-          background: #dff4f4;
-          color: #159a9c;
+          background: #e5f0ff;
+          color: #006ee6;
         }
 
         .how-principles > div:last-child > span {
           display: block;
           margin-bottom: 6px;
-          color: #159a9c;
+          color: #006ee6;
           font-size: 10px;
           font-weight: 800;
           letter-spacing: 1.2px;
@@ -774,7 +774,7 @@ export default function HowItWorks() {
 
         .how-principles h2 {
           margin: 0;
-          color: #24494c;
+          color: #22344c;
           font-size: 18px;
           line-height: 1.4;
         }
@@ -782,7 +782,7 @@ export default function HowItWorks() {
         .how-principles p {
           max-width: 850px;
           margin: 8px 0 0;
-          color: #718487;
+          color: #707a87;
           font-size: 12px;
           line-height: 1.7;
         }
@@ -793,7 +793,7 @@ export default function HowItWorks() {
 
         .caretrack-footer {
           width: 100%;
-          background: #123f43;
+          background: #123b5d;
           color: white;
           margin-top: 20px;
         }
@@ -825,7 +825,7 @@ export default function HowItWorks() {
           align-items: center;
           justify-content: center;
           border-radius: 13px;
-          background: #159a9c;
+          background: #006ee6;
           color: white;
         }
 
@@ -838,14 +838,14 @@ export default function HowItWorks() {
         .footer-logo span {
           display: block;
           margin-top: 4px;
-          color: #a9c7c9;
+          color: #aac8e8;
           font-size: 10px;
           letter-spacing: 0.3px;
         }
 
         .footer-brand > p {
           margin: 0;
-          color: #b3cbcd;
+          color: #b4cbe5;
           font-size: 13px;
           line-height: 1.8;
         }
@@ -855,7 +855,7 @@ export default function HowItWorks() {
           align-items: center;
           gap: 8px;
           margin-top: 20px;
-          color: #8ed3d2;
+          color: #a8d1ff;
           font-size: 11px;
         }
 
@@ -877,7 +877,7 @@ export default function HowItWorks() {
           align-items: center;
           gap: 5px;
           margin-bottom: 13px;
-          color: #b4cbcd;
+          color: #b6cbe0;
           font-size: 12px;
           text-decoration: none;
           transition:
@@ -891,7 +891,7 @@ export default function HowItWorks() {
         }
 
         .footer-column > a svg {
-          color: #61c4c3;
+          color: #73b5ff;
         }
 
         .footer-info {
@@ -899,14 +899,14 @@ export default function HowItWorks() {
           align-items: flex-start;
           gap: 9px;
           margin-bottom: 14px;
-          color: #b4cbcd;
+          color: #b6cbe0;
           font-size: 12px;
           line-height: 1.4;
         }
 
         .footer-info svg {
           flex-shrink: 0;
-          color: #61c4c3;
+          color: #73b5ff;
           margin-top: 1px;
         }
 
@@ -923,7 +923,7 @@ export default function HowItWorks() {
 
         .footer-bottom p {
           margin: 0;
-          color: #91afb1;
+          color: #92afcc;
           font-size: 11px;
         }
 
@@ -931,7 +931,7 @@ export default function HowItWorks() {
           display: flex;
           align-items: center;
           gap: 9px;
-          color: #91afb1;
+          color: #92afcc;
           font-size: 11px;
         }
 

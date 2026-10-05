@@ -121,9 +121,9 @@ export default function ContextualHelp({
           padding: 0,
           borderRadius: "50%",
           background: open
-            ? "#e0f4f4"
+            ? "#eef6ff"
             : "transparent",
-          color: "#087b83",
+          color: "#0056dd",
           display: "grid",
           placeItems: "center",
           cursor: "pointer",
@@ -133,12 +133,12 @@ export default function ContextualHelp({
         }}
         onMouseEnter={(event) => {
           event.currentTarget.style.background =
-            "#eaf7f7";
+            "#eef6ff";
         }}
         onMouseLeave={(event) => {
           event.currentTarget.style.background =
             open
-              ? "#e0f4f4"
+              ? "#eef6ff"
               : "transparent";
         }}
       >
@@ -206,8 +206,8 @@ export default function ContextualHelp({
                   minWidth: "25px",
                   borderRadius: "7px",
                   background:
-                    "#e8f6f6",
-                  color: "#087b83",
+                    "#eef6ff",
+                  color: "#0056dd",
                   display: "grid",
                   placeItems: "center",
                 }}

@@ -98,7 +98,7 @@ export default function PatientVitals() {
       {!vitals ? (
         <div className="patient-inner-card">
           <div className="patient-card-title">
-            <Activity size={20} color="#159a9c" />
+            <Activity size={20} color="#006ee6" />
             No Vital Records Yet
           </div>
 
@@ -118,7 +118,7 @@ export default function PatientVitals() {
             }}
           >
             <div className="patient-card-title">
-              <Activity size={20} color="#159a9c" />
+              <Activity size={20} color="#006ee6" />
               Latest Vital Information
             </div>
 
@@ -152,7 +152,7 @@ export default function PatientVitals() {
                     marginBottom: "12px",
                   }}
                 >
-                  <Gauge size={20} color="#159a9c" />
+                  <Gauge size={20} color="#006ee6" />
                   <strong>Blood Pressure</strong>
                 </div>
 
@@ -193,7 +193,7 @@ export default function PatientVitals() {
                     marginBottom: "12px",
                   }}
                 >
-                  <HeartPulse size={20} color="#159a9c" />
+                  <HeartPulse size={20} color="#006ee6" />
                   <strong>Heart Rate</strong>
                 </div>
 
@@ -234,7 +234,7 @@ export default function PatientVitals() {
                     marginBottom: "12px",
                   }}
                 >
-                  <Thermometer size={20} color="#159a9c" />
+                  <Thermometer size={20} color="#006ee6" />
                   <strong>Temperature</strong>
                 </div>
 
@@ -275,7 +275,7 @@ export default function PatientVitals() {
                     marginBottom: "12px",
                   }}
                 >
-                  <Droplets size={20} color="#159a9c" />
+                  <Droplets size={20} color="#006ee6" />
                   <strong>Oxygen Level</strong>
                 </div>
 
@@ -305,7 +305,7 @@ export default function PatientVitals() {
           <div className="daily-report-layout">
             <div className="patient-inner-card">
               <div className="patient-card-title">
-                <Clock3 size={20} color="#159a9c" />
+                <Clock3 size={20} color="#006ee6" />
                 Record Information
               </div>
 
