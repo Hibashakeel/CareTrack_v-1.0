@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import { get, ref } from "firebase/database";
 import { db } from "../../lib/firebase";
+import { useAuth } from "../../context/AuthContext";
+import { getDoctorPatients } from "../../services/hospital";
 
 interface Patient {
   uid: string;
@@ -39,6 +41,7 @@ interface DailyReport {
 }
 
 export default function DoctorReports() {
+  const { user } = useAuth();
   const [searchParams] = useSearchParams();
 
   const selectedPatientId =
@@ -60,25 +63,9 @@ export default function DoctorReports() {
       try {
         setLoading(true);
 
-        const usersSnapshot =
-          await get(ref(db, "users"));
-
-        const usersData =
-          usersSnapshot.val() || {};
-
-        const patientList: Patient[] =
-          Object.entries(usersData)
-            .map(([uid, value]) => ({
-              ...(value as Omit<
-                Patient,
-                "uid"
-              >),
-              uid,
-            }))
-            .filter(
-              (user) =>
-                user.role === "patient"
-            );
+        const patientList: Patient[] = user?.uid
+          ? await getDoctorPatients(user.uid)
+          : [];
 
         setPatients(patientList);
 
@@ -172,7 +159,7 @@ export default function DoctorReports() {
     }
 
     loadReports();
-  }, [selectedPatientId]);
+  }, [selectedPatientId, user?.uid]);
 
   const selectedPatient =
     useMemo(

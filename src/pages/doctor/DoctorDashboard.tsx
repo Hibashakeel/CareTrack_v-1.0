@@ -13,6 +13,7 @@ import { get, ref } from "firebase/database";
 
 import { useAuth } from "../../context/AuthContext";
 import { db } from "../../lib/firebase";
+import { getDoctorPatients } from "../../services/hospital";
 
 interface UserProfile {
   uid?: string;
@@ -56,25 +57,10 @@ export default function DoctorDashboard() {
   useEffect(() => {
     async function loadDashboardData() {
       try {
-        const usersSnapshot = await get(ref(db, "users"));
-
-        if (!usersSnapshot.exists()) {
-          setPatients([]);
-          setReportsCount(0);
-          setVitalsCount(0);
-          setNotificationsCount(0);
-          return;
-        }
-
-        const usersData =
-          usersSnapshot.val() as Record<string, UserProfile>;
-
-        const patientList = Object.entries(usersData)
-          .filter(([, item]) => item.role === "patient")
-          .map(([uid, item]) => ({
-            ...item,
-            uid,
-          }));
+        if (!user?.uid) return;
+        const patientList = (await getDoctorPatients(user.uid)).map(
+          (patient) => ({ ...patient })
+        );
 
         setPatients(patientList);
 

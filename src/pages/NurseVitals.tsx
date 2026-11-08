@@ -14,6 +14,7 @@ import { get, ref, set } from "firebase/database";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../lib/firebase";
 import ContextualHelp from "../components/ContextualHelp";
+import { getNursePatients } from "../services/hospital";
 
 // =========================
 // TYPES
@@ -76,33 +77,28 @@ export function NurseVitals() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [profile?.uid]);
 
   async function loadData() {
     try {
       setLoading(true);
 
-      const [usersSnapshot, monitoringSnapshot] = await Promise.all([
-        get(ref(db, "users")),
-        get(ref(db, "patientMonitoring")),
-      ]);
-
-      const usersData = usersSnapshot.val() || {};
-      const monitoringData = monitoringSnapshot.val() || {};
-
-      const patientList: UserProfile[] = Object.entries(usersData)
-        .map(([uid, value]) => ({
-          uid,
-          ...(value as UserProfile),
-        }))
-        .filter(
-          (user) =>
-            user.role === "patient" &&
-            user.active !== false
-        );
+      const patientList: UserProfile[] = profile?.uid
+        ? await getNursePatients(profile.uid)
+        : [];
+      const monitoringEntries = await Promise.all(
+        patientList.map(async (patient) => [
+          patient.uid,
+          (await get(ref(db, `patientMonitoring/${patient.uid}`))).val(),
+        ] as const)
+      );
 
       setPatients(patientList);
-      setMonitoring(monitoringData);
+      setMonitoring(
+        Object.fromEntries(
+          monitoringEntries.filter(([, value]) => value)
+        ) as Record<string, PatientMonitoring>
+      );
     } catch (error) {
       console.error("Error loading nurse vitals data:", error);
       alert("Unable to load patient vitals.");

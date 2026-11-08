@@ -89,11 +89,11 @@ export default function PatientInformation() {
     setError("");
 
     try {
-      await update(ref(db, `users/${user.uid}`), {
-        phone: phone.trim(),
-        address: address.trim(),
-        dateOfBirth: dateOfBirth.trim(),
-        gender: gender.trim(),
+      await update(ref(db), {
+        [`users/${user.uid}/phone`]: phone.trim(),
+        [`users/${user.uid}/address`]: address.trim(),
+        [`users/${user.uid}/dateOfBirth`]: dateOfBirth.trim(),
+        [`users/${user.uid}/gender`]: gender.trim(),
       });
 
       setSaved(true);

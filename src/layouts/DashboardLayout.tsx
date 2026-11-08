@@ -1,5 +1,4 @@
 import {
-Accessibility,
 Activity,
 Bell,
 CalendarDays,
@@ -19,10 +18,12 @@ HeartPulse,
 UserRound,
 } from "lucide-react";
 
+import { useEffect, useRef, useState } from "react";
 import {
 Link,
 NavLink,
 Outlet,
+useNavigate,
 useParams,
 } from "react-router-dom";
 
@@ -31,6 +32,10 @@ import { useAuth } from "../context/AuthContext";
 export default function DashboardLayout() {
 const { role: demoRole } = useParams();
 const { profile, logout } = useAuth();
+const navigate = useNavigate();
+const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+const [logoutError, setLogoutError] = useState("");
+const profileMenuRef = useRef<HTMLDivElement>(null);
 
 const role = demoRole || profile?.role || "patient";
 const isDemo = Boolean(demoRole);
@@ -94,11 +99,6 @@ label: "Notifications",
 icon: Bell,
 path: "/notifications",
 },
-{
-label: "Accessibility",
-icon: Accessibility,
-path: "/accessibility",
-},
 ];
 
 // ================= NURSE =================
@@ -133,11 +133,6 @@ path: "/notes",
 label: "Notifications",
 icon: Bell,
 path: "/notifications",
-},
-{
-label: "Accessibility",
-icon: Accessibility,
-path: "/accessibility",
 },
 ];
 
@@ -178,11 +173,6 @@ path: "/reports",
 label: "Notifications",
 icon: Bell,
 path: "/notifications",
-},
-{
-label: "Accessibility",
-icon: Accessibility,
-path: "/accessibility",
 },
 ];
 
@@ -244,11 +234,6 @@ label: "Settings",
 icon: Settings,
 path: "/settings",
 },
-{
-label: "Accessibility",
-icon: Accessibility,
-path: "/accessibility",
-},
 ];
 
 // ================= SELECT NAVIGATION =================
@@ -282,8 +267,37 @@ const userName = isDemo
 // ================= LOGOUT =================
 
 const handleLogout = async () => {
-await logout();
+try {
+  await logout();
+  navigate("/login", { replace: true });
+} catch (error) {
+  console.error("Unable to log out:", error);
+  setLogoutError("Unable to log out. Please try again.");
+}
 };
+
+useEffect(() => {
+  if (!profileMenuOpen) return;
+
+  const closeOnOutsideClick = (event: MouseEvent) => {
+    if (
+      event.target instanceof Node &&
+      !profileMenuRef.current?.contains(event.target)
+    ) {
+      setProfileMenuOpen(false);
+    }
+  };
+  const closeOnEscape = (event: KeyboardEvent) => {
+    if (event.key === "Escape") setProfileMenuOpen(false);
+  };
+
+  document.addEventListener("mousedown", closeOnOutsideClick);
+  document.addEventListener("keydown", closeOnEscape);
+  return () => {
+    document.removeEventListener("mousedown", closeOnOutsideClick);
+    document.removeEventListener("keydown", closeOnEscape);
+  };
+}, [profileMenuOpen]);
 
 return ( <div className="app-shell">
 
@@ -447,32 +461,74 @@ return ( <div className="app-shell">
 
         {/* USER */}
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
-          <UserCircle size={31} />
-
-          <div>
-            <strong>
-              {userName}
-            </strong>
-
-            <small
-              style={{
-                display: "block",
-                color: "#8293a0",
-                fontSize: "10px",
-                marginTop: "2px",
+        {isDemo ? (
+          <div className="topbar-profile">
+            <UserCircle size={31} />
+            <div>
+              <strong>{userName}</strong>
+              <small>{roleName}</small>
+            </div>
+          </div>
+        ) : (
+          <div className="profile-menu" ref={profileMenuRef}>
+            <button
+              type="button"
+              className="topbar-profile profile-menu-trigger"
+              aria-label="Open profile menu"
+              aria-haspopup="menu"
+              aria-expanded={profileMenuOpen}
+              onClick={() => {
+                setLogoutError("");
+                setProfileMenuOpen((open) => !open);
               }}
             >
-              {roleName}
-            </small>
+              <UserCircle size={31} />
+              <span className="profile-trigger-copy">
+                <strong>{userName}</strong>
+                <small>{roleName}</small>
+              </span>
+            </button>
+
+            {profileMenuOpen && (
+              <div className="profile-dropdown" role="menu">
+                <div className="profile-dropdown-heading">
+                  <strong>{userName}</strong>
+                  <span>{profile?.email || "Signed-in account"}</span>
+                </div>
+                <Link
+                  to={getRoute("/profile")}
+                  role="menuitem"
+                  onClick={() => setProfileMenuOpen(false)}
+                >
+                  <UserRound size={17} />
+                  My Profile
+                </Link>
+                <Link
+                  to={getRoute("/account-settings")}
+                  role="menuitem"
+                  onClick={() => setProfileMenuOpen(false)}
+                >
+                  <Settings size={17} />
+                  Account Settings
+                </Link>
+                {logoutError && (
+                  <p className="profile-dropdown-error" role="alert">
+                    {logoutError}
+                  </p>
+                )}
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="profile-dropdown-logout"
+                  onClick={handleLogout}
+                >
+                  <LogOut size={17} />
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
     </header>
 

@@ -15,6 +15,7 @@ import "../role-dashboards.css";
 
 import { get, push, ref, remove, serverTimestamp } from "firebase/database";
 import { auth, db } from "../lib/firebase";
+import { getNursePatients } from "../services/hospital";
 
 type Patient = {
   uid: string;
@@ -32,16 +33,25 @@ type PatientNote = {
   note: string;
   authorId: string;
   authorName: string;
-  createdAt: number;
+  nurseId?: string;
+  createdAt: number | string;
 };
 
-function formatDateTime(timestamp: number) {
+function formatDateTime(timestamp: number | string) {
   if (!timestamp) return "Just now";
 
   return new Date(timestamp).toLocaleString("en-US", {
     dateStyle: "medium",
     timeStyle: "short",
   });
+}
+
+function getTimestamp(timestamp: number | string) {
+  const parsed =
+    typeof timestamp === "number"
+      ? timestamp
+      : new Date(timestamp).getTime();
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 export default function NurseNotes() {
@@ -74,28 +84,10 @@ export default function NurseNotes() {
       setLoading(true);
       setError("");
 
-      // -------------------------
-      // LOAD PATIENTS
-      // -------------------------
-
-      const usersSnapshot = await get(ref(db, "users"));
-
-      const loadedPatients: Patient[] = [];
-
-      if (usersSnapshot.exists()) {
-        const usersData = usersSnapshot.val();
-
-        Object.entries(usersData).forEach(([uid, value]) => {
-        const user = value as Patient;
-
-        if (user.role === "patient") {
-          loadedPatients.push({
-            ...user,
-            uid: String(uid),
-          });
-        }
-      });
-      }
+      const nurseUid = auth.currentUser?.uid;
+      const loadedPatients: Patient[] = nurseUid
+        ? await getNursePatients(nurseUid)
+        : [];
 
       loadedPatients.sort((a, b) =>
         (a.fullName || "").localeCompare(b.fullName || "")
@@ -103,32 +95,36 @@ export default function NurseNotes() {
 
       setPatients(loadedPatients);
 
-      // -------------------------
-      // LOAD NURSE NOTES
-      // -------------------------
-
-      const notesSnapshot = await get(ref(db, "nurseNotes"));
-
       const loadedNotes: PatientNote[] = [];
-
-      if (notesSnapshot.exists()) {
-        const notesData = notesSnapshot.val();
-
-        Object.entries(notesData).forEach(([id, value]) => {
-          const item = value as Omit<PatientNote, "id">;
-
+      const notesSnapshots = await Promise.all(
+        loadedPatients.map(async (patient) => ({
+          patient,
+          snapshot: await get(ref(db, `nurseNotes/${patient.uid}`)),
+        }))
+      );
+      for (const { patient, snapshot } of notesSnapshots) {
+        const noteRecords = snapshot.val() as
+          | Record<string, Partial<PatientNote>>
+          | null;
+        for (const [id, item] of Object.entries(noteRecords ?? {})) {
           loadedNotes.push({
             id,
-            ...item,
+            patientId: patient.uid,
+            patientName: item.patientName || patient.fullName || "Patient",
+            patientCode:
+              item.patientCode ||
+              patient.patientId ||
+              `PT-${patient.uid.slice(0, 6).toUpperCase()}`,
+            note: item.note || "",
+            authorId: item.authorId || item.nurseId || "",
+            authorName: item.authorName || "",
+            createdAt: item.createdAt || 0,
           });
-        });
+        }
       }
 
       loadedNotes.sort((a, b) => {
-        const timeA = a.createdAt || 0;
-        const timeB = b.createdAt || 0;
-
-        return timeB - timeA;
+        return getTimestamp(b.createdAt) - getTimestamp(a.createdAt);
       });
 
       setNotes(loadedNotes);
@@ -173,15 +169,11 @@ export default function NurseNotes() {
         auth.currentUser.email ||
         "Nurse";
 
-      const notesRef = ref(db, "nurseNotes");
-
-      const newNoteRef = push(notesRef);
-
       const patientCode =
         selectedPatient.patientId ||
         `PT-${selectedPatient.uid.slice(0, 6).toUpperCase()}`;
 
-      await push(ref(db, "nurseNotes"), {
+      await push(ref(db, `nurseNotes/${selectedPatient.uid}`), {
         patientId: selectedPatient.uid,
         patientName: selectedPatient.fullName || "Patient",
         patientCode,
@@ -216,7 +208,7 @@ export default function NurseNotes() {
   // DELETE NOTE
   // --------------------------------------------------
 
-  const handleDelete = async (noteId: string) => {
+  const handleDelete = async (patientUid: string, noteId: string) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this note?"
     );
@@ -224,10 +216,12 @@ export default function NurseNotes() {
     if (!confirmed) return;
 
     try {
-      await remove(ref(db, `nurseNotes/${noteId}`));
+      await remove(ref(db, `nurseNotes/${patientUid}/${noteId}`));
 
       setNotes((previous) =>
-        previous.filter((item) => item.id !== noteId)
+        previous.filter(
+          (item) => item.id !== noteId || item.patientId !== patientUid
+        )
       );
     } catch (err) {
       console.error("Error deleting note:", err);
@@ -765,7 +759,7 @@ export default function NurseNotes() {
                     <button
                       type="button"
                       onClick={() =>
-                        handleDelete(item.id)
+                        handleDelete(item.patientId, item.id)
                       }
                       style={{
                         display: "flex",

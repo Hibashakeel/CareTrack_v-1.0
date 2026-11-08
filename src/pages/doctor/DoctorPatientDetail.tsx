@@ -665,7 +665,6 @@ export default function DoctorPatientDetail() {
           reportsSnapshot,
           vitalsSnapshot,
           notesSnapshot,
-          usersSnapshot,
           questionsSnapshot,
         ] = await Promise.all([
           get(
@@ -695,8 +694,6 @@ export default function DoctorPatientDetail() {
               `nurseNotes/${patientId}`,
             ),
           ),
-
-          get(ref(db, "users")),
 
           get(
             ref(
@@ -757,37 +754,7 @@ export default function DoctorPatientDetail() {
           setNotes([]);
         }
 
-        /* USERS MAP */
-
-        if (usersSnapshot.exists()) {
-          const usersData =
-            usersSnapshot.val();
-
-          const map: Record<
-            string,
-            UserRecord
-          > = {};
-
-          Object.entries(
-            usersData || {},
-          ).forEach(
-            ([uid, value]) => {
-              if (
-                value &&
-                typeof value === "object"
-              ) {
-                map[uid] = {
-                  uid,
-                  ...(value as object),
-                };
-              }
-            },
-          );
-
-          setUsersMap(map);
-        } else {
-          setUsersMap({});
-        }
+        setUsersMap({});
 
         /* QUESTIONS */
 

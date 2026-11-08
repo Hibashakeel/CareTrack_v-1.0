@@ -289,6 +289,7 @@ export default function Register() {
                   <option value="doctor">
                     Doctor
                   </option>
+
                 </select>
 
                 <p style={styles.roleHint}>

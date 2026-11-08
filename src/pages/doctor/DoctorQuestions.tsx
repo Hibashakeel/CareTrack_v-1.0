@@ -18,6 +18,7 @@ import { get, ref, set } from "firebase/database";
 
 import { useAuth } from "../../context/AuthContext";
 import { db } from "../../lib/firebase";
+import { getDoctorPatients } from "../../services/hospital";
 
 import "../../patient-pages.css";
 
@@ -194,24 +195,18 @@ export default function DoctorQuestions() {
       try {
         setLoading(true);
 
-        const snapshot = await get(
-          ref(db, "patientQuestions"),
+        const patients = await getDoctorPatients(user.uid);
+        const questionSnapshots = await Promise.all(
+          patients.map((patient) =>
+            get(ref(db, `patientQuestions/${patient.uid}`))
+          )
         );
-
-        if (!snapshot.exists()) {
-          setQuestions([]);
-          return;
-        }
-
-        const rootData = snapshot.val() || {};
-
         const loadedQuestions: Question[] = [];
 
-        Object.entries(rootData).forEach(
-          ([patientId, patientQuestions]: [
-            string,
-            any,
-          ]) => {
+        questionSnapshots.forEach((snapshot, patientIndex) => {
+          if (!snapshot.exists()) return;
+          const patientId = patients[patientIndex].uid;
+          const patientQuestions = snapshot.val();
             if (
               !patientQuestions ||
               typeof patientQuestions !==
@@ -353,8 +348,7 @@ export default function DoctorQuestions() {
                   doctorReplyBy:
                     value.doctorReplyBy || "",
                 });
-              },
-            );
+            });
           },
         );
 

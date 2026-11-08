@@ -28,6 +28,11 @@ import {
 
 import { db } from "../../lib/firebase";
 import ContextualHelp from "../../components/ContextualHelp";
+import AdminUserManagement from "../../components/admin/AdminUserManagement";
+import {
+  AdminAdmissionManagement,
+  AdminWardManagement,
+} from "../../components/admin/AdminHospitalOperations";
 
 /* =========================================================
    TYPES
@@ -66,7 +71,7 @@ interface AdminPageProps {
    COMMON ADMIN PAGE
 ========================================================= */
 
-function AdminPage({
+export function AdminPage({
   title,
   description,
   icon: Icon,
@@ -476,7 +481,7 @@ function StatusBadge({
    ADMIN PATIENTS
 ========================================================= */
 
-export function AdminPatients() {
+function LegacyAdminPatients() {
   const {
     users,
     loading,
@@ -913,7 +918,7 @@ function StaffCard({
    ADMIN DOCTORS
 ========================================================= */
 
-export function AdminDoctors() {
+function LegacyAdminDoctors() {
   const {
     users,
     loading,
@@ -1057,7 +1062,7 @@ export function AdminDoctors() {
    ADMIN NURSES
 ========================================================= */
 
-export function AdminNurses() {
+function LegacyAdminNurses() {
   const {
     users,
     loading,
@@ -1201,7 +1206,7 @@ export function AdminNurses() {
    ADMIN ADMISSIONS
 ========================================================= */
 
-export function AdminAdmissions() {
+function LegacyAdminAdmissions() {
   const [
     admissions,
     setAdmissions,
@@ -1490,7 +1495,7 @@ export function AdminAdmissions() {
    ADMIN WARDS
 ========================================================= */
 
-export function AdminWards() {
+function LegacyAdminWards() {
   const {
     users,
     loading,
@@ -2497,3 +2502,23 @@ const smallLabel: React.CSSProperties = {
 ========================================================= */
 
 export default AdminPage;
+
+export function AdminPatients() {
+  return <AdminUserManagement role="patient" />;
+}
+
+export function AdminDoctors() {
+  return <AdminUserManagement role="doctor" />;
+}
+
+export function AdminNurses() {
+  return <AdminUserManagement role="nurse" />;
+}
+
+export function AdminAdmissions() {
+  return <AdminAdmissionManagement />;
+}
+
+export function AdminWards() {
+  return <AdminWardManagement />;
+}

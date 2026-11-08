@@ -34,6 +34,13 @@ export interface UserProfile {
   active: boolean;
   approvalStatus: "approved" | "pending";
   createdAt?: number;
+  address?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  specialization?: string;
+  department?: string;
+  availability?: "available" | "unavailable";
+  assignedDoctorId?: string;
 }
 
 function getFirebaseError(error: any): string {
@@ -93,6 +100,12 @@ export async function registerUser(data: {
   role: UserRole;
 }) {
   try {
+    if (data.role === "admin") {
+      throw new Error(
+        "Administrator accounts must be provisioned by an existing administrator."
+      );
+    }
+
     const fullName = data.fullName.trim();
     const email = data.email.trim().toLowerCase();
     const phone = data.phone.trim();
@@ -119,9 +132,9 @@ export async function registerUser(data: {
       displayName: fullName,
     });
 
-    const staff =
-      data.role === "nurse" ||
-      data.role === "doctor";
+        const staff =
+          data.role === "nurse" ||
+          data.role === "doctor";
 
     const profile: UserProfile = {
       uid: credential.user.uid,

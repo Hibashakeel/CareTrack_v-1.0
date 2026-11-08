@@ -11,6 +11,8 @@ import {
 import { get, ref } from "firebase/database";
 
 import { db } from "../../lib/firebase";
+import { useAuth } from "../../context/AuthContext";
+import { getDoctorPatients } from "../../services/hospital";
 
 interface Patient {
   uid: string;
@@ -32,6 +34,7 @@ interface VitalRecord {
 }
 
 const DoctorVitals = () => {
+  const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const selectedPatientId = searchParams.get("patientId");
 
@@ -50,30 +53,9 @@ const DoctorVitals = () => {
         // =========================
         // LOAD PATIENTS
         // =========================
-        const usersSnapshot = await get(ref(db, "users"));
-
-        const patientList: Patient[] = [];
-
-        if (usersSnapshot.exists()) {
-          const users = usersSnapshot.val();
-
-          Object.entries(users).forEach(([uid, value]) => {
-            const user = value as Record<string, any>;
-
-            if (user?.role === "patient") {
-              patientList.push({
-                uid,
-                fullName:
-                  user.fullName ||
-                  user.name ||
-                  user.displayName ||
-                  "Unknown Patient",
-                email: user.email || "",
-                role: user.role,
-              });
-            }
-          });
-        }
+        const patientList: Patient[] = user?.uid
+          ? await getDoctorPatients(user.uid)
+          : [];
 
         setPatients(patientList);
 
@@ -92,89 +74,49 @@ const DoctorVitals = () => {
         //       ├── updatedAt
         //       └── updatedBy
         //
-        const monitoringSnapshot = await get(
-          ref(db, "patientMonitoring")
-        );
-
-        if (!monitoringSnapshot.exists()) {
-          setVitals([]);
-          return;
-        }
-
-        const monitoringData = monitoringSnapshot.val();
-
         const records: VitalRecord[] = [];
-
-        Object.entries(monitoringData).forEach(
-          ([patientId, value]) => {
-            // If coming from a specific patient
-            if (
-              selectedPatientId &&
-              patientId !== selectedPatientId
-            ) {
-              return;
-            }
-
-            const data = value as Record<string, any>;
-
-            if (
-              !data ||
-              typeof data !== "object"
-            ) {
-              return;
-            }
-
-            records.push({
-              id: patientId,
-              patientId: patientId,
-
-              temperature: String(
-                data.temperature ??
-                  data.bodyTemperature ??
-                  data.temp ??
-                  ""
-              ),
-
-              heartRate: String(
-                data.heartRate ??
-                  data.heart_rate ??
-                  data.pulse ??
-                  ""
-              ),
-
-              bloodPressure: String(
-                data.bloodPressure ??
-                  data.blood_pressure ??
-                  data.bp ??
-                  ""
-              ),
-
-              oxygenLevel: String(
-                data.oxygenLevel ??
-                  data.oxygenSaturation ??
-                  data.oxygen ??
-                  data.spo2 ??
-                  data.spO2 ??
-                  ""
-              ),
-
-              severity: String(
-                data.severity ?? ""
-              ),
-
-              updatedAt:
-                data.updatedAt ??
-                data.recordedAt ??
-                data.createdAt ??
-                data.timestamp ??
-                "",
-
-              updatedBy: String(
-                data.updatedBy ?? ""
-              ),
-            });
-          }
+        const patientsToLoad = patientList.filter(
+          (patient) => !selectedPatientId || patient.uid === selectedPatientId
         );
+        const monitoringSnapshots = await Promise.all(
+          patientsToLoad.map((patient) =>
+            get(ref(db, `patientMonitoring/${patient.uid}`))
+          )
+        );
+        monitoringSnapshots.forEach((snapshot, index) => {
+          if (!snapshot.exists()) return;
+          const data = snapshot.val() as Record<string, any>;
+          const patientId = patientsToLoad[index].uid;
+          records.push({
+            id: patientId,
+            patientId,
+            temperature: String(
+              data.temperature ?? data.bodyTemperature ?? data.temp ?? ""
+            ),
+            heartRate: String(
+              data.heartRate ?? data.heart_rate ?? data.pulse ?? ""
+            ),
+            bloodPressure: String(
+              data.bloodPressure ?? data.blood_pressure ?? data.bp ?? ""
+            ),
+            oxygenLevel: String(
+              data.oxygenLevel ??
+                data.oxygenSaturation ??
+                data.oxygen ??
+                data.spo2 ??
+                data.spO2 ??
+                ""
+            ),
+            severity: String(data.severity ?? ""),
+            updatedAt:
+              data.updatedAt ??
+              data.recordedAt ??
+              data.createdAt ??
+              data.timestamp ??
+              "",
+            updatedBy: String(data.updatedBy ?? ""),
+          });
+        });
 
         setVitals(records);
       } catch (err) {
@@ -192,7 +134,7 @@ const DoctorVitals = () => {
     };
 
     loadData();
-  }, [selectedPatientId]);
+  }, [selectedPatientId, user?.uid]);
 
   // =========================
   // SEARCH

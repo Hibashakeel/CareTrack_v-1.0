@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { get, ref } from "firebase/database";
 
 import { db } from "../../lib/firebase";
+import { useAuth } from "../../context/AuthContext";
+import { getDoctorPatients } from "../../services/hospital";
 
 interface UserProfile {
   uid: string;
@@ -21,6 +23,7 @@ interface UserProfile {
 }
 
 export default function DoctorPatients() {
+  const { user } = useAuth();
   const [patients, setPatients] = useState<UserProfile[]>(
     []
   );
@@ -31,30 +34,7 @@ export default function DoctorPatients() {
   useEffect(() => {
     async function loadPatients() {
       try {
-        const snapshot = await get(ref(db, "users"));
-
-        if (!snapshot.exists()) {
-          setPatients([]);
-          return;
-        }
-
-        const data = snapshot.val() as Record<
-          string,
-          Omit<UserProfile, "uid">
-        >;
-
-        const patientList: UserProfile[] =
-          Object.entries(data)
-            .filter(
-              ([, item]) =>
-                item.role === "patient"
-            )
-            .map(([uid, item]) => ({
-              uid,
-              ...item,
-            }));
-
-        setPatients(patientList);
+        setPatients(user?.uid ? await getDoctorPatients(user.uid) : []);
       } catch (error) {
         console.error(
           "Unable to load doctor patients:",
@@ -66,7 +46,7 @@ export default function DoctorPatients() {
     }
 
     loadPatients();
-  }, []);
+  }, [user?.uid]);
 
   const filteredPatients = patients.filter(
     (patient) => {

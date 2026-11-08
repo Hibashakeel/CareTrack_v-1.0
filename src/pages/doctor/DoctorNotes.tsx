@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { get, ref } from "firebase/database";
 import { db } from "../../lib/firebase";
+import { useAuth } from "../../context/AuthContext";
+import { getDoctorPatients } from "../../services/hospital";
 
 interface Patient {
   uid: string;
@@ -26,6 +28,7 @@ interface NurseNote {
 }
 
 export default function DoctorNotes() {
+  const { user } = useAuth();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [notes, setNotes] = useState<NurseNote[]>([]);
   const [search, setSearch] = useState("");
@@ -36,15 +39,9 @@ export default function DoctorNotes() {
       try {
         setLoading(true);
 
-        const usersSnapshot = await get(ref(db, "users"));
-        const usersData = usersSnapshot.val() || {};
-
-        const patientList: Patient[] = Object.entries(usersData)
-          .map(([uid, value]) => ({
-            ...(value as Omit<Patient, "uid">),
-            uid,
-          }))
-          .filter((user) => user.role === "patient");
+        const patientList: Patient[] = user?.uid
+          ? await getDoctorPatients(user.uid)
+          : [];
 
         setPatients(patientList);
 
@@ -89,7 +86,7 @@ export default function DoctorNotes() {
     };
 
     loadData();
-  }, []);
+  }, [user?.uid]);
 
   const filteredNotes = useMemo(() => {
     const query = search.toLowerCase().trim();

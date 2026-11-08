@@ -27,7 +27,6 @@ PATIENT
 ========================================================= */
 
 import PatientDashboard from "./pages/PatientDashboard";
-import PatientInformation from "./pages/PatientInformation";
 import PatientDailyReport from "./pages/PatientDailyReport";
 import PatientVitals from "./pages/PatientVitals";
 import PatientMedications from "./pages/PatientMedications";
@@ -37,6 +36,10 @@ import PatientAppointments from "./pages/PatientAppointments";
 import PatientTimeline from "./pages/PatientTimeline";
 import PatientNotifications from "./pages/PatientNotifications";
 import PatientNotes from "./pages/PatientNotes";
+import {
+  AccountSettingsPage,
+  UserProfilePage,
+} from "./pages/UserAccountPages";
 
 /* =========================================================
 NURSE
@@ -74,13 +77,13 @@ ADMIN
 ========================================================= */
 
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminUserManagement from "./components/admin/AdminUserManagement";
+import {
+  AdminAdmissionManagement,
+  AdminWardManagement,
+} from "./components/admin/AdminHospitalOperations";
 
 import {
-AdminPatients,
-AdminAdmissions,
-AdminWards,
-AdminDoctors,
-AdminNurses,
 AdminAppointments,
 AdminReports,
 AdminAuditLogs,
@@ -205,7 +208,17 @@ return (
 
         <Route
           path="/patient/information"
-          element={<PatientInformation />}
+          element={<UserProfilePage />}
+        />
+
+        <Route
+          path="/patient/profile"
+          element={<UserProfilePage />}
+        />
+
+        <Route
+          path="/patient/account-settings"
+          element={<AccountSettingsPage />}
         />
 
         <Route
@@ -288,6 +301,16 @@ return (
         />
 
         <Route
+          path="/nurse/profile"
+          element={<UserProfilePage />}
+        />
+
+        <Route
+          path="/nurse/account-settings"
+          element={<AccountSettingsPage />}
+        />
+
+        <Route
           path="/nurse/patients"
           element={<NursePatients />}
         />
@@ -351,6 +374,16 @@ return (
         <Route
           path="/doctor/dashboard"
           element={<DoctorDashboard />}
+        />
+
+        <Route
+          path="/doctor/profile"
+          element={<UserProfilePage />}
+        />
+
+        <Route
+          path="/doctor/account-settings"
+          element={<AccountSettingsPage />}
         />
 
         {/* Doctor Patients */}
@@ -453,28 +486,38 @@ return (
         />
 
         <Route
+          path="/admin/profile"
+          element={<UserProfilePage />}
+        />
+
+        <Route
+          path="/admin/account-settings"
+          element={<AccountSettingsPage />}
+        />
+
+        <Route
           path="/admin/patients"
-          element={<AdminPatients />}
+          element={<AdminUserManagement role="patient" />}
         />
 
         <Route
           path="/admin/admissions"
-          element={<AdminAdmissions />}
+          element={<AdminAdmissionManagement />}
         />
 
         <Route
           path="/admin/wards"
-          element={<AdminWards />}
+          element={<AdminWardManagement />}
         />
 
         <Route
           path="/admin/doctors"
-          element={<AdminDoctors />}
+          element={<AdminUserManagement role="doctor" />}
         />
 
         <Route
           path="/admin/nurses"
-          element={<AdminNurses />}
+          element={<AdminUserManagement role="nurse" />}
         />
 
         <Route

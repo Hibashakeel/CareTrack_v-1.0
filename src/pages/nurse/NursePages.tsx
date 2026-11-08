@@ -23,6 +23,10 @@ import {
 
 import { get, ref, set } from "firebase/database";
 import { auth, db } from "../../lib/firebase";
+import {
+  getNursePatients,
+  getPatientActiveAdmission,
+} from "../../services/hospital";
 import ContextualHelp from "../../components/ContextualHelp";
 
 /* =========================================================
@@ -327,31 +331,37 @@ function SeverityBadge({
 ========================================================= */
 
 async function loadNurseData() {
-  const [
-    usersSnapshot,
-    admissionsSnapshot,
-    monitoringSnapshot,
-  ] = await Promise.all([
-    get(ref(db, "users")),
-    get(ref(db, "admissions")),
-    get(ref(db, "patientMonitoring")),
-  ]);
+  const nurseUid = auth.currentUser?.uid;
+  if (!nurseUid) throw new Error("You must be signed in to view assigned patients.");
+  const patients = await getNursePatients(nurseUid);
+  const patientData = await Promise.all(
+    patients.map(async (patient) => {
+      const [admission, monitoringSnapshot] = await Promise.all([
+        getPatientActiveAdmission(patient.uid),
+        get(ref(db, `patientMonitoring/${patient.uid}`)),
+      ]);
+      return {
+        patient,
+        admission,
+        monitoring: monitoringSnapshot.val() as PatientMonitoring | null,
+      };
+    })
+  );
 
   return {
-    users: usersSnapshot.exists()
-      ? (usersSnapshot.val() as Record<string, UserProfile>)
-      : {},
-
-    admissions: admissionsSnapshot.exists()
-      ? (admissionsSnapshot.val() as Record<string, Admission>)
-      : {},
-
-    monitoring: monitoringSnapshot.exists()
-      ? (monitoringSnapshot.val() as Record<
-          string,
-          PatientMonitoring
-        >)
-      : {},
+    users: Object.fromEntries(
+      patientData.map(({ patient }) => [patient.uid, patient])
+    ) as Record<string, UserProfile>,
+    admissions: Object.fromEntries(
+      patientData.flatMap(({ admission }) =>
+        admission?.id ? [[admission.id, admission]] : []
+      )
+    ) as Record<string, Admission>,
+    monitoring: Object.fromEntries(
+      patientData.flatMap(({ patient, monitoring }) =>
+        monitoring ? [[patient.uid, monitoring]] : []
+      )
+    ) as Record<string, PatientMonitoring>,
   };
 }
 
@@ -1005,12 +1015,12 @@ export function NursePatientDetail() {
       try {
         const [
           userSnapshot,
-          admissionsSnapshot,
+          activeAdmission,
           monitoringSnapshot,
           dailyReportSnapshot,
         ] = await Promise.all([
           get(ref(db, `users/${patientId}`)),
-          get(ref(db, "admissions")),
+          getPatientActiveAdmission(patientId),
           get(ref(db, `patientMonitoring/${patientId}`)),
           get(ref(db, `patientDailyReports/${patientId}`)),
         ]);
@@ -1023,26 +1033,7 @@ export function NursePatientDetail() {
 
         /* ADMISSION */
 
-        if (admissionsSnapshot.exists()) {
-          const admissionsData =
-            admissionsSnapshot.val() as Record<
-              string,
-              Admission
-            >;
-
-          const matchingAdmission = Object.values(
-            admissionsData
-          ).find(
-            (item) =>
-              item.patientId === patientId ||
-              item.patientUid === patientId ||
-              item.uid === patientId
-          );
-
-          if (matchingAdmission) {
-            setAdmission(matchingAdmission);
-          }
-        }
+        setAdmission(activeAdmission);
 
         /* MONITORING / VITALS */
 
@@ -1933,21 +1924,23 @@ export function NurseReports() {
         setLoading(true);
         setError("");
 
-        const snapshot = await get(
-          ref(db, "patientDailyReports")
-        );
-
-        if (!snapshot.exists()) {
+        const nurseUid = auth.currentUser?.uid;
+        if (!nurseUid) {
           setReports([]);
           return;
         }
-
-        const data = snapshot.val();
-
+        const patients = await getNursePatients(nurseUid);
+        const snapshots = await Promise.all(
+          patients.map((patient) =>
+            get(ref(db, `patientDailyReports/${patient.uid}`))
+          )
+        );
         const allReports: PatientDailyReport[] = [];
 
-        Object.entries(data).forEach(
-          ([patientId, patientReports]) => {
+        snapshots.forEach((snapshot, patientIndex) => {
+          if (!snapshot.exists()) return;
+          const patientId = patients[patientIndex].uid;
+          const patientReports = snapshot.val();
             if (
               patientReports &&
               typeof patientReports === "object"
@@ -1967,8 +1960,7 @@ export function NurseReports() {
                 }
               });
             }
-          }
-        );
+        });
 
         allReports.sort((a, b) => {
           const timeA =
@@ -2579,26 +2571,8 @@ export function NurseNotes() {
   useEffect(() => {
     const loadPatients = async () => {
       try {
-        const snapshot = await get(ref(db, "users"));
-
-        if (!snapshot.exists()) {
-          setPatients([]);
-          return;
-        }
-
-        const data = snapshot.val();
-
-        const patientList: UserProfile[] = Object.entries(data)
-          .map(([uid, value]) => ({
-            uid,
-            ...(value as Omit<UserProfile, "uid">),
-          }))
-          .filter(
-            (user) =>
-              String(user.role || "").toLowerCase() === "patient"
-          );
-
-        setPatients(patientList);
+        const nurseUid = auth.currentUser?.uid;
+        setPatients(nurseUid ? await getNursePatients(nurseUid) : []);
       } catch (error) {
         console.error("Error loading patients:", error);
       }
