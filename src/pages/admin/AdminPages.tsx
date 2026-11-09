@@ -60,6 +60,31 @@ interface Admission {
   admittedAt?: string | number;
 }
 
+interface AdminAppointment {
+  id: string;
+  patientUid?: string;
+  doctorUid?: string;
+  patient?: string;
+  doctor?: string;
+  patientName?: string;
+  doctorName?: string;
+  date?: string;
+  time?: string;
+  startTime?: string;
+  status?: string;
+}
+
+interface AdminAuditLog {
+  id: string;
+  actorUid?: string;
+  actorName?: string;
+  actorRole?: string;
+  action?: string;
+  recordType?: string;
+  recordId?: string;
+  createdAt?: number | string | null;
+}
+
 interface AdminPageProps {
   title: string;
   description?: string;
@@ -1496,132 +1521,7 @@ function LegacyAdminAdmissions() {
 ========================================================= */
 
 function LegacyAdminWards() {
-  const {
-    users,
-    loading,
-  } = useUsers();
-
-  const patients =
-    users.filter(
-      (user) =>
-        user.role === "patient"
-    );
-
-  const wardNames = [
-    "General Ward",
-    "Medical Ward",
-    "Surgical Ward",
-    "Private Ward",
-  ];
-
-  return (
-    <AdminPage
-      title="Wards"
-      description="Overview of hospital ward organization and patient allocation."
-      icon={BedDouble}
-    >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(4, minmax(0, 1fr))",
-          gap: "15px",
-        }}
-      >
-        {wardNames.map(
-          (ward, index) => (
-            <div
-              key={ward}
-              className="panel"
-              style={{
-                padding: "18px",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems:
-                    "center",
-                  justifyContent:
-                    "space-between",
-                  marginBottom:
-                    "14px",
-                }}
-              >
-                <div
-                  style={{
-                    width: "38px",
-                    height: "38px",
-                    borderRadius:
-                      "10px",
-                    background:
-                      "#eef6ff",
-                    color:
-                      "#0056dd",
-                    display:
-                      "grid",
-                    placeItems:
-                      "center",
-                  }}
-                >
-                  <BedDouble
-                    size={19}
-                  />
-                </div>
-
-                <span
-                  style={{
-                    fontSize:
-                      "10px",
-                    color:
-                      "#8293a0",
-                    fontWeight:
-                      700,
-                  }}
-                >
-                  WARD{" "}
-                  {index + 1}
-                </span>
-              </div>
-
-              <h3
-                style={{
-                  margin:
-                    "0 0 6px",
-                  color:
-                    "#17324d",
-                  fontSize:
-                    "14px",
-                }}
-              >
-                {ward}
-              </h3>
-
-              <p
-                style={{
-                  margin: 0,
-                  color:
-                    "#8293a0",
-                  fontSize:
-                    "11px",
-                }}
-              >
-                {loading
-                  ? "Loading..."
-                  : `${Math.max(
-                      0,
-                      Math.floor(
-                        patients.length /
-                          4
-                      )
-                    )} patients`}
-              </p>
-            </div>
-          )
-        )}
-      </div>
-    </AdminPage>
-  );
+  return <AdminWardManagement />;
 }
 
 /* =========================================================
@@ -1629,49 +1529,52 @@ function LegacyAdminWards() {
 ========================================================= */
 
 export function AdminAppointments() {
-  const [
-    appointments,
-  ] = useState([
-    {
-      id: "1",
-      patient:
-        "Sarah Ahmed",
-      doctor:
-        "Dr. Ahmed Khan",
-      date:
-        "05 October 2026",
-      time:
-        "10:30 AM",
-      status:
-        "Scheduled",
-    },
-    {
-      id: "2",
-      patient:
-        "Ali Raza",
-      doctor:
-        "Dr. Sara Malik",
-      date:
-        "06 October 2026",
-      time:
-        "11:00 AM",
-      status:
-        "Upcoming",
-    },
-    {
-      id: "3",
-      patient:
-        "Fatima Noor",
-      doctor:
-        "Dr. Ahmed Khan",
-      date:
-        "07 October 2026",
-      time:
-        "02:00 PM",
-      status:
-        "Scheduled",
-    },
-  ]);
+  const [appointments, setAppointments] = useState<AdminAppointment[]>([]);
+  const [users, setUsers] = useState<Record<string, SystemUser>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadAppointments() {
+      try {
+        const [appointmentsSnapshot, usersSnapshot] = await Promise.all([
+          get(ref(db, "appointments")),
+          get(ref(db, "users")),
+        ]);
+        const records = appointmentsSnapshot.val() as
+          | Record<string, Omit<AdminAppointment, "id">>
+          | null;
+        const userRecords = usersSnapshot.val() as
+          | Record<string, Omit<SystemUser, "uid">>
+          | null;
+        setAppointments(
+          Object.entries(records ?? {}).map(([id, value]) => ({
+            id,
+            ...value,
+          }))
+        );
+        setUsers(
+          Object.fromEntries(
+            Object.entries(userRecords ?? {}).map(([uid, value]) => [
+              uid,
+              { uid, ...value },
+            ])
+          )
+        );
+      } catch (loadError) {
+        console.error("Could not load admin appointments:", loadError);
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : "Could not load appointments from Firebase."
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    void loadAppointments();
+  }, []);
 
   return (
     <AdminPage
@@ -1679,7 +1582,14 @@ export function AdminAppointments() {
       description="Monitor scheduled patient appointments."
       icon={CalendarDays}
     >
-      <div
+      {error && <p role="alert" style={{ color: "#b42318" }}>{error}</p>}
+      {loading ? (
+        <div className="panel" style={{ padding: 20 }}>Loading appointments...</div>
+      ) : appointments.length === 0 ? (
+        <div className="panel" style={{ padding: 20 }}>
+          No appointment records are available in Firebase.
+        </div>
+      ) : <div
         style={{
           display: "grid",
           gap: "12px",
@@ -1720,7 +1630,11 @@ export function AdminAppointments() {
                   }}
                 >
                   {
-                    appointment.patient
+                    appointment.patientName ||
+                    appointment.patient ||
+                    users[appointment.patientUid ?? ""]?.fullName ||
+                    appointment.patientUid ||
+                    "Unknown patient"
                   }
                 </strong>
               </div>
@@ -1743,7 +1657,11 @@ export function AdminAppointments() {
                   }}
                 >
                   {
-                    appointment.doctor
+                    appointment.doctorName ||
+                    appointment.doctor ||
+                    users[appointment.doctorUid ?? ""]?.fullName ||
+                    appointment.doctorUid ||
+                    "Unassigned"
                   }
                 </span>
               </div>
@@ -1767,6 +1685,8 @@ export function AdminAppointments() {
                 >
                   {
                     appointment.date
+                      ? formatAdminDate(appointment.date)
+                      : "Date unavailable"
                   }
                 </span>
               </div>
@@ -1789,7 +1709,9 @@ export function AdminAppointments() {
                   }}
                 >
                   {
-                    appointment.time
+                    appointment.time ||
+                    appointment.startTime ||
+                    "Time unavailable"
                   }
                 </span>
               </div>
@@ -1802,7 +1724,7 @@ export function AdminAppointments() {
             </div>
           )
         )}
-      </div>
+      </div>}
     </AdminPage>
   );
 }
@@ -1812,60 +1734,151 @@ export function AdminAppointments() {
 ========================================================= */
 
 export function AdminReports() {
-  const {
-    users,
-    loading,
-  } = useUsers();
+  const [stats, setStats] = useState<
+    Array<{ title: string; value: number; icon: React.ElementType }>
+  >([]);
+  const [activity, setActivity] = useState<AdminAuditLog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const patients =
-    users.filter(
-      (user) =>
-        user.role === "patient"
-    ).length;
+  useEffect(() => {
+    async function loadReportData() {
+      try {
+        const [
+          usersSnapshot,
+          wardsSnapshot,
+          admissionsSnapshot,
+          occupancySnapshot,
+          appointmentsSnapshot,
+          reportsSnapshot,
+          auditSnapshot,
+        ] = await Promise.all([
+          get(ref(db, "users")),
+          get(ref(db, "wards")),
+          get(ref(db, "admissions")),
+          get(ref(db, "bedOccupancy")),
+          get(ref(db, "appointments")),
+          get(ref(db, "patientDailyReports")),
+          get(ref(db, "auditLogs")),
+        ]);
+        const users = Object.values(
+          (usersSnapshot.val() ?? {}) as Record<string, SystemUser>
+        );
+        const wards = Object.values(
+          (wardsSnapshot.val() ?? {}) as Record<
+            string,
+            { roomCount?: number; bedsPerRoom?: number }
+          >
+        );
+        const admissions = Object.values(
+          (admissionsSnapshot.val() ?? {}) as Record<string, Admission>
+        );
+        const occupancy = (occupancySnapshot.val() ?? {}) as Record<
+          string,
+          Record<string, Record<string, unknown>>
+        >;
+        const appointmentRecords = appointmentsSnapshot.val() as
+          | Record<string, unknown>
+          | null;
+        const patientReports = reportsSnapshot.val() as
+          | Record<string, Record<string, unknown>>
+          | null;
+        const auditRecords = auditSnapshot.val() as
+          | Record<string, Omit<AdminAuditLog, "id">>
+          | null;
+        const occupiedBeds = Object.values(occupancy).reduce(
+          (total, rooms) =>
+            total +
+            Object.values(rooms ?? {}).reduce(
+              (roomTotal, beds) =>
+                roomTotal +
+                Object.values(beds ?? {}).filter((bed) => bed != null).length,
+              0
+            ),
+          0
+        );
+        const bedCapacity = wards.reduce(
+          (total, ward) =>
+            total +
+            (Number(ward.roomCount) || 0) *
+              (Number(ward.bedsPerRoom) || 0),
+          0
+        );
+        const reportCount = Object.values(patientReports ?? {}).reduce(
+          (total, records) =>
+            total +
+            Object.values(records ?? {}).filter(
+              (record) => record != null
+            ).length,
+          0
+        );
+        const activeAdmissions = admissions.filter(
+          (admission) => admission.status === "active"
+        ).length;
+        setStats([
+          {
+            title: "Total Patients",
+            value: users.filter((user) => user.role === "patient").length,
+            icon: Users,
+          },
+          {
+            title: "Registered Doctors",
+            value: users.filter((user) => user.role === "doctor").length,
+            icon: Stethoscope,
+          },
+          {
+            title: "Registered Nurses",
+            value: users.filter((user) => user.role === "nurse").length,
+            icon: Activity,
+          },
+          {
+            title: "Active Accounts",
+            value: users.filter((user) => user.active === true).length,
+            icon: CheckCircle2,
+          },
+          { title: "Active Admissions", value: activeAdmissions, icon: BedDouble },
+          { title: "Wards", value: wards.length, icon: BedDouble },
+          { title: "Total Bed Capacity", value: bedCapacity, icon: BedDouble },
+          { title: "Occupied Beds", value: occupiedBeds, icon: BedDouble },
+          {
+            title: "Patient Reports",
+            value: reportCount,
+            icon: FileText,
+          },
+          {
+            title: "Appointments",
+            value: Object.keys(appointmentRecords ?? {}).length,
+            icon: CalendarDays,
+          },
+          {
+            title: "Recorded Audit Events",
+            value: Object.keys(auditRecords ?? {}).length,
+            icon: History,
+          },
+        ]);
+        setActivity(
+          Object.entries(auditRecords ?? {})
+            .map(([id, log]) => ({ id, ...log }))
+            .sort(
+              (a, b) =>
+                getAdminTime(b.createdAt) - getAdminTime(a.createdAt)
+            )
+            .slice(0, 5)
+        );
+      } catch (loadError) {
+        console.error("Could not load admin report data:", loadError);
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : "Could not load real hospital statistics."
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  const doctors =
-    users.filter(
-      (user) =>
-        user.role === "doctor"
-    ).length;
-
-  const nurses =
-    users.filter(
-      (user) =>
-        user.role === "nurse"
-    ).length;
-
-  const activeUsers =
-    users.filter(
-      (user) => user.active
-    ).length;
-
-  const reports = [
-    {
-      title:
-        "Total Patients",
-      value: patients,
-      icon: Users,
-    },
-    {
-      title:
-        "Registered Doctors",
-      value: doctors,
-      icon: Stethoscope,
-    },
-    {
-      title:
-        "Registered Nurses",
-      value: nurses,
-      icon: Activity,
-    },
-    {
-      title:
-        "Active Accounts",
-      value: activeUsers,
-      icon: CheckCircle2,
-    },
-  ];
+    void loadReportData();
+  }, []);
 
   return (
     <AdminPage
@@ -1883,16 +1896,20 @@ export function AdminReports() {
         >
           Loading report...
         </div>
+      ) : error ? (
+        <div role="alert" className="panel" style={{ padding: 20, color: "#b42318" }}>
+          {error}
+        </div>
       ) : (
+        <>
         <div
           style={{
             display: "grid",
-            gridTemplateColumns:
-              "repeat(4, minmax(0, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
             gap: "15px",
           }}
         >
-          {reports.map(
+          {stats.map(
             ({
               title,
               value,
@@ -1957,6 +1974,28 @@ export function AdminReports() {
             )
           )}
         </div>
+        <section className="panel" style={{ marginTop: 16, overflow: "hidden" }}>
+          <h2 style={{ margin: 0, padding: "16px 18px", color: "#17324d", fontSize: 15 }}>
+            Recent hospital activity
+          </h2>
+          {activity.length === 0 ? (
+            <p style={{ padding: "0 18px 16px", color: "#8293a0", fontSize: 12 }}>
+              No audit events have been recorded yet.
+            </p>
+          ) : activity.map((log, index) => (
+            <div key={log.id} style={{ display: "flex", gap: 12, padding: "12px 18px", borderTop: "1px solid #edf1f4" }}>
+              <History size={16} color="#47718c" />
+              <div style={{ flex: 1 }}>
+                <strong style={{ color: "#314e60", fontSize: 12 }}>{log.action || "Recorded action"}</strong>
+                <div style={{ color: "#8293a0", fontSize: 10, marginTop: 3 }}>
+                  {log.actorName || log.actorUid || "Unknown user"} · {log.actorRole || "role unavailable"} · {log.recordType || "record"} {log.recordId || ""}
+                </div>
+              </div>
+              <span style={{ color: "#8293a0", fontSize: 10 }}>{formatAdminDate(log.createdAt)}</span>
+            </div>
+          ))}
+        </section>
+        </>
       )}
     </AdminPage>
   );
@@ -1967,40 +2006,35 @@ export function AdminReports() {
 ========================================================= */
 
 export function AdminAuditLogs() {
-  const logs = [
-    {
-      action:
-        "Patient account registered",
-      user:
-        "System",
-      time:
-        "Today, 09:42 AM",
-    },
-    {
-      action:
-        "Doctor approval status updated",
-      user:
-        "Admin",
-      time:
-        "Today, 09:15 AM",
-    },
-    {
-      action:
-        "Patient admission recorded",
-      user:
-        "Nurse",
-      time:
-        "Yesterday, 04:20 PM",
-    },
-    {
-      action:
-        "Appointment scheduled",
-      user:
-        "Doctor",
-      time:
-        "Yesterday, 02:10 PM",
-    },
-  ];
+  const [logs, setLogs] = useState<AdminAuditLog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    get(ref(db, "auditLogs"))
+      .then((snapshot) => {
+        const records = snapshot.val() as
+          | Record<string, Omit<AdminAuditLog, "id">>
+          | null;
+        setLogs(
+          Object.entries(records ?? {})
+            .map(([id, log]) => ({ id, ...log }))
+            .sort(
+              (a, b) =>
+                getAdminTime(b.createdAt) - getAdminTime(a.createdAt)
+            )
+        );
+      })
+      .catch((loadError: unknown) => {
+        console.error("Could not load audit logs:", loadError);
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : "Could not load audit logs from Firebase."
+        );
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <AdminPage
@@ -2008,16 +2042,23 @@ export function AdminAuditLogs() {
       description="Review important system activities."
       icon={History}
     >
+      {error && <p role="alert" style={{ color: "#b42318" }}>{error}</p>}
       <div
         className="panel"
         style={{
           overflow: "hidden",
         }}
       >
-        {logs.map(
+        {loading ? (
+          <p style={{ padding: 17, color: "#8293a0" }}>Loading audit events...</p>
+        ) : logs.length === 0 ? (
+          <p style={{ padding: 17, color: "#8293a0" }}>
+            No audit events have been recorded yet.
+          </p>
+        ) : logs.map(
           (log, index) => (
             <div
-              key={`${log.action}-${index}`}
+              key={log.id}
               style={{
                 display: "flex",
                 alignItems:
@@ -2069,7 +2110,7 @@ export function AdminAuditLogs() {
                       700,
                   }}
                 >
-                  {log.action}
+                  {log.action || "Recorded action"}
                 </div>
 
                 <div
@@ -2082,7 +2123,11 @@ export function AdminAuditLogs() {
                       "3px",
                   }}
                 >
-                  By {log.user}
+                  By {log.actorName || log.actorUid || "Unknown user"}
+                  {log.actorRole ? ` · ${log.actorRole}` : ""}
+                  {log.recordType || log.recordId
+                    ? ` · ${log.recordType || "record"} ${log.recordId || ""}`
+                    : ""}
                 </div>
               </div>
 
@@ -2096,7 +2141,7 @@ export function AdminAuditLogs() {
                     "nowrap",
                 }}
               >
-                {log.time}
+                {formatAdminDate(log.createdAt)}
               </span>
             </div>
           )
@@ -2521,4 +2566,21 @@ export function AdminAdmissions() {
 
 export function AdminWards() {
   return <AdminWardManagement />;
+}
+
+function getAdminTime(value?: number | string | null) {
+  if (value === undefined || value === null || value === "") return 0;
+  const timestamp =
+    typeof value === "number" ? value : new Date(value).getTime();
+  return Number.isNaN(timestamp) ? 0 : timestamp;
+}
+
+function formatAdminDate(value?: number | string | null) {
+  if (value === undefined || value === null || value === "") {
+    return "Date unavailable";
+  }
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? String(value)
+    : date.toLocaleString();
 }

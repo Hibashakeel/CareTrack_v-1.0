@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Accessibility,
   X,
@@ -107,6 +107,7 @@ export default function AccessibilitySettings() {
 
   const [isOpen, setIsOpen] =
     useState(false);
+  const toggleButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     applyPreferences(settings);
@@ -116,6 +117,20 @@ export default function AccessibilitySettings() {
       JSON.stringify(settings)
     );
   }, [settings]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        toggleButtonRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [isOpen]);
 
   function updateSettings(
     changes: Partial<Preferences>
@@ -136,8 +151,11 @@ export default function AccessibilitySettings() {
     <>
       {/* ACCESSIBILITY FLOATING BUTTON */}
       <button
+        ref={toggleButtonRef}
         type="button"
         aria-label="Accessibility settings"
+        aria-expanded={isOpen}
+        aria-controls="caretrack-accessibility-panel"
         onClick={() =>
           setIsOpen((current) => !current)
         }
@@ -166,6 +184,9 @@ export default function AccessibilitySettings() {
       {/* ACCESSIBILITY PANEL */}
       {isOpen && (
         <div
+          id="caretrack-accessibility-panel"
+          role="dialog"
+          aria-labelledby="caretrack-accessibility-title"
           style={{
             position: "fixed",
             right: "22px",
@@ -219,15 +240,17 @@ export default function AccessibilitySettings() {
               </div>
 
               <div>
-                <div
+                <h2
+                  id="caretrack-accessibility-title"
                   style={{
+                    margin: 0,
                     fontSize: "14px",
                     fontWeight: 700,
                     color: "#17324d",
                   }}
                 >
                   Accessibility
-                </div>
+                </h2>
 
                 <div
                   style={{
@@ -268,6 +291,8 @@ export default function AccessibilitySettings() {
               style={{
                 marginBottom: "18px",
               }}
+              role="group"
+              aria-label="Text size"
             >
               <div
                 style={{
@@ -352,6 +377,8 @@ export default function AccessibilitySettings() {
               style={{
                 marginBottom: "18px",
               }}
+              role="group"
+              aria-label="Font style"
             >
               <div
                 style={{
@@ -530,6 +557,7 @@ function TextButton({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={selected}
       style={{
         minHeight: "52px",
         border: selected

@@ -8,9 +8,10 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { ref, set } from "firebase/database";
+import { ref, update } from "firebase/database";
 
 import { db, firebaseConfig } from "../lib/firebase";
+import { createAuditEntry } from "./audit";
 
 type ManagedRole = "patient" | "doctor" | "nurse";
 
@@ -55,23 +56,33 @@ export async function createManagedUser(data: {
 
   try {
     await updateProfile(credential.user, { displayName: fullName });
-    await set(ref(db, `users/${credential.user.uid}`), {
-      uid: credential.user.uid,
-      fullName,
-      email,
-      phone,
-      role: data.role,
-      ...(data.role === "doctor"
-        ? {
-            specialization,
-            ...(department ? { department } : {}),
-            availability: data.availability ?? "available",
-          }
-        : {}),
-      active: true,
-      approvalStatus: "approved",
-      createdAt: Date.now(),
+    const audit = await createAuditEntry(
+      "user_account_created",
+      "user",
+      credential.user.uid,
+      { role: data.role }
+    );
+    await update(ref(db), {
+      [`users/${credential.user.uid}`]: {
+        uid: credential.user.uid,
+        fullName,
+        email,
+        phone,
+        role: data.role,
+        ...(data.role === "doctor"
+          ? {
+              specialization,
+              ...(department ? { department } : {}),
+              availability: data.availability ?? "available",
+            }
+          : {}),
+        active: true,
+        approvalStatus: "approved",
+        createdAt: Date.now(),
+      },
+      [audit.path]: audit.value,
     });
+    return credential.user.uid;
   } catch (error) {
     try {
       await deleteUser(credential.user);

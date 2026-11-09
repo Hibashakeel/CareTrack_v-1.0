@@ -7,49 +7,95 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+import { useEffect, useState } from "react";
+import { get, ref } from "firebase/database";
+
+import { useAuth } from "../../context/AuthContext";
+import { db } from "../../lib/firebase";
 import "./doctor-pages.css";
 
 type Appointment = {
-  id: number;
-  patient: string;
-  department: string;
-  date: string;
-  time: string;
-  location: string;
-  type: string;
-  status: "Scheduled" | "Upcoming";
+  id: string;
+  patient?: string;
+  patientName?: string;
+  patientUid?: string;
+  department?: string;
+  date?: string | number;
+  time?: string;
+  startTime?: string;
+  location?: string;
+  type?: string;
+  status?: string;
 };
 
 export default function DoctorAppointments() {
-  const appointments: Appointment[] = [
-    {
-      id: 1,
-      patient: "Sarah Ahmed",
-      department: "General Consultation",
-      date: "30 September 2026",
-      time: "10:30 AM",
-      location: "Consultation Room 2",
-      type: "Follow-up",
-      status: "Scheduled",
-    },
-    {
-      id: 2,
-      patient: "Ali Raza",
-      department: "Patient Review",
-      date: "05 October 2026",
-      time: "11:00 AM",
-      location: "Consultation Room 1",
-      type: "Review",
-      status: "Upcoming",
-    },
-  ];
+  const { user } = useAuth();
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadAppointments() {
+      if (!user?.uid) {
+        setAppointments([]);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const indexSnapshot = await get(
+          ref(db, `appointmentsByDoctor/${user.uid}`)
+        );
+        const appointmentIds = Object.keys(
+          (indexSnapshot.val() ?? {}) as Record<string, unknown>
+        );
+        const records = await Promise.all(
+          appointmentIds.map(async (id) => {
+            const snapshot = await get(ref(db, `appointments/${id}`));
+            const value = snapshot.val() as Omit<Appointment, "id"> | null;
+            if (!value) return null;
+            let patient =
+              value.patientName || value.patient;
+            if (!patient && value.patientUid) {
+              const patientSnapshot = await get(
+                ref(db, `users/${value.patientUid}`)
+              );
+              const patientProfile = patientSnapshot.val() as
+                | { fullName?: string }
+                | null;
+              patient = patientProfile?.fullName;
+            }
+            return {
+              ...value,
+              id,
+              patient: patient || "Patient unavailable",
+            };
+          })
+        );
+        setAppointments(
+          records.filter((appointment) => appointment !== null)
+        );
+      } catch (loadError) {
+        console.error("Could not load doctor appointments:", loadError);
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : "Could not load appointments from Firebase."
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    void loadAppointments();
+  }, [user?.uid]);
 
   const scheduledCount = appointments.filter(
-    (appointment) => appointment.status === "Scheduled"
+    (appointment) => (appointment.status || "").toLowerCase() === "scheduled"
   ).length;
 
   const upcomingCount = appointments.filter(
-    (appointment) => appointment.status === "Upcoming"
+    (appointment) => (appointment.status || "").toLowerCase() === "upcoming"
   ).length;
 
   return (
@@ -126,7 +172,13 @@ export default function DoctorAppointments() {
 
       {/* APPOINTMENTS */}
       <div className="doctor-appointment-list">
-        {appointments.map((appointment) => (
+        {loading ? (
+          <div className="doctor-empty-card">Loading appointments...</div>
+        ) : error ? (
+          <div className="doctor-empty-card" role="alert">{error}</div>
+        ) : appointments.length === 0 ? (
+          <div className="doctor-empty-card">No appointment records are available.</div>
+        ) : appointments.map((appointment) => (
           <article
             className="doctor-appointment-card"
             key={appointment.id}
@@ -140,7 +192,7 @@ export default function DoctorAppointments() {
               <div>
                 <span>Appointment Date</span>
 
-                <strong>{appointment.date}</strong>
+                <strong>{formatDoctorAppointmentDate(appointment.date)}</strong>
               </div>
             </div>
 
@@ -153,20 +205,20 @@ export default function DoctorAppointments() {
                   </div>
 
                   <div>
-                    <h2>{appointment.patient}</h2>
+                    <h2>{appointment.patientName || appointment.patient || "Patient unavailable"}</h2>
 
-                    <p>{appointment.department}</p>
+                    <p>{appointment.department || "Consultation"}</p>
                   </div>
                 </div>
 
                 <div className="doctor-appointment-badges">
                   <span className="doctor-appointment-type">
-                    {appointment.type}
+                    {appointment.type || "Appointment"}
                   </span>
 
                   <span className="doctor-appointment-status">
                     <span />
-                    {appointment.status}
+                    {appointment.status || "Scheduled"}
                   </span>
                 </div>
               </div>
@@ -179,7 +231,7 @@ export default function DoctorAppointments() {
                   <div>
                     <span>Time</span>
 
-                    <strong>{appointment.time}</strong>
+                    <strong>{appointment.time || appointment.startTime || "Time unavailable"}</strong>
                   </div>
                 </div>
 
@@ -189,7 +241,7 @@ export default function DoctorAppointments() {
                   <div>
                     <span>Location</span>
 
-                    <strong>{appointment.location}</strong>
+                    <strong>{appointment.location || "Location unavailable"}</strong>
                   </div>
                 </div>
 
@@ -219,4 +271,12 @@ export default function DoctorAppointments() {
       </div>
     </div>
   );
+}
+
+function formatDoctorAppointmentDate(value?: string | number) {
+  if (value === undefined || value === "") return "Date unavailable";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? String(value)
+    : date.toLocaleDateString();
 }

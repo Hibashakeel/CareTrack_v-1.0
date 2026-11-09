@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { db } from "../lib/firebase";
+import { createAuditEntry } from "../services/audit";
 
 interface StaffUser {
   uid: string;
@@ -78,9 +79,15 @@ export default function AdminDashboard() {
     try {
       setProcessing(uid);
 
-      await update(ref(db, `users/${uid}`), {
-        active: true,
-        approvalStatus: "approved",
+      const audit = await createAuditEntry(
+        "staff_account_approved",
+        "user",
+        uid
+      );
+      await update(ref(db), {
+        [`users/${uid}/active`]: true,
+        [`users/${uid}/approvalStatus`]: "approved",
+        [audit.path]: audit.value,
       });
 
       setUsers((current) =>
@@ -101,9 +108,15 @@ export default function AdminDashboard() {
     try {
       setProcessing(uid);
 
-      await update(ref(db, `users/${uid}`), {
-        active: false,
-        approvalStatus: "rejected",
+      const audit = await createAuditEntry(
+        "staff_account_rejected",
+        "user",
+        uid
+      );
+      await update(ref(db), {
+        [`users/${uid}/active`]: false,
+        [`users/${uid}/approvalStatus`]: "rejected",
+        [audit.path]: audit.value,
       });
 
       setUsers((current) =>

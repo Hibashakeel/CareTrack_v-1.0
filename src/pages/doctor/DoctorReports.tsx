@@ -27,17 +27,21 @@ interface DailyReport {
   id: string;
   patientId: string;
   date?: string;
+  reportDate?: string;
   pain?: string | number;
   painLevel?: string | number;
   symptoms?: string;
   food?: string;
   water?: string | number;
   waterConsumption?: string | number;
+  waterGlasses?: string | number;
   medicineTaken?: boolean | string;
   medication?: string;
   notes?: string;
   dailyNotes?: string;
-  createdAt?: string;
+  createdAt?: string | number | null;
+  submittedAt?: string | number | null;
+  status?: string;
 }
 
 export default function DoctorReports() {
@@ -140,10 +144,16 @@ export default function DoctorReports() {
         allReports.sort(
           (a, b) =>
             getTime(
-              b.createdAt || b.date
+              b.submittedAt ??
+                b.createdAt ??
+                b.reportDate ??
+                b.date
             ) -
             getTime(
-              a.createdAt || a.date
+              a.submittedAt ??
+                a.createdAt ??
+                a.reportDate ??
+                a.date
             )
         );
 
@@ -378,9 +388,11 @@ export default function DoctorReports() {
                         size={15}
                       />
 
-                      {report.date ||
+                      {report.reportDate ||
+                        report.date ||
                         formatDate(
-                          report.createdAt
+                          report.submittedAt ??
+                            report.createdAt
                         )}
                     </div>
 
@@ -441,6 +453,7 @@ export default function DoctorReports() {
                       value={
                         report.water ??
                         report.waterConsumption ??
+                        report.waterGlasses ??
                         "Not recorded"
                       }
                     />
@@ -500,9 +513,11 @@ export default function DoctorReports() {
                   <div className="doctor-card-footer">
 
                     <span>
-                      {report.createdAt
+                      {report.submittedAt ??
+                      report.createdAt
                         ? `Submitted ${formatDate(
-                            report.createdAt
+                            report.submittedAt ??
+                              report.createdAt
                           )}`
                         : "Patient submitted report"}
                     </span>
@@ -568,11 +583,15 @@ function ReportValue({
    HELPERS
 ========================================================= */
 
-function getTime(value?: string) {
-  if (!value) return 0;
+function getTime(value?: string | number | null) {
+  if (value === undefined || value === null || value === "") {
+    return 0;
+  }
 
   const time =
-    new Date(value).getTime();
+    typeof value === "number"
+      ? value
+      : new Date(value).getTime();
 
   return Number.isNaN(time)
     ? 0
@@ -580,20 +599,19 @@ function getTime(value?: string) {
 }
 
 
-function formatDate(value?: string) {
-  if (!value) {
+function formatDate(value?: string | number | null) {
+  if (value === undefined || value === null || value === "") {
     return "Date unavailable";
   }
 
-  const date =
-    new Date(value);
+  const date = new Date(value);
 
   if (
     Number.isNaN(
       date.getTime()
     )
   ) {
-    return value;
+    return String(value);
   }
 
   return date.toLocaleDateString();

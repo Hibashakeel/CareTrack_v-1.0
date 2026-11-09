@@ -6,7 +6,7 @@ import {
   type CSSProperties,
   type FormEvent,
 } from "react";
-import { onValue, ref, update } from "firebase/database";
+import { get, onValue, ref, update } from "firebase/database";
 import { Plus, Save, X } from "lucide-react";
 
 import { auth, db } from "../../lib/firebase";
@@ -15,6 +15,7 @@ import {
   type HospitalUser,
   type PatientDoctorAssignment,
 } from "../../services/hospital";
+import { createAuditEntry } from "../../services/audit";
 import { createManagedUser } from "../../services/adminUsers";
 
 type ManagedRole = "patient" | "doctor" | "nurse";
@@ -46,7 +47,7 @@ export default function AdminUserManagement({
 }) {
   const [users, setUsers] = useState<HospitalUser[]>([]);
   const [assignments, setAssignments] = useState<
-    Record<string, PatientDoctorAssignment>
+    Record<string, PatientDoctorAssignment | string>
   >({});
   const [doctorChoices, setDoctorChoices] = useState<HospitalUser[]>([]);
   const [wardAssignments, setWardAssignments] = useState<
@@ -77,7 +78,10 @@ export default function AdminUserManagement({
 
   useEffect(() => {
     let userRecords: Record<string, Omit<HospitalUser, "uid">> | null = null;
-    let assignmentRecords: Record<string, PatientDoctorAssignment> | null = null;
+    let assignmentRecords: Record<
+      string,
+      PatientDoctorAssignment | string
+    > | null = null;
     let usersLoaded = false;
     let assignmentsLoaded = role !== "patient";
     const migrateLegacyAssignments = async () => {
@@ -98,11 +102,17 @@ export default function AdminUserManagement({
       }
       const updates: Record<string, unknown> = {};
       const now = Date.now();
+      const admissionsSnapshot = await get(ref(db, "admissions"));
+      const admissions = admissionsSnapshot.val() as
+        | Record<string, { patientId?: string; status?: string }>
+        | null;
       for (const [patientUid, profile] of Object.entries(userRecords ?? {})) {
         if (profile.role !== "patient") continue;
         const doctorUid =
           profile.assignedDoctorId ??
-          assignmentRecords?.[patientUid]?.doctorUid;
+          (typeof assignmentRecords?.[patientUid] === "string"
+            ? assignmentRecords[patientUid]
+            : assignmentRecords?.[patientUid]?.doctorUid);
         if (!doctorUid) continue;
         const doctor = userRecords?.[doctorUid];
         if (
@@ -114,16 +124,33 @@ export default function AdminUserManagement({
         }
         updates[`users/${patientUid}/assignedDoctorId`] = doctorUid;
         updates[`doctorPatients/${doctorUid}/${patientUid}`] = true;
-        const legacyDoctorUid = assignmentRecords?.[patientUid]?.doctorUid;
+        const legacyAssignment = assignmentRecords?.[patientUid];
+        const legacyDoctorUid =
+          typeof legacyAssignment === "string"
+            ? legacyAssignment
+            : legacyAssignment?.doctorUid;
         if (legacyDoctorUid && legacyDoctorUid !== doctorUid) {
           updates[`doctorPatients/${legacyDoctorUid}/${patientUid}`] = null;
         }
-        if (legacyDoctorUid !== doctorUid) {
+        if (
+          legacyDoctorUid !== doctorUid ||
+          typeof legacyAssignment === "string" ||
+          !legacyAssignment
+        ) {
           updates[`patientDoctors/${patientUid}`] = {
             doctorUid,
             updatedAt: now,
             updatedBy,
           } satisfies PatientDoctorAssignment;
+        }
+        updates[`doctorPatients/${doctorUid}/${patientUid}`] = true;
+        for (const [admissionId, admission] of Object.entries(admissions ?? {})) {
+          if (
+            admission.patientId === patientUid &&
+            admission.status === "active"
+          ) {
+            updates[`admissions/${admissionId}/doctorUid`] = doctorUid;
+          }
         }
       }
       if (Object.keys(updates).length) {
@@ -160,7 +187,8 @@ export default function AdminUserManagement({
             (user) =>
               user.role === "doctor" &&
               user.active &&
-              user.approvalStatus === "approved"
+              user.approvalStatus === "approved" &&
+              user.availability !== "unavailable"
           )
         );
         setLoading(false);
@@ -179,7 +207,7 @@ export default function AdminUserManagement({
             ref(db, "patientDoctors"),
             (snapshot) => {
               const values = snapshot.val() as
-                | Record<string, PatientDoctorAssignment>
+                | Record<string, PatientDoctorAssignment | string>
                 | null;
               assignmentRecords = values ?? {};
               assignmentsLoaded = true;
@@ -295,14 +323,24 @@ export default function AdminUserManagement({
 
     try {
       if (editingUid) {
-        await update(ref(db, `users/${editingUid}`), {
-          fullName: fullName.trim(),
-          phone: phone.trim(),
-          active,
-          approvalStatus,
-          specialization: role === "doctor" ? specialization.trim() : null,
-          department: role === "doctor" ? department.trim() || null : null,
-          availability: role === "doctor" ? availability : null,
+        const audit = await createAuditEntry(
+          "user_account_updated",
+          "user",
+          editingUid,
+          { role }
+        );
+        await update(ref(db), {
+          [`users/${editingUid}/fullName`]: fullName.trim(),
+          [`users/${editingUid}/phone`]: phone.trim(),
+          [`users/${editingUid}/active`]: active,
+          [`users/${editingUid}/approvalStatus`]: approvalStatus,
+          [`users/${editingUid}/specialization`]:
+            role === "doctor" ? specialization.trim() : null,
+          [`users/${editingUid}/department`]:
+            role === "doctor" ? department.trim() || null : null,
+          [`users/${editingUid}/availability`]:
+            role === "doctor" ? availability : null,
+          [audit.path]: audit.value,
         });
         setNotice(`${title.slice(0, -1)} account updated.`);
       } else {
@@ -532,10 +570,15 @@ export default function AdminUserManagement({
               </thead>
               <tbody>
                 {filteredUsers.map((user) => {
+                  const assignment = assignments[user.uid];
+                  const indexedDoctorUid =
+                    typeof assignment === "string"
+                      ? assignment
+                      : assignment?.doctorUid;
                   const assignedDoctor =
                     selectedDoctors[user.uid] ??
                     user.assignedDoctorId ??
-                    assignments[user.uid]?.doctorUid ??
+                    indexedDoctorUid ??
                     "";
                   return (
                     <tr key={user.uid} style={{ borderTop: "1px solid #edf1f4" }}>
@@ -589,7 +632,7 @@ export default function AdminUserManagement({
                               saving ||
                               assignedDoctor ===
                                 (user.assignedDoctorId ??
-                                  assignments[user.uid]?.doctorUid ??
+                                  indexedDoctorUid ??
                                   "")
                             }
                             onClick={() => saveDoctorAssignment(user.uid)}

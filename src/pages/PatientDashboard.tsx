@@ -9,6 +9,7 @@ import {
   HeartPulse,
   MessageCircleQuestion,
   Pill,
+  Stethoscope,
   UserRound,
 } from "lucide-react";
 
@@ -34,11 +35,76 @@ interface DailyReport {
   status?: string;
 }
 
+interface AssignedDoctor {
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  specialization?: string;
+  department?: string;
+}
+
 export default function PatientDashboard() {
   const { user, profile } = useAuth();
 
   const [report, setReport] = useState<DailyReport | null>(null);
   const [loadingReport, setLoadingReport] = useState(true);
+  const [assignedDoctor, setAssignedDoctor] =
+    useState<AssignedDoctor | null>(null);
+  const [doctorLoadError, setDoctorLoadError] = useState("");
+
+  useEffect(() => {
+    async function loadAssignedDoctor() {
+      if (!user?.uid) {
+        setAssignedDoctor(null);
+        return;
+      }
+
+      try {
+        setDoctorLoadError("");
+        const assignmentSnapshot = await get(
+          ref(db, `patientDoctors/${user.uid}`)
+        );
+        const assignment = assignmentSnapshot.val() as
+          | { doctorUid?: string }
+          | string
+          | null;
+        const doctorUid =
+          profile?.assignedDoctorId ??
+          (typeof assignment === "string"
+            ? assignment
+            : assignment?.doctorUid);
+        if (!doctorUid) {
+          setAssignedDoctor(null);
+          return;
+        }
+
+        const [name, email, phone, specialization, department] =
+          await Promise.all([
+            get(ref(db, `users/${doctorUid}/fullName`)),
+            get(ref(db, `users/${doctorUid}/email`)),
+            get(ref(db, `users/${doctorUid}/phone`)),
+            get(ref(db, `users/${doctorUid}/specialization`)),
+            get(ref(db, `users/${doctorUid}/department`)),
+          ]);
+        setAssignedDoctor(
+          name.exists()
+            ? {
+                fullName: name.val() as string,
+                email: email.val() as string | undefined,
+                phone: phone.val() as string | undefined,
+                specialization: specialization.val() as string | undefined,
+                department: department.val() as string | undefined,
+              }
+            : null
+        );
+      } catch (error) {
+        console.error("Unable to load assigned doctor information:", error);
+        setDoctorLoadError("Your assigned doctor information is unavailable.");
+      }
+    }
+
+    void loadAssignedDoctor();
+  }, [profile?.assignedDoctorId, user?.uid]);
 
   useEffect(() => {
     async function loadLatestReport() {
@@ -620,6 +686,31 @@ export default function PatientDashboard() {
 
         </div>
 
+      </section>
+
+      <section className="pd-card" style={{ marginBottom: 18 }}>
+        <div className="pd-card-header">
+          <div>
+            <span className="pd-card-kicker">YOUR CARE TEAM</span>
+            <h2>Assigned Doctor</h2>
+          </div>
+          <Stethoscope size={21} />
+        </div>
+        {doctorLoadError ? (
+          <p role="alert">{doctorLoadError}</p>
+        ) : assignedDoctor ? (
+          <div style={{ display: "grid", gap: 5, color: "#536b7b", fontSize: 13 }}>
+            <strong style={{ color: "#17324d" }}>{assignedDoctor.fullName || "Doctor"}</strong>
+            {assignedDoctor.specialization && <span>{assignedDoctor.specialization}</span>}
+            {assignedDoctor.department && <span>{assignedDoctor.department}</span>}
+            {assignedDoctor.email && <span>{assignedDoctor.email}</span>}
+            {assignedDoctor.phone && <span>{assignedDoctor.phone}</span>}
+          </div>
+        ) : (
+          <p style={{ margin: 0, color: "#8293a0", fontSize: 12 }}>
+            No approved doctor is currently assigned to your account.
+          </p>
+        )}
       </section>
 
 
@@ -1305,4 +1396,3 @@ export default function PatientDashboard() {
     </div>
   );
 }
-

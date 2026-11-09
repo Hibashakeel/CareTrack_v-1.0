@@ -9,7 +9,7 @@ import {
 import { onValue, ref } from "firebase/database";
 import { Save } from "lucide-react";
 
-import { db } from "../../lib/firebase";
+import { auth, db } from "../../lib/firebase";
 import {
   createAdmission,
   dischargeAdmission,
@@ -52,6 +52,22 @@ const buttonStyle: CSSProperties = {
   cursor: "pointer",
 };
 
+function formatHospitalOperationError(
+  action: string,
+  error: unknown
+) {
+  const message =
+    error instanceof Error ? error.message : "Unexpected Firebase error.";
+  if (
+    message.toLowerCase().includes("permission_denied") ||
+    message.toLowerCase().includes("permission denied")
+  ) {
+    const uid = auth.currentUser?.uid;
+    return `${action} was denied by Realtime Database rules. Verify admins/${uid || "<admin-uid>"} is true in Firebase and deploy the current database.rules.json.`;
+  }
+  return message;
+}
+
 function useAdminHospitalData() {
   const [users, setUsers] = useState<HospitalUser[]>([]);
   const [wards, setWards] = useState<Ward[]>([]);
@@ -62,6 +78,7 @@ function useAdminHospitalData() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const reconciliationStarted = useRef(false);
+  const loadFailed = useRef(false);
 
   useEffect(() => {
     let remaining = 4;
@@ -86,7 +103,8 @@ function useAdminHospitalData() {
         },
         (loadError) => {
           console.error("Could not load hospital user records:", loadError);
-          setError(`Could not load user records: ${loadError.message}`);
+          loadFailed.current = true;
+          setError(formatHospitalOperationError("Loading hospital users", loadError));
           markLoaded();
         }
       ),
@@ -106,7 +124,8 @@ function useAdminHospitalData() {
         },
         (loadError) => {
           console.error("Could not load wards:", loadError);
-          setError(`Could not load wards: ${loadError.message}`);
+          loadFailed.current = true;
+          setError(formatHospitalOperationError("Loading wards", loadError));
           markLoaded();
         }
       ),
@@ -126,7 +145,8 @@ function useAdminHospitalData() {
         },
         (loadError) => {
           console.error("Could not load admissions:", loadError);
-          setError(`Could not load admissions: ${loadError.message}`);
+          loadFailed.current = true;
+          setError(formatHospitalOperationError("Loading admissions", loadError));
           markLoaded();
         }
       ),
@@ -142,7 +162,8 @@ function useAdminHospitalData() {
         },
         (loadError) => {
           console.error("Could not load bed availability:", loadError);
-          setError(`Could not load bed availability: ${loadError.message}`);
+          loadFailed.current = true;
+          setError(formatHospitalOperationError("Loading bed availability", loadError));
           markLoaded();
         }
       ),
@@ -152,14 +173,12 @@ function useAdminHospitalData() {
   }, []);
 
   useEffect(() => {
-    if (loading || reconciliationStarted.current) return;
+    if (loading || loadFailed.current || reconciliationStarted.current) return;
     reconciliationStarted.current = true;
     reconcileHospitalAssignmentIndexes().catch((reconcileError) => {
       console.error("Could not reconcile hospital assignment indexes:", reconcileError);
       setError(
-        reconcileError instanceof Error
-          ? `Could not reconcile existing hospital assignments: ${reconcileError.message}`
-          : "Could not reconcile existing hospital assignments."
+        `Could not reconcile existing hospital assignments: ${formatHospitalOperationError("Reconciling hospital assignments", reconcileError)}`
       );
     });
   }, [loading]);
@@ -230,7 +249,7 @@ export function AdminWardManagement() {
       clearForm();
     } catch (saveError) {
       console.error("Could not save ward:", saveError);
-      setError(saveError instanceof Error ? saveError.message : "Could not save ward.");
+      setError(formatHospitalOperationError("Saving ward", saveError));
     } finally {
       setSaving(false);
     }
@@ -425,9 +444,7 @@ export function AdminAdmissionManagement() {
     } catch (admissionError) {
       console.error("Could not admit patient:", admissionError);
       setError(
-        admissionError instanceof Error
-          ? admissionError.message
-          : "Could not create admission."
+        formatHospitalOperationError("Saving admission", admissionError)
       );
     } finally {
       setSaving(false);
@@ -453,9 +470,7 @@ export function AdminAdmissionManagement() {
     } catch (dischargeError) {
       console.error("Could not discharge patient:", dischargeError);
       setError(
-        dischargeError instanceof Error
-          ? dischargeError.message
-          : "Could not discharge patient."
+        formatHospitalOperationError("Discharging patient", dischargeError)
       );
     } finally {
       setSaving(false);

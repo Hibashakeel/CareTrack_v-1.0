@@ -19,10 +19,12 @@ import {
   push,
   ref,
   serverTimestamp,
+  update,
 } from "firebase/database";
 
 import { useAuth } from "../context/AuthContext";
 import { db } from "../lib/firebase";
+import { createAuditEntry } from "../services/audit";
 
 export default function PatientDailyReport() {
   const { user, profile } = useAuth();
@@ -132,37 +134,56 @@ export default function PatientDailyReport() {
 
       const now = new Date();
 
-      await push(
-        ref(db, `patientDailyReports/${user.uid}`),
-        {
-          patientId: user.uid,
+      const reportDate = now.toISOString().split("T")[0];
+      const savedReport = {
+        patientId: user.uid,
 
-          patientName:
-            profile?.fullName ||
-            user.displayName ||
-            "Patient",
+        patientName:
+          profile?.fullName ||
+          user.displayName ||
+          "Patient",
 
-          patientEmail: user.email || "",
+        patientEmail: user.email || "",
 
-          reportDate: now.toISOString().split("T")[0],
+        reportDate,
+        date: reportDate,
 
-          condition,
+        condition,
 
-          pain: Number(pain),
+        pain: Number(pain),
+        painLevel: Number(pain),
 
-          waterGlasses: Number(water),
+        waterGlasses: Number(water),
+        water: Number(water),
+        waterConsumption: Number(water),
 
-          food: food.trim(),
+        food: food.trim(),
 
-          symptoms: symptoms.trim(),
+        symptoms: symptoms.trim(),
 
-          dailyChanges: dailyChanges.trim(),
+        dailyChanges: dailyChanges.trim(),
+        dailyNotes: dailyChanges.trim(),
+        notes: dailyChanges.trim(),
 
-          submittedAt: serverTimestamp(),
+        createdAt: now.getTime(),
+        submittedAt: serverTimestamp(),
 
-          status: "submitted",
-        }
+        status: "submitted",
+      };
+
+      const reportRef = push(ref(db, `patientDailyReports/${user.uid}`));
+      if (!reportRef.key) {
+        throw new Error("Could not allocate a daily report record.");
+      }
+      const audit = await createAuditEntry(
+        "patient_daily_report_submitted",
+        "patient_daily_report",
+        reportRef.key
       );
+      await update(ref(db), {
+        [`patientDailyReports/${user.uid}/${reportRef.key}`]: savedReport,
+        [audit.path]: audit.value,
+      });
 
       setSubmitted(true);
 

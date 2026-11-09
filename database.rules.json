@@ -15,9 +15,25 @@
         ".read": "auth != null && (auth.uid == $uid || root.child('admins').child(auth.uid).val() == true || (data.child('role').val() == 'patient' && root.child('users').child(auth.uid).child('role').val() == 'doctor' && root.child('users').child(auth.uid).child('active').val() == true && root.child('users').child(auth.uid).child('approvalStatus').val() == 'approved' && data.child('assignedDoctorId').val() == auth.uid && root.child('patientDoctors').child($uid).child('doctorUid').val() == auth.uid && root.child('doctorPatients').child(auth.uid).child($uid).val() == true) || (data.child('role').val() == 'patient' && root.child('users').child(auth.uid).child('role').val() == 'nurse' && root.child('users').child(auth.uid).child('active').val() == true && root.child('users').child(auth.uid).child('approvalStatus').val() == 'approved' && root.child('patientNurses').child($uid).child(auth.uid).val() == true && root.child('activeAdmissions').child($uid).exists() && root.child('admissions').child(root.child('activeAdmissions').child($uid).val()).child('patientId').val() == $uid && root.child('admissions').child(root.child('activeAdmissions').child($uid).val()).child('status').val() == 'active' && root.child('wardNurses').child(auth.uid).child(root.child('admissions').child(root.child('activeAdmissions').child($uid).val()).child('wardId').val()).val() == true))",
         ".write": "auth != null && (root.child('admins').child(auth.uid).val() == true || (auth.uid == $uid && !data.exists() && newData.child('uid').val() == auth.uid && ((newData.child('role').val() == 'patient' && !newData.child('assignedDoctorId').exists()) || ((newData.child('role').val() == 'doctor' || newData.child('role').val() == 'nurse') && newData.child('active').val() == false && newData.child('approvalStatus').val() == 'pending'))))",
         ".validate": "newData.hasChildren(['uid', 'fullName', 'email', 'role', 'active', 'approvalStatus']) && newData.child('uid').val() == $uid && (newData.child('role').val() == 'patient' || newData.child('role').val() == 'doctor' || newData.child('role').val() == 'nurse' || newData.child('role').val() == 'admin') && (!newData.child('assignedDoctorId').exists() || (newData.child('role').val() == 'patient' && root.child('users').child(newData.child('assignedDoctorId').val()).child('role').val() == 'doctor'))",
+        "assignedDoctorId": {
+          ".validate": "!newData.exists() || (root.child('users').child($uid).child('role').val() == 'patient' && root.child('users').child(newData.val()).child('role').val() == 'doctor' && root.child('users').child(newData.val()).child('active').val() == true && root.child('users').child(newData.val()).child('approvalStatus').val() == 'approved')"
+        },
         "phone": {
+          ".read": "auth != null && root.child('users').child($uid).child('role').val() == 'doctor' && root.child('users').child(auth.uid).child('role').val() == 'patient' && root.child('users').child(auth.uid).child('assignedDoctorId').val() == $uid && root.child('patientDoctors').child(auth.uid).child('doctorUid').val() == $uid && root.child('doctorPatients').child($uid).child(auth.uid).val() == true",
           ".write": "auth != null && auth.uid == $uid && root.child('users').child($uid).exists()",
           ".validate": "newData.isString()"
+        },
+        "fullName": {
+          ".read": "auth != null && root.child('users').child($uid).child('role').val() == 'doctor' && root.child('users').child(auth.uid).child('role').val() == 'patient' && root.child('users').child(auth.uid).child('assignedDoctorId').val() == $uid && root.child('patientDoctors').child(auth.uid).child('doctorUid').val() == $uid && root.child('doctorPatients').child($uid).child(auth.uid).val() == true"
+        },
+        "email": {
+          ".read": "auth != null && root.child('users').child($uid).child('role').val() == 'doctor' && root.child('users').child(auth.uid).child('role').val() == 'patient' && root.child('users').child(auth.uid).child('assignedDoctorId').val() == $uid && root.child('patientDoctors').child(auth.uid).child('doctorUid').val() == $uid && root.child('doctorPatients').child($uid).child(auth.uid).val() == true"
+        },
+        "specialization": {
+          ".read": "auth != null && root.child('users').child($uid).child('role').val() == 'doctor' && root.child('users').child(auth.uid).child('role').val() == 'patient' && root.child('users').child(auth.uid).child('assignedDoctorId').val() == $uid && root.child('patientDoctors').child(auth.uid).child('doctorUid').val() == $uid && root.child('doctorPatients').child($uid).child(auth.uid).val() == true"
+        },
+        "department": {
+          ".read": "auth != null && root.child('users').child($uid).child('role').val() == 'doctor' && root.child('users').child(auth.uid).child('role').val() == 'patient' && root.child('users').child(auth.uid).child('assignedDoctorId').val() == $uid && root.child('patientDoctors').child(auth.uid).child('doctorUid').val() == $uid && root.child('doctorPatients').child($uid).child(auth.uid).val() == true"
         },
         "address": {
           ".write": "auth != null && auth.uid == $uid && root.child('users').child($uid).exists()",
@@ -42,6 +58,7 @@
       }
     },
     "doctorPatients": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() == true",
       "$doctorUid": {
         ".read": "auth != null && (root.child('admins').child(auth.uid).val() == true || (auth.uid == $doctorUid && root.child('users').child(auth.uid).child('role').val() == 'doctor' && root.child('users').child(auth.uid).child('active').val() == true && root.child('users').child(auth.uid).child('approvalStatus').val() == 'approved'))",
         "$patientUid": {
@@ -113,6 +130,7 @@
       }
     },
     "patientDailyReports": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() == true",
       "$patientUid": {
         ".read": "auth != null && (auth.uid == $patientUid || root.child('admins').child(auth.uid).val() == true || (root.child('users').child(auth.uid).child('role').val() == 'doctor' && root.child('users').child(auth.uid).child('active').val() == true && root.child('users').child(auth.uid).child('approvalStatus').val() == 'approved' && root.child('users').child($patientUid).child('assignedDoctorId').val() == auth.uid && root.child('patientDoctors').child($patientUid).child('doctorUid').val() == auth.uid && root.child('doctorPatients').child(auth.uid).child($patientUid).val() == true) || (root.child('users').child(auth.uid).child('role').val() == 'nurse' && root.child('users').child(auth.uid).child('active').val() == true && root.child('users').child(auth.uid).child('approvalStatus').val() == 'approved' && root.child('patientNurses').child($patientUid).child(auth.uid).val() == true && root.child('activeAdmissions').child($patientUid).exists() && root.child('admissions').child(root.child('activeAdmissions').child($patientUid).val()).child('status').val() == 'active' && root.child('wardNurses').child(auth.uid).child(root.child('admissions').child(root.child('activeAdmissions').child($patientUid).val()).child('wardId').val()).val() == true))",
         ".write": "auth != null && root.child('admins').child(auth.uid).val() == true",
@@ -170,6 +188,13 @@
             ".write": "auth != null && auth.uid == $uid && data.parent().exists() && newData.isBoolean()"
           }
         }
+      }
+    },
+    "auditLogs": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() == true",
+      "$logId": {
+        ".write": "auth != null && !data.exists() && newData.child('actorUid').val() == auth.uid && newData.child('actorRole').val() == root.child('users').child(auth.uid).child('role').val() && root.child('users').child(auth.uid).child('active').val() == true && root.child('users').child(auth.uid).child('approvalStatus').val() == 'approved'",
+        ".validate": "newData.hasChildren(['actorUid', 'actorName', 'actorRole', 'action', 'recordType', 'recordId', 'createdAt']) && newData.child('actorUid').isString() && newData.child('actorName').isString() && newData.child('actorRole').isString() && newData.child('action').isString() && newData.child('recordType').isString() && newData.child('recordId').isString() && newData.child('createdAt').isNumber()"
       }
     },
     "adminNotifications": {

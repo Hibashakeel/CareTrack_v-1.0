@@ -9,64 +9,97 @@ import {
   UserRound,
 } from "lucide-react";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { get, ref } from "firebase/database";
+
+import { useAuth } from "../context/AuthContext";
+import { db } from "../lib/firebase";
 import "../patient-pages.css";
 
 type Appointment = {
-  id: number;
-  doctor: string;
-  department: string;
-  date: string;
-  time: string;
-  location: string;
-  type: string;
+  id: string;
+  doctor?: string;
+  doctorName?: string;
+  doctorUid?: string;
+  department?: string;
+  date?: string | number;
+  time?: string;
+  location?: string;
+  type?: string;
 };
 
 type AppointmentStatus = "upcoming" | "past";
 
 export default function PatientAppointments() {
-  const appointments: Appointment[] = [
-    {
-      id: 1,
-      doctor: "Dr. Care Team",
-      department: "General Consultation",
-      date: "30 September 2026",
-      time: "10:30 AM",
-      location: "Consultation Room 2",
-      type: "Follow-up",
-    },
-    {
-      id: 2,
-      doctor: "Dr. Care Team",
-      department: "Patient Review",
-      date: "05 October 2026",
-      time: "11:00 AM",
-      location: "Consultation Room 1",
-      type: "Review",
-    },
-  ];
+  const { user } = useAuth();
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadAppointments() {
+      if (!user?.uid) {
+        setAppointments([]);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const indexSnapshot = await get(
+          ref(db, `appointmentsByPatient/${user.uid}`)
+        );
+        const appointmentIds = Object.keys(
+          (indexSnapshot.val() ?? {}) as Record<string, unknown>
+        );
+        const records = await Promise.all(
+          appointmentIds.map(async (id) => {
+            const snapshot = await get(ref(db, `appointments/${id}`));
+            const value = snapshot.val() as Omit<Appointment, "id"> | null;
+            if (!value) return null;
+            let doctor = value.doctorName || value.doctor;
+            if (!doctor && value.doctorUid) {
+              const doctorSnapshot = await get(
+                ref(db, `users/${value.doctorUid}/fullName`)
+              );
+              doctor = doctorSnapshot.val() as string | undefined;
+            }
+            return {
+              ...value,
+              id,
+              doctor: doctor || "Doctor not assigned",
+            };
+          })
+        );
+        setAppointments(
+          records.filter((appointment) => appointment !== null)
+        );
+      } catch (loadError) {
+        console.error("Could not load patient appointments:", loadError);
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : "Could not load appointments from Firebase."
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    void loadAppointments();
+  }, [user?.uid]);
 
   const [activeTab, setActiveTab] =
     useState<"upcoming" | "past">("upcoming");
 
   const [expandedId, setExpandedId] =
-    useState<number | null>(null);
+    useState<string | null>(null);
 
-  /*
-   * Current system date is used only to decide whether
-   * an appointment is upcoming or past.
-   *
-   * The appointment data itself remains unchanged.
-   */
-  const today = new Date(
-    2026,
-    9,
-    2
-  );
+  const today = new Date();
 
   const parseAppointmentDate = (
-    dateString: string
+    dateString?: string | number
   ) => {
+    if (dateString === undefined || dateString === "") return null;
     const parsed = new Date(dateString);
 
     return Number.isNaN(parsed.getTime())
@@ -112,7 +145,7 @@ export default function PatientAppointments() {
       ? upcomingAppointments
       : pastAppointments;
 
-  const toggleDetails = (id: number) => {
+  const toggleDetails = (id: string) => {
     setExpandedId((current) =>
       current === id ? null : id
     );
@@ -237,7 +270,17 @@ export default function PatientAppointments() {
 
       <div className="appointment-list">
 
-        {visibleAppointments.length === 0 ? (
+        {loading ? (
+          <div className="patient-inner-card appointment-empty">
+            <h2>Loading appointments</h2>
+            <p>Retrieving your appointments from CareTrack.</p>
+          </div>
+        ) : error ? (
+          <div className="patient-inner-card appointment-empty" role="alert">
+            <h2>Appointments unavailable</h2>
+            <p>{error}</p>
+          </div>
+        ) : visibleAppointments.length === 0 ? (
           <div className="patient-inner-card appointment-empty">
 
             <div className="appointment-empty-icon">
@@ -285,7 +328,7 @@ export default function PatientAppointments() {
                     <CalendarDays size={22} />
 
                     <strong>
-                      {appointment.date}
+                      {formatAppointmentDate(appointment.date)}
                     </strong>
 
                     <span>
@@ -327,12 +370,12 @@ export default function PatientAppointments() {
                         </div>
 
                         <p>
-                          {appointment.department}
+                          {appointment.department || "Consultation"}
                         </p>
                       </div>
 
                       <span className="appointment-type">
-                        {appointment.type}
+                        {appointment.type || "Appointment"}
                       </span>
 
                     </div>
@@ -346,12 +389,12 @@ export default function PatientAppointments() {
 
                       <span>
                         <Clock3 size={15} />
-                        {appointment.time}
+                        {appointment.time || "Time unavailable"}
                       </span>
 
                       <span>
                         <MapPin size={15} />
-                        {appointment.location}
+                        {appointment.location || "Location unavailable"}
                       </span>
 
                       <span>
@@ -400,7 +443,7 @@ export default function PatientAppointments() {
                           </span>
 
                           <strong>
-                            {appointment.type}
+                            {appointment.type || "Appointment"}
                           </strong>
                         </div>
 
@@ -410,7 +453,7 @@ export default function PatientAppointments() {
                           </span>
 
                           <strong>
-                            {appointment.department}
+                            {appointment.department || "Not specified"}
                           </strong>
                         </div>
 
@@ -442,6 +485,7 @@ export default function PatientAppointments() {
                 </div>
               );
             }
+
           )
         )}
 
@@ -1039,4 +1083,12 @@ export default function PatientAppointments() {
       `}</style>
     </div>
   );
+}
+
+function formatAppointmentDate(value?: string | number) {
+  if (value === undefined || value === "") return "Date unavailable";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? String(value)
+    : date.toLocaleDateString();
 }

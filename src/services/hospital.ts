@@ -3,11 +3,11 @@ import {
   push,
   ref,
   runTransaction,
-  set,
   update,
 } from "firebase/database";
 
 import { auth, db } from "../lib/firebase";
+import { createAuditEntry } from "./audit";
 
 export interface HospitalUser {
   uid: string;
@@ -68,19 +68,25 @@ export async function assignDoctorToPatient(
   const updatedBy = auth.currentUser?.uid;
   if (!updatedBy) throw new Error("You must be signed in to assign a doctor.");
 
-  const [patientSnapshot, existingAssignmentSnapshot] = await Promise.all([
+  const [patientSnapshot, existingAssignmentSnapshot, admissionsSnapshot] = await Promise.all([
     get(ref(db, `users/${patientUid}`)),
     get(ref(db, `patientDoctors/${patientUid}`)),
+    get(ref(db, "admissions")),
   ]);
   if (!patientSnapshot.exists() || patientSnapshot.val().role !== "patient") {
     throw new Error("Select a valid patient account.");
   }
 
   const patient = patientSnapshot.val() as HospitalUser;
-  const previousDoctorUid =
+  const existingAssignment = existingAssignmentSnapshot.val() as
+    | PatientDoctorAssignment
+    | string
+    | null;
+  let previousDoctorUid =
     patient.assignedDoctorId ??
-    (existingAssignmentSnapshot.val() as PatientDoctorAssignment | null)
-      ?.doctorUid;
+    (typeof existingAssignment === "string"
+      ? existingAssignment
+      : existingAssignment?.doctorUid);
   if (doctorUid) {
     const doctorSnapshot = await get(ref(db, `users/${doctorUid}`));
     const doctor = doctorSnapshot.val() as HospitalUser | null;
@@ -96,31 +102,70 @@ export async function assignDoctorToPatient(
   }
 
   const timestamp = Date.now();
+  const audit = await createAuditEntry(
+    doctorUid ? "doctor_assigned_to_patient" : "doctor_unassigned_from_patient",
+    "patient",
+    patientUid,
+    { doctorUid, previousDoctorUid: previousDoctorUid ?? null }
+  );
+  const assignmentRef = ref(db, `patientDoctors/${patientUid}`);
+  const assignmentResult = await runTransaction(assignmentRef, (current) => {
+    const currentDoctorUid =
+      typeof current === "string"
+        ? current
+        : (current as PatientDoctorAssignment | null)?.doctorUid;
+    previousDoctorUid = currentDoctorUid ?? patient.assignedDoctorId;
+    return doctorUid
+      ? { doctorUid, updatedAt: timestamp, updatedBy }
+      : null;
+  });
+  if (!assignmentResult.committed) {
+    throw new Error("The patient assignment changed before it could be saved.");
+  }
+  if (audit.value.details) {
+    audit.value.details.previousDoctorUid = previousDoctorUid ?? null;
+  }
+
   const updates: Record<string, unknown> = {
     [`users/${patientUid}/assignedDoctorId`]: doctorUid,
-    [`patientDoctors/${patientUid}`]: doctorUid
-      ? {
-          doctorUid,
-          updatedAt: timestamp,
-          updatedBy,
-        } satisfies PatientDoctorAssignment
-      : null,
     ...(previousDoctorUid && previousDoctorUid !== doctorUid
       ? { [`doctorPatients/${previousDoctorUid}/${patientUid}`]: null }
       : {}),
     ...(doctorUid
       ? { [`doctorPatients/${doctorUid}/${patientUid}`]: true }
       : {}),
+    [audit.path]: audit.value,
   };
 
-  const admissionsSnapshot = await get(ref(db, "admissions"));
   const admissions = admissionsSnapshot.val() as Record<string, Admission> | null;
   for (const [admissionId, admission] of Object.entries(admissions ?? {})) {
     if (admission.patientId === patientUid && admission.status === "active") {
       updates[`admissions/${admissionId}/doctorUid`] = doctorUid;
     }
   }
-  await update(ref(db), updates);
+  try {
+    await update(ref(db), updates);
+  } catch (error) {
+    try {
+      await runTransaction(assignmentRef, (current) => {
+        const currentDoctorUid =
+          typeof current === "string"
+            ? current
+            : (current as PatientDoctorAssignment | null)?.doctorUid;
+        const currentUpdatedAt =
+          typeof current === "object" && current
+            ? (current as PatientDoctorAssignment).updatedAt
+            : undefined;
+        if (currentDoctorUid !== doctorUid || currentUpdatedAt !== timestamp) {
+          return;
+        }
+        return existingAssignment;
+      });
+    } catch (rollbackError) {
+      console.error("Could not roll back the patient doctor assignment:", rollbackError);
+    }
+    throw error;
+  }
 }
 
 export async function getDoctorPatients(doctorUid: string) {
@@ -141,15 +186,22 @@ export async function getDoctorPatients(doctorUid: string) {
       return {
         patientUid,
         patient: patientSnapshot.val() as HospitalUser | null,
-        assignment: assignmentSnapshot.val() as PatientDoctorAssignment | null,
+        assignment: assignmentSnapshot.val() as
+          | PatientDoctorAssignment
+          | string
+          | null,
       };
     })
   );
   return patientRecords.flatMap(({ patientUid, patient, assignment }) => {
+    const assignedDoctorUid =
+      typeof assignment === "string"
+        ? assignment
+        : assignment?.doctorUid;
     return patient?.role === "patient" &&
       patient.active === true &&
       patient.assignedDoctorId === doctorUid &&
-      assignment?.doctorUid === doctorUid
+      assignedDoctorUid === doctorUid
       ? [{ ...patient, uid: patientUid }]
       : [];
   });
@@ -211,16 +263,25 @@ export async function getPatientActiveAdmission(patientUid: string) {
 }
 
 export async function reconcileHospitalAssignmentIndexes() {
-  if (!auth.currentUser?.uid) {
+  const updatedBy = auth.currentUser?.uid;
+  if (!updatedBy) {
     throw new Error("You must be signed in to reconcile hospital assignments.");
   }
-  const [usersSnapshot, wardsSnapshot, admissionsSnapshot, nurseIndexSnapshot] =
-    await Promise.all([
-      get(ref(db, "users")),
-      get(ref(db, "wards")),
-      get(ref(db, "admissions")),
-      get(ref(db, "wardNurses")),
-    ]);
+  const [
+    usersSnapshot,
+    wardsSnapshot,
+    admissionsSnapshot,
+    nurseIndexSnapshot,
+    patientDoctorSnapshot,
+    doctorPatientSnapshot,
+  ] = await Promise.all([
+    get(ref(db, "users")),
+    get(ref(db, "wards")),
+    get(ref(db, "admissions")),
+    get(ref(db, "wardNurses")),
+    get(ref(db, "patientDoctors")),
+    get(ref(db, "doctorPatients")),
+  ]);
   const users = usersSnapshot.val() as Record<string, HospitalUser> | null;
   const wards = wardsSnapshot.val() as Record<string, Omit<Ward, "id">> | null;
   const admissions = admissionsSnapshot.val() as
@@ -229,24 +290,91 @@ export async function reconcileHospitalAssignmentIndexes() {
   const nurseIndexes = nurseIndexSnapshot.val() as
     | Record<string, Record<string, boolean>>
     | null;
+  const patientDoctorRecords = patientDoctorSnapshot.val() as
+    | Record<string, PatientDoctorAssignment | string>
+    | null;
+  const doctorPatientRecords = doctorPatientSnapshot.val() as
+    | Record<string, Record<string, boolean>>
+    | null;
   const updates: Record<string, unknown> = {};
   const activePatientIds = new Set<string>();
   const activeWardPatients: Record<string, Set<string>> = {};
+  const resolvedDoctorByPatient: Record<string, string> = {};
+
+  for (const [patientUid, patient] of Object.entries(users ?? {})) {
+    if (patient.role !== "patient") continue;
+    const assignment = patientDoctorRecords?.[patientUid];
+    const assignmentObject =
+      typeof assignment === "object" && assignment
+        ? assignment
+        : null;
+    const indexedDoctorUid =
+      typeof assignment === "string"
+        ? assignment
+        : assignmentObject?.doctorUid;
+    const doctorUid = patient.assignedDoctorId ?? indexedDoctorUid;
+    const doctor = doctorUid ? users?.[doctorUid] : undefined;
+    if (
+      !doctorUid ||
+      doctor?.role !== "doctor" ||
+      doctor.active !== true ||
+      doctor.approvalStatus !== "approved"
+    ) {
+      continue;
+    }
+
+    resolvedDoctorByPatient[patientUid] = doctorUid;
+    if (patient.assignedDoctorId !== doctorUid) {
+      updates[`users/${patientUid}/assignedDoctorId`] = doctorUid;
+    }
+    if (
+      typeof assignment === "string" ||
+      assignmentObject?.doctorUid !== doctorUid ||
+      !assignmentObject.updatedAt ||
+      !assignmentObject.updatedBy
+    ) {
+      updates[`patientDoctors/${patientUid}`] = {
+        doctorUid,
+        updatedAt: assignmentObject?.updatedAt ?? Date.now(),
+        updatedBy: assignmentObject?.updatedBy ?? updatedBy,
+      };
+    }
+    for (const [indexedDoctorUid, indexedPatients] of Object.entries(
+      doctorPatientRecords ?? {}
+    )) {
+      if (
+        indexedDoctorUid !== doctorUid &&
+        indexedPatients?.[patientUid] === true
+      ) {
+        updates[`doctorPatients/${indexedDoctorUid}/${patientUid}`] = null;
+      }
+    }
+    updates[`doctorPatients/${doctorUid}/${patientUid}`] = true;
+  }
 
   for (const [wardId, ward] of Object.entries(wards ?? {})) {
     const nurseUids = Object.keys(ward.nurseUids ?? {}).filter(
       (nurseUid) => ward.nurseUids?.[nurseUid] === true
     );
     if (!nurseUids.length && ward.nurseUid) nurseUids.push(ward.nurseUid);
-    if (!ward.nurseUids && nurseUids.length) {
+    for (const nurseUid of Object.keys(nurseIndexes ?? {})) {
+      if (
+        nurseIndexes?.[nurseUid]?.[wardId] === true &&
+        !nurseUids.includes(nurseUid)
+      ) {
+        nurseUids.push(nurseUid);
+      }
+    }
+    if (
+      nurseUids.length &&
+      nurseUids.some((nurseUid) => ward.nurseUids?.[nurseUid] !== true)
+    ) {
       updates[`wards/${wardId}/nurseUids`] = Object.fromEntries(
         nurseUids.map((nurseUid) => [nurseUid, true])
       );
     }
-    for (const nurseUid of Object.keys(nurseIndexes ?? {})) {
-      if (nurseIndexes?.[nurseUid]?.[wardId] && !nurseUids.includes(nurseUid)) {
-        updates[`wardNurses/${nurseUid}/${wardId}`] = null;
-      }
+    if (!ward.nurseUid && nurseUids[0]) {
+      updates[`wards/${wardId}/nurseUid`] = nurseUids[0];
     }
     for (const nurseUid of nurseUids) {
       const nurse = users?.[nurseUid];
@@ -337,11 +465,10 @@ export async function reconcileHospitalAssignmentIndexes() {
       (nurseUid) => ward.nurseUids?.[nurseUid] === true
     );
     if (!nurseUids.length && ward.nurseUid) nurseUids.push(ward.nurseUid);
-    for (const nurseUid of admission.nurseUids ??
-      (admission.nurseUid ? [admission.nurseUid] : [])) {
-      if (!nurseUids.includes(nurseUid)) {
-        updates[`patientNurses/${admission.patientId}/${nurseUid}`] = null;
-      }
+    const admissionNurseUids = admission.nurseUids ??
+      (admission.nurseUid ? [admission.nurseUid] : []);
+    for (const nurseUid of admissionNurseUids) {
+      if (!nurseUids.includes(nurseUid)) nurseUids.push(nurseUid);
     }
     for (const nurseUid of nurseUids) {
       updates[`patientNurses/${admission.patientId}/${nurseUid}`] = true;
@@ -349,7 +476,7 @@ export async function reconcileHospitalAssignmentIndexes() {
     updates[`admissions/${admissionId}/nurseUid`] = nurseUids[0] ?? null;
     updates[`admissions/${admissionId}/nurseUids`] = nurseUids;
     updates[`admissions/${admissionId}/doctorUid`] =
-      patient.assignedDoctorId ?? null;
+      resolvedDoctorByPatient[admission.patientId] ?? null;
     updates[`patientWards/${admission.patientId}`] = {
       wardId: admission.wardId,
       updatedAt: admission.admittedAt ?? Date.now(),
@@ -409,7 +536,13 @@ export async function saveWard(input: {
   if (!updatedBy) throw new Error("You must be signed in to manage wards.");
 
   const name = input.name.trim();
-  if (!name || input.roomCount < 1 || input.bedsPerRoom < 1) {
+  if (
+    !name ||
+    !Number.isInteger(input.roomCount) ||
+    !Number.isInteger(input.bedsPerRoom) ||
+    input.roomCount < 1 ||
+    input.bedsPerRoom < 1
+  ) {
     throw new Error("Enter a ward name and positive room and bed counts.");
   }
 
@@ -438,9 +571,10 @@ export async function saveWard(input: {
     : null;
   const existing = existingSnapshot?.val() as Ward | null;
   if (input.id && existing) {
-    const occupancySnapshot = await get(
-      ref(db, `bedOccupancy/${input.id}`)
-    );
+    const [occupancySnapshot, admissionsSnapshot] = await Promise.all([
+      get(ref(db, `bedOccupancy/${input.id}`)),
+      get(ref(db, "admissions")),
+    ]);
     const occupancy = occupancySnapshot.val() as
       | Record<string, Record<string, unknown>>
       | null;
@@ -452,6 +586,22 @@ export async function saveWard(input: {
         if (Number(bed) > input.bedsPerRoom) {
           throw new Error("Cannot reduce bed capacity while that bed is occupied.");
         }
+      }
+    }
+    const activeAdmissions = admissionsSnapshot.val() as
+      | Record<string, Admission>
+      | null;
+    for (const admission of Object.values(activeAdmissions ?? {})) {
+      if (admission.wardId !== input.id || admission.status !== "active") {
+        continue;
+      }
+      if (
+        Number(admission.room) > input.roomCount ||
+        Number(admission.bed) > input.bedsPerRoom
+      ) {
+        throw new Error(
+          "Cannot reduce ward capacity below an existing active admission."
+        );
       }
     }
   }
@@ -508,6 +658,13 @@ export async function saveWard(input: {
       }
     }
   }
+  const audit = await createAuditEntry(
+    existing ? "ward_updated" : "ward_created",
+    "ward",
+    id,
+    { name, roomCount: input.roomCount, bedsPerRoom: input.bedsPerRoom }
+  );
+  changes[audit.path] = audit.value;
   await update(ref(db), changes);
 }
 
@@ -520,10 +677,11 @@ export async function createAdmission(input: {
   const updatedBy = auth.currentUser?.uid;
   if (!updatedBy) throw new Error("You must be signed in to admit a patient.");
 
-  const [patientSnapshot, wardSnapshot, assignmentSnapshot] = await Promise.all([
+  const [patientSnapshot, wardSnapshot, assignmentSnapshot, admissionsSnapshot] = await Promise.all([
     get(ref(db, `users/${input.patientUid}`)),
     get(ref(db, `wards/${input.wardId}`)),
     get(ref(db, `patientDoctors/${input.patientUid}`)),
+    get(ref(db, "admissions")),
   ]);
   const patient = patientSnapshot.val() as HospitalUser | null;
   const ward = wardSnapshot.val() as Omit<Ward, "id"> | null;
@@ -589,7 +747,32 @@ export async function createAdmission(input: {
   }
   const doctorUid =
     patient.assignedDoctorId ??
-    (assignmentSnapshot.val() as PatientDoctorAssignment | null)?.doctorUid;
+    (typeof assignmentSnapshot.val() === "string"
+      ? assignmentSnapshot.val() as string
+      : (assignmentSnapshot.val() as PatientDoctorAssignment | null)?.doctorUid);
+  const existingAdmissions = admissionsSnapshot.val() as
+    | Record<string, Admission>
+    | null;
+  const activeAdmissions = Object.values(existingAdmissions ?? {}).filter(
+    (admission) => admission.status === "active"
+  );
+  if (activeAdmissions.some((admission) => admission.patientId === patient.uid)) {
+    throw new Error(
+      "This patient already has an active admission; reconcile the admission indexes before creating another."
+    );
+  }
+  if (
+    activeAdmissions.some(
+      (admission) =>
+        admission.wardId === input.wardId &&
+        Number(admission.room) === roomNumber &&
+        Number(admission.bed) === bedNumber
+    )
+  ) {
+    throw new Error(
+      "That bed is occupied by an active admission. Reconcile bed occupancy before assigning it."
+    );
+  }
   const admission: Admission = {
     id: admissionId,
     patientId: patient.uid,
@@ -606,6 +789,17 @@ export async function createAdmission(input: {
   };
 
   try {
+    const audit = await createAuditEntry(
+      "patient_admitted",
+      "admission",
+      admissionId,
+      {
+        patientUid: patient.uid,
+        wardId: input.wardId,
+        room: roomNumber,
+        bed: bedNumber,
+      }
+    );
     await update(ref(db), {
       [`admissions/${admissionId}`]: admission,
       [`patientWards/${patient.uid}`]: {
@@ -619,6 +813,7 @@ export async function createAdmission(input: {
           true,
         ])
       ),
+      [audit.path]: audit.value,
     });
   } catch (error) {
     const rollback = await runTransaction(occupancyRef, (current) =>
@@ -785,6 +980,19 @@ export async function transferAdmission(
   }
 
   try {
+    const audit = await createAuditEntry(
+      "patient_transferred",
+      "admission",
+      admissionId,
+      {
+        patientUid: patient.uid,
+        fromAdmissionId: currentAdmission.id,
+        wardId: input.wardId,
+        room: roomNumber,
+        bed: bedNumber,
+      }
+    );
+    updates[audit.path] = audit.value;
     await update(ref(db), updates);
   } catch (error) {
     await runTransaction(activeAdmissionRef, (current) =>
@@ -894,6 +1102,13 @@ export async function dischargeAdmission(admission: Admission) {
     updates[`patientNurses/${admission.patientId}/${nurseUid}`] = null;
   }
   try {
+    const audit = await createAuditEntry(
+      "patient_discharged",
+      "admission",
+      admission.id,
+      { patientUid: admission.patientId, wardId: admission.wardId }
+    );
+    updates[audit.path] = audit.value;
     await update(ref(db), updates);
   } catch (error) {
     const restoredPointer = await runTransaction(

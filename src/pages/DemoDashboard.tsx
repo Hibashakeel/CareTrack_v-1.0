@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Activity,
@@ -10,11 +10,8 @@ import {
   ClipboardList,
   FileText,
   HeartPulse,
-  LayoutDashboard,
-  LogOut,
   MessageCircleQuestion,
   Mic,
-  Search,
   Settings,
   ShieldCheck,
   Stethoscope,
@@ -745,47 +742,205 @@ function AdminDashboard() {
   );
 }
 
-function DemoEmptyPage({
+function DemoFeaturePage({
   role,
   page,
 }: {
   role: DemoRole;
   page: string;
 }) {
+  const [notice, setNotice] = useState("");
+  const [rows, setRows] = useState(() => {
+    if (page === "patients") {
+      return demoPatients.map((patient) => ({
+        name: patient.name,
+        detail: `${patient.ward} · Room ${patient.room} · Bed ${patient.bed}`,
+        status: patient.severity,
+      }));
+    }
+
+    if (page === "doctors" || page === "nurses") {
+      return [
+        { name: page === "doctors" ? "Dr. Ahmed Khan" : "Maria Ali", detail: `${page === "doctors" ? "Cardiology" : "Medical Ward"} · Staff registration`, status: "Pending approval" },
+        { name: page === "doctors" ? "Dr. Sana Qureshi" : "James Wilson", detail: `${page === "doctors" ? "Internal Medicine" : "Surgical Ward"} · Active staff`, status: "Active" },
+      ];
+    }
+
+    const sampleRows: Record<string, Array<{ name: string; detail: string; status: string }>> = {
+      "daily-report": [
+        { name: "Today's health report", detail: "Submitted at 8:30 AM · Feeling better today", status: "Submitted" },
+        { name: "Yesterday's health report", detail: "Pain level 3/10 · Medication taken", status: "Reviewed" },
+      ],
+      reports: [
+        { name: "Sarah Ahmed · Daily report", detail: "Feeling better today · 8:30 AM", status: "Reviewed" },
+        { name: "Ali Hassan · Daily report", detail: "Reported mild discomfort · 7:55 AM", status: "Needs review" },
+      ],
+      vitals: [
+        { name: "Blood pressure", detail: "118/76 mmHg · Today, 9:15 AM", status: "Within range" },
+        { name: "Heart rate", detail: "72 bpm · Today, 9:15 AM", status: "Within range" },
+        { name: "Temperature", detail: "36.8 °C · Today, 9:15 AM", status: "Within range" },
+      ],
+      medications: [
+        { name: "Medication A", detail: "Morning dose · 8:00 AM", status: "Taken" },
+        { name: "Medication B", detail: "Evening dose · 8:00 PM", status: "Upcoming" },
+      ],
+      appointments: [
+        { name: "Dr. Ahmed Khan", detail: "Cardiology · Tomorrow, 10:30 AM", status: "Confirmed" },
+        { name: "Care team review", detail: "Medical Ward · Friday, 2:00 PM", status: "Requested" },
+      ],
+      notifications: [
+        { name: "Daily report reviewed", detail: "Dr. Ahmed Khan reviewed your latest report · 9:10 AM", status: "Unread" },
+        { name: "Appointment reminder", detail: "Your appointment is scheduled for tomorrow · Yesterday", status: "Read" },
+      ],
+      questions: [
+        { name: "Can I take my medication with food?", detail: "Asked by Sarah Ahmed · Today, 8:45 AM", status: "Awaiting response" },
+        { name: "How is my latest report?", detail: "Answered by Dr. Ahmed Khan · Yesterday", status: "Answered" },
+      ],
+      "voice-responses": [
+        { name: "Follow-up response", detail: "Voice message · Today, 9:05 AM", status: "Received" },
+        { name: "Medication check-in", detail: "Voice message · Yesterday", status: "Reviewed" },
+      ],
+      admissions: [
+        { name: "Sarah Ahmed", detail: "Medical Ward · Room 204 · Bed B", status: "Admitted" },
+        { name: "Ali Hassan", detail: "Surgical Ward · Room 118 · Bed A", status: "Admitted" },
+      ],
+      wards: [
+        { name: "Medical Ward", detail: "18 of 24 beds occupied", status: "Available capacity" },
+        { name: "Surgical Ward", detail: "22 of 24 beds occupied", status: "Near capacity" },
+      ],
+      "audit-logs": [
+        { name: "Patient report reviewed", detail: "Dr. Ahmed Khan · Today, 9:10 AM", status: "Completed" },
+        { name: "Staff account approved", detail: "Administrator · Yesterday, 4:32 PM", status: "Completed" },
+      ],
+      timeline: [
+        { name: "Daily report submitted", detail: "Today, 8:30 AM", status: "Complete" },
+        { name: "Medication taken", detail: "Today, 8:05 AM", status: "Complete" },
+      ],
+    };
+
+    return (sampleRows[page] || [
+      { name: "Care team update", detail: "Sample information for this section", status: "Up to date" },
+      { name: "Recent activity", detail: "Updated today · Example record", status: "Complete" },
+    ]).map((row) => ({ ...row }));
+  });
+
   const prettyPage = page
     .split("-")
-    .map(
-      (word) =>
-        word.charAt(0).toUpperCase() + word.slice(1)
-    )
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+  const formPage = page === "daily-report" || page === "questions" || page === "notes" || page === "appointments" || page === "admissions";
+  const actionLabel = page === "doctors" || page === "nurses"
+    ? "Approve"
+    : page === "notifications"
+      ? "Mark as read"
+      : page === "reports" || page === "voice-responses"
+        ? "Mark reviewed"
+        : "View details";
+
+  function handleDemoAction(index: number) {
+    if (actionLabel === "View details") {
+      setNotice(`Opened fictional sample details for ${rows[index].name}. No records were changed.`);
+      return;
+    }
+
+    setRows((current) => current.map((row, rowIndex) => rowIndex === index
+      ? { ...row, status: page === "notifications" ? "Read" : page === "doctors" || page === "nurses" ? "Approved" : "Reviewed" }
+      : row));
+    setNotice(`${rows[index].name} updated in this demo only. No account or patient records were changed.`);
+  }
 
   return (
-    <section className="demo-empty-page">
-      <div className="demo-empty-icon">
-        <Search size={30} />
+    <div className="demo-feature-page">
+      <div className="demo-feature-heading">
+        <div>
+          <span className="demo-eyebrow">{role.toUpperCase()} WORKSPACE</span>
+          <h1>{prettyPage}</h1>
+          <p>Explore fictional CareTrack information. All demo actions stay local and never change hospital records.</p>
+        </div>
+        <span className="demo-feature-isolation">Sample data · Isolated demo</span>
       </div>
 
-      <span className="demo-eyebrow">
-        DEMO SECTION
-      </span>
+      <div className="demo-feature-grid">
+        {formPage && (
+          <form
+            className="demo-feature-form demo-panel"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const recordName = page === "questions"
+                ? "New demo question"
+                : page === "appointments"
+                  ? "New appointment request"
+                  : page === "admissions"
+                    ? "New sample admission"
+                    : `New ${prettyPage.toLowerCase()} update`;
+              setRows((current) => [
+                { name: recordName, detail: "Added just now · Local demo data", status: "Submitted" },
+                ...current,
+              ]);
+              setNotice(`Your ${prettyPage.toLowerCase()} update was saved in this demo only.`);
+            }}
+          >
+            <SectionTitle
+              title={page === "appointments" ? "Request an appointment" : page === "admissions" ? "Create a sample admission" : `Add ${prettyPage.toLowerCase()}`}
+              subtitle="Try the form with fictional information."
+            />
+            {page === "daily-report" && (
+              <>
+                <label>How are you feeling?
+                  <select defaultValue="Improving">
+                    <option>Improving</option><option>About the same</option><option>Feeling worse</option>
+                  </select>
+                </label>
+                <label>Pain level
+                  <select defaultValue="2">
+                    {Array.from({ length: 11 }, (_, value) => <option key={value} value={value}>{value} / 10</option>)}
+                  </select>
+                </label>
+              </>
+            )}
+            {page === "appointments" && (
+              <>
+                <label>Appointment date<input type="date" required /></label>
+                <label>Preferred time<input type="time" required /></label>
+              </>
+            )}
+            {page === "admissions" && (
+              <>
+                <label>Patient
+                  <select defaultValue="Sarah Ahmed">{demoPatients.map((patient) => <option key={patient.id}>{patient.name}</option>)}</select>
+                </label>
+                <label>Ward
+                  <select defaultValue="Medical Ward"><option>Medical Ward</option><option>Surgical Ward</option></select>
+                </label>
+              </>
+            )}
+            <label>{page === "questions" ? "Your question" : page === "notes" ? "Note" : "Additional details"}
+              <textarea rows={4} placeholder="Enter a short update..." required={page === "questions" || page === "notes"} />
+            </label>
+            <button type="submit" className="demo-primary-button">
+              {page === "appointments" ? "Request appointment" : page === "admissions" ? "Add sample admission" : `Save ${prettyPage.toLowerCase()}`}
+            </button>
+          </form>
+        )}
 
-      <h1>{prettyPage}</h1>
-
-      <p>
-        This is a preview of the {role}{" "}
-        {prettyPage.toLowerCase()} section. Demo mode uses sample
-        information only and does not change your Firebase data.
-      </p>
-
-      <Link
-        to={`/demo/${role}`}
-        className="demo-primary-button"
-      >
-        <LayoutDashboard size={18} />
-        Back to Dashboard
-      </Link>
-    </section>
+        <section className="demo-panel demo-feature-records">
+          <SectionTitle title="Recent information" subtitle="Fictional sample records for this role" />
+          <ul className="demo-feature-record-list">
+            {rows.map((row, index) => (
+              <li key={`${row.name}-${index}`}>
+                <div className="demo-feature-record-copy">
+                  <strong>{row.name}</strong>
+                  <span>{row.detail}</span>
+                </div>
+                <span className="demo-feature-record-status">{row.status}</span>
+                <button type="button" onClick={() => handleDemoAction(index)}>{actionLabel}</button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+      {notice && <p className="demo-feature-notice" role="status">{notice}</p>}
+    </div>
   );
 }
 
@@ -830,22 +985,15 @@ export default function DemoDashboard() {
       return <AdminDashboard />;
     }
 
-    return (
-      <DemoEmptyPage
-        role={currentRole}
-        page={currentPage}
-      />
-    );
+    return <DemoFeaturePage role={currentRole} page={currentPage} />;
   };
 
   return (
-    <div
-      className={`demo-interface demo-role-${currentRole}`}
-    >
+    <div className={`demo-interface demo-role-${currentRole}`}>
       <style>{`
         .demo-interface {
-          min-height: 100vh;
-          background: #f4f8f8;
+          min-height: 0;
+          background: transparent;
           color: #173b5d;
           font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
@@ -937,7 +1085,7 @@ export default function DemoDashboard() {
         .demo-main {
           width: 100%;
           min-width: 0;
-          padding: 30px;
+          padding: 0;
           max-width: 1500px;
           margin: 0 auto;
         }
@@ -966,6 +1114,7 @@ export default function DemoDashboard() {
           margin: 8px 0;
           font-size: 27px;
           letter-spacing: -.02em;
+          color: #ffffff;
         }
 
         .demo-welcome p {
@@ -1444,6 +1593,27 @@ export default function DemoDashboard() {
           background: #072e62;
         }
 
+        .demo-feature-page { min-width: 0; }
+        .demo-feature-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin: 2px 0 22px; }
+        .demo-feature-heading h1 { margin: 6px 0; color: #173b5d; font-size: clamp(24px, 3vw, 32px); }
+        .demo-feature-heading p { max-width: 680px; margin: 0; color: #64788a; line-height: 1.6; }
+        .demo-feature-isolation { flex: 0 0 auto; padding: 8px 11px; border: 1px solid #c9dff4; border-radius: 999px; background: #edf6ff; color: #145a9f; font-size: 11px; font-weight: 700; }
+        .demo-feature-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 1fr); align-items: start; gap: 18px; }
+        .demo-feature-form label { display: grid; gap: 6px; margin: 13px 0; color: #354e64; font-size: 12px; font-weight: 700; }
+        .demo-feature-form :is(input, select, textarea) { width: 100%; min-height: 42px; padding: 10px 11px; border: 1px solid #d5e0e9; border-radius: 8px; background: #fff; color: #173b5d; font: inherit; }
+        .demo-feature-form textarea { resize: vertical; }
+        .demo-feature-form .demo-primary-button { border: 0; background: #1769c2; color: white; cursor: pointer; }
+        .demo-feature-form .demo-primary-button:hover { background: #124e8e; }
+        .demo-feature-record-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+        .demo-feature-record-list li { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 12px; border: 1px solid #e1eaf2; border-radius: 10px; background: #fbfdff; }
+        .demo-feature-record-copy { flex: 1; min-width: 0; }
+        .demo-feature-record-copy strong, .demo-feature-record-copy span { display: block; }
+        .demo-feature-record-copy strong { color: #273648; font-size: 13px; }
+        .demo-feature-record-copy span { margin-top: 4px; color: #687b8d; font-size: 11px; line-height: 1.45; }
+        .demo-feature-record-status { flex: 0 0 auto; padding: 5px 8px; border-radius: 999px; background: #eff5fb; color: #375875; font-size: 10px; font-weight: 700; }
+        .demo-feature-record-list button { flex: 0 0 auto; min-height: 36px; padding: 7px 10px; border: 1px solid #cbdced; border-radius: 8px; background: #fff; color: #145a9f; font-size: 11px; font-weight: 700; cursor: pointer; }
+        .demo-feature-notice { margin: 14px 0 0; padding: 12px 14px; border: 1px solid #b9ddc9; border-radius: 9px; background: #effaf3; color: #245c3b; font-size: 13px; }
+
         @media (max-width: 1050px) {
           .demo-stats-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -1455,18 +1625,6 @@ export default function DemoDashboard() {
         }
 
         @media (max-width: 800px) {
-          .demo-topbar {
-            padding: 0 15px;
-          }
-
-          .demo-mode-badge {
-            display: none;
-          }
-
-          .demo-main {
-            padding: 18px;
-          }
-
           .demo-two-column {
             grid-template-columns: 1fr;
           }
@@ -1484,10 +1642,6 @@ export default function DemoDashboard() {
             grid-template-columns: 1fr;
           }
 
-          .demo-main {
-            padding: 12px;
-          }
-
           .demo-welcome,
           .demo-panel {
             padding: 17px;
@@ -1496,42 +1650,15 @@ export default function DemoDashboard() {
           .demo-welcome h1 {
             font-size: 22px;
           }
-
-          .demo-topbar {
-            height: 62px;
-          }
+          .demo-feature-heading { flex-direction: column; }
+          .demo-feature-grid { grid-template-columns: 1fr; }
+          .demo-feature-record-list li { align-items: flex-start; flex-wrap: wrap; }
+          .demo-feature-record-copy { flex-basis: calc(100% - 1px); }
         }
       `}</style>
-
-      <header className="demo-topbar">
-        <div className="demo-brand">
-          <div className="demo-brand-mark">
-            <HeartPulse size={21} />
-          </div>
-
-          <div>
-            <strong>CareTrack</strong>
-            <span>
-              Smart Patient Self-Monitoring System
-            </span>
-          </div>
-        </div>
-
-        <div className="demo-top-actions">
-          <span className="demo-mode-badge">
-            DEMO MODE · NO FIREBASE CHANGES
-          </span>
-
-          <Link to="/demo" className="demo-exit">
-            <LogOut size={16} />
-            Exit Demo
-          </Link>
-        </div>
-      </header>
-
-      <main className="demo-main">
+      <div className="demo-main">
         {renderContent()}
-      </main>
+      </div>
     </div>
   );
 }
