@@ -345,34 +345,6 @@ export default function PatientDashboard() {
           </Link>
 
 
-          {/* APPOINTMENTS */}
-
-          <Link
-            to="/patient/appointments"
-            className="pd-action-card"
-          >
-            <div className="pd-action-icon">
-              <CalendarDays size={22} />
-            </div>
-
-            <div className="pd-action-content">
-              <span>APPOINTMENTS</span>
-
-              <strong>
-                View Appointments
-              </strong>
-
-              <small>
-                Check your scheduled appointments
-              </small>
-            </div>
-
-            <ArrowRight
-              size={18}
-              className="pd-action-arrow"
-            />
-          </Link>
-
         </div>
       </section>
 
@@ -711,83 +683,6 @@ export default function PatientDashboard() {
             No approved doctor is currently assigned to your account.
           </p>
         )}
-      </section>
-
-
-      {/* =====================================================
-          4. RECENT ACTIVITY
-      ====================================================== */}
-
-      <section className="pd-card pd-timeline-card">
-
-        <div className="pd-card-header pd-compact-header">
-
-          <div>
-            <span className="pd-card-kicker">
-              RECENT ACTIVITY
-            </span>
-
-            <h2>
-              My Timeline
-            </h2>
-
-            <p>
-              A quick look at your latest activity.
-            </p>
-          </div>
-
-          <Link
-            to="/patient/timeline"
-            className="pd-link-button"
-          >
-            View Timeline
-
-            <ArrowRight size={16} />
-          </Link>
-
-        </div>
-
-
-        <div className="pd-timeline-preview">
-
-          {report ? (
-            <div className="pd-timeline-item">
-
-              <span className="pd-timeline-dot" />
-
-              <div>
-                <strong>
-                  Daily report submitted
-                </strong>
-
-                <span>
-                  Your latest daily report is saved
-                  in CareTrack.
-                </span>
-              </div>
-
-            </div>
-          ) : (
-            <div className="pd-timeline-item">
-
-              <span className="pd-timeline-dot inactive" />
-
-              <div>
-                <strong>
-                  No daily report yet
-                </strong>
-
-                <span>
-                  Submit your daily report to start
-                  tracking your activity.
-                </span>
-              </div>
-
-            </div>
-          )}
-
-        </div>
-
       </section>
 
 

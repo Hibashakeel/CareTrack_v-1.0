@@ -32,8 +32,6 @@ import PatientVitals from "./pages/PatientVitals";
 import PatientMedications from "./pages/PatientMedications";
 import PatientQuestions from "./pages/PatientQuestions";
 import PatientVoiceResponses from "./pages/PatientVoiceResponses";
-import PatientAppointments from "./pages/PatientAppointments";
-import PatientTimeline from "./pages/PatientTimeline";
 import PatientNotifications from "./pages/PatientNotifications";
 import PatientNotes from "./pages/PatientNotes";
 import {
@@ -70,7 +68,6 @@ import DoctorNotifications from "./pages/doctor/DoctorNotifications";
 
 import DoctorQuestions from "./pages/doctor/DoctorQuestions";
 import DoctorVoiceResponses from "./pages/doctor/DoctorVoiceResponses";
-import DoctorAppointments from "./pages/doctor/DoctorAppointments";
 
 /* =========================================================
 ADMIN
@@ -84,9 +81,6 @@ import {
 } from "./components/admin/AdminHospitalOperations";
 
 import {
-AdminAppointments,
-AdminReports,
-AdminAuditLogs,
 AdminNotifications,
 AdminSettings,
 } from "./pages/admin/AdminPages";
@@ -247,16 +241,6 @@ return (
         />
 
         <Route
-          path="/patient/appointments"
-          element={<PatientAppointments />}
-        />
-
-        <Route
-          path="/patient/timeline"
-          element={<PatientTimeline />}
-        />
-
-        <Route
           path="/patient/notifications"
           element={<PatientNotifications />}
         />
@@ -414,13 +398,6 @@ return (
           element={<DoctorVoiceResponses />}
         />
 
-        {/* Doctor Appointments */}
-
-        <Route
-          path="/doctor/appointments"
-          element={<DoctorAppointments />}
-        />
-
         {/* Doctor Reports */}
 
         <Route
@@ -518,21 +495,6 @@ return (
         <Route
           path="/admin/nurses"
           element={<AdminUserManagement role="nurse" />}
-        />
-
-        <Route
-          path="/admin/appointments"
-          element={<AdminAppointments />}
-        />
-
-        <Route
-          path="/admin/reports"
-          element={<AdminReports />}
-        />
-
-        <Route
-          path="/admin/audit-logs"
-          element={<AdminAuditLogs />}
         />
 
         <Route

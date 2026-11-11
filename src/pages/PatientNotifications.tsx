@@ -1,105 +1,92 @@
 
-import {
-  Bell,
-  CheckCircle2,
-  MessageCircleQuestion,
-  CalendarDays,
-  Clock3,
-  Circle,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Bell, Check, CheckCircle2, Circle, Clock3 } from "lucide-react";
+import { onValue, ref } from "firebase/database";
+
+import { useAuth } from "../context/AuthContext";
+import { db } from "../lib/firebase";
+import { markNotificationRead } from "../services/notifications";
 
 import "../patient-pages.css";
 
-type Notification = {
-  id: number;
+type NotificationItem = {
+  id: string;
   title: string;
   message: string;
-  time: string;
-  type: "question" | "appointment" | "general";
-  unread: boolean;
+  type: string;
+  read?: boolean;
+  createdAt?: number;
 };
 
 export default function PatientNotifications() {
-  const notifications: Notification[] = [
-    {
-      id: 1,
-      title: "New Question From Care Team",
-      message:
-        "Your care team has added a new question for you. Please review and submit your response.",
-      time: "10 minutes ago",
-      type: "question",
-      unread: true,
-    },
-    {
-      id: 2,
-      title: "Upcoming Appointment",
-      message:
-        "You have an appointment scheduled for 30 September. Please review your appointment details.",
-      time: "2 hours ago",
-      type: "appointment",
-      unread: true,
-    },
-    {
-      id: 3,
-      title: "Daily Report Saved",
-      message:
-        "Your daily health report has been successfully recorded in your CareTrack patient record.",
-      time: "Yesterday",
-      type: "general",
-      unread: false,
-    },
-  ];
+  const { user } = useAuth();
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const unreadCount = notifications.filter(
-    (notification) => notification.unread
-  ).length;
-
-  const getNotificationIcon = (type: Notification["type"]) => {
-    switch (type) {
-      case "question":
-        return <MessageCircleQuestion size={19} />;
-
-      case "appointment":
-        return <CalendarDays size={19} />;
-
-      default:
-        return <CheckCircle2 size={19} />;
+  useEffect(() => {
+    if (!user?.uid) {
+      setNotifications([]);
+      setLoading(false);
+      return;
     }
-  };
 
-  const getNotificationType = (type: Notification["type"]) => {
-    switch (type) {
-      case "question":
-        return "Doctor Question";
+    const notificationsRef = ref(db, `notifications/${user.uid}`);
+    const unsubscribe = onValue(
+      notificationsRef,
+      (snapshot) => {
+        if (!snapshot.exists()) {
+          setNotifications([]);
+          setLoading(false);
+          return;
+        }
 
-      case "appointment":
-        return "Appointment";
+        const nextNotifications = Object.entries(snapshot.val() ?? {})
+          .map(([id, value]) => {
+            const payload = value as Record<string, unknown>;
+            return {
+              id,
+              title: String(payload.title ?? "CareTrack Update"),
+              message: String(payload.message ?? "A CareTrack update is available."),
+              type: String(payload.type ?? "general"),
+              read: Boolean(payload.read),
+              createdAt: Number(payload.createdAt ?? 0),
+            };
+          })
+          .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-      default:
-        return "CareTrack Update";
-    }
+        setNotifications(nextNotifications);
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Failed to load patient notifications:", error);
+        setNotifications([]);
+        setLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [user?.uid]);
+
+  const unreadCount = notifications.filter((notification) => !notification.read).length;
+
+  const handleMarkRead = async (notificationId: string) => {
+    if (!user?.uid) return;
+    await markNotificationRead(user.uid, notificationId);
   };
 
   return (
     <div className="patient-page patient-notifications-page">
-      {/* Page Header */}
       <div className="patient-page-heading notifications-page-heading">
         <div>
           <span className="notifications-eyebrow">CARE UPDATES</span>
-
           <h1>Notifications</h1>
-
-          <p>
-            Stay updated with questions, appointments, and important
-            CareTrack activity.
-          </p>
+          <p>Updates from your care team and your CareTrack account appear here.</p>
         </div>
 
         <div className="notifications-header-stat">
           <div className="notifications-header-icon">
             <Bell size={18} />
           </div>
-
           <div>
             <strong>{unreadCount}</strong>
             <span>Unread updates</span>
@@ -107,18 +94,15 @@ export default function PatientNotifications() {
         </div>
       </div>
 
-      {/* Main Notification Card */}
       <div className="notifications-panel">
-        {/* Panel Header */}
         <div className="notifications-panel-header">
           <div className="notifications-panel-title">
             <div className="notifications-panel-icon">
               <Bell size={19} />
             </div>
-
             <div>
               <h2>Recent Notifications</h2>
-              <p>Your latest CareTrack updates and reminders</p>
+              <p>Your current CareTrack updates and alerts</p>
             </div>
           </div>
 
@@ -128,37 +112,33 @@ export default function PatientNotifications() {
           </div>
         </div>
 
-        {/* Notification List */}
         <div className="notifications-list">
-          {notifications.length > 0 ? (
+          {loading ? (
+            <div className="notifications-empty">
+              <h3>Loading notifications...</h3>
+            </div>
+          ) : notifications.length > 0 ? (
             notifications.map((notification) => (
               <div
-                className={`notification-card ${
-                  notification.unread ? "notification-card-unread" : ""
-                }`}
                 key={notification.id}
+                className={`notification-card ${notification.read ? "" : "notification-card-unread"}`}
+                onClick={() => handleMarkRead(notification.id)}
+                style={{ cursor: "pointer" }}
               >
-                {/* Icon */}
-                <div
-                  className={`notification-type-icon notification-type-${notification.type}`}
-                >
-                  {getNotificationIcon(notification.type)}
+                <div className="notification-type-icon notification-type-general">
+                  <Bell size={19} />
                 </div>
 
-                {/* Content */}
                 <div className="notification-main">
                   <div className="notification-top-row">
                     <div className="notification-title-group">
-                      <span
-                        className={`notification-type-label notification-label-${notification.type}`}
-                      >
-                        {getNotificationType(notification.type)}
+                      <span className="notification-type-label notification-label-general">
+                        {notification.type.replace("_", " ")}
                       </span>
-
                       <h3>{notification.title}</h3>
                     </div>
 
-                    {notification.unread && (
+                    {!notification.read && (
                       <span className="notification-unread">
                         <Circle size={8} fill="currentColor" />
                         New
@@ -170,7 +150,9 @@ export default function PatientNotifications() {
 
                   <div className="notification-time">
                     <Clock3 size={13} />
-                    <span>{notification.time}</span>
+                    <span>
+                      {notification.createdAt ? new Date(notification.createdAt).toLocaleString() : "Recently"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -180,25 +162,15 @@ export default function PatientNotifications() {
               <div className="notifications-empty-icon">
                 <Bell size={24} />
               </div>
-
               <h3>No notifications</h3>
-
-              <p>
-                You are all caught up. New CareTrack updates will appear
-                here.
-              </p>
+              <p>You are all caught up. New updates will appear here once they are created.</p>
             </div>
           )}
         </div>
 
-        {/* Footer */}
         <div className="notifications-panel-footer">
           <CheckCircle2 size={15} />
-
-          <span>
-            Important questions, appointments, and patient record updates
-            will appear here.
-          </span>
+          <span>Important updates and care actions are stored in the Firebase notifications collection.</span>
         </div>
       </div>
     </div>

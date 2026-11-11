@@ -33,6 +33,7 @@ import {
   AdminAdmissionManagement,
   AdminWardManagement,
 } from "../../components/admin/AdminHospitalOperations";
+import { createNotification } from "../../services/notifications";
 
 /* =========================================================
    TYPES
@@ -2170,17 +2171,31 @@ export function AdminNotifications() {
       if (!text) return;
 
       try {
-        await push(
-          ref(
-            db,
-            "adminNotifications"
-          ),
-          {
-            message: text,
-            createdAt:
-              Date.now(),
-            status: "sent",
-          }
+        const usersSnapshot = await get(ref(db, "users"));
+        const users = (usersSnapshot.val() ?? {}) as Record<string, { active?: boolean; uid?: string }>;
+
+        const recipientUids = Object.keys(users).filter((uid) => {
+          const userRecord = users[uid];
+          return userRecord && typeof userRecord === "object" && userRecord.active !== false;
+        });
+
+        if (recipientUids.length === 0) {
+          throw new Error("No active users are available for a system notification.");
+        }
+
+        await Promise.all(
+          recipientUids.map((uid) =>
+            createNotification(
+              uid,
+              "System update",
+              text,
+              "system",
+              "admin-system-notification",
+              {
+                sentBy: "admin",
+              }
+            )
+          )
         );
 
         setMessage("");

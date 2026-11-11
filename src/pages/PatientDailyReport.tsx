@@ -41,6 +41,14 @@ export default function PatientDailyReport() {
 
   const [today, setToday] = useState("");
 
+  function getLocalDateValue(date: Date) {
+    const localDate = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60 * 1000
+    );
+
+    return localDate.toISOString().slice(0, 10);
+  }
+
   useEffect(() => {
     setToday(
       new Date().toLocaleDateString("en-US", {
@@ -134,7 +142,7 @@ export default function PatientDailyReport() {
 
       const now = new Date();
 
-      const reportDate = now.toISOString().split("T")[0];
+      const reportDate = getLocalDateValue(now);
       const savedReport = {
         patientId: user.uid,
 

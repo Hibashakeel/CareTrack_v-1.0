@@ -54,13 +54,6 @@ type Question = {
   doctorReplyBy?: string;
 };
 
-declare global {
-  interface Window {
-    SpeechRecognition?: any;
-    webkitSpeechRecognition?: any;
-  }
-}
-
 /* =========================================================
    HELPERS
 ========================================================= */
